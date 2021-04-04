@@ -1,0 +1,110 @@
+Date : 2021-02-21 15:05:45
+Directory : d:\flutter\stackr
+Total : 52 files,  2792 codes, 138 comments, 544 blanks, all 3474 lines
+
+Languages
++------------+------------+------------+------------+------------+------------+
+| language   | files      | code       | comment    | blank      | total      |
++------------+------------+------------+------------+------------+------------+
+| Dart       |         33 |      2,385 |         50 |        483 |      2,918 |
+| JSON       |          2 |        145 |          0 |          2 |        147 |
+| XML        |          7 |        113 |         40 |          8 |        161 |
+| Groovy     |          3 |         84 |          3 |         21 |        108 |
+| YAML       |          1 |         30 |         44 |         16 |         90 |
+| Markdown   |          2 |         13 |          0 |          9 |         22 |
+| Swift      |          1 |         12 |          0 |          2 |         14 |
+| Properties |          2 |          9 |          1 |          2 |         12 |
+| C++        |          1 |          1 |          0 |          1 |          2 |
++------------+------------+------------+------------+------------+------------+
+
+Directories
++---------------------------------------------------------------------------------+------------+------------+------------+------------+------------+
+| path                                                                            | files      | code       | comment    | blank      | total      |
++---------------------------------------------------------------------------------+------------+------------+------------+------------+------------+
+| .                                                                               |         52 |      2,792 |        138 |        544 |      3,474 |
+| android                                                                         |         10 |        145 |         42 |         29 |        216 |
+| android\app                                                                     |          6 |        101 |         41 |         18 |        160 |
+| android\app\src                                                                 |          5 |         52 |         38 |          6 |         96 |
+| android\app\src\debug                                                           |          1 |          4 |          3 |          1 |          8 |
+| android\app\src\main                                                            |          3 |         44 |         32 |          4 |         80 |
+| android\app\src\main\res                                                        |          2 |         13 |         16 |          3 |         32 |
+| android\app\src\main\res\drawable                                               |          1 |          4 |          7 |          2 |         13 |
+| android\app\src\main\res\values                                                 |          1 |          9 |          9 |          1 |         19 |
+| android\app\src\profile                                                         |          1 |          4 |          3 |          1 |          8 |
+| android\gradle                                                                  |          1 |          5 |          1 |          1 |          7 |
+| android\gradle\wrapper                                                          |          1 |          5 |          1 |          1 |          7 |
+| ios                                                                             |          7 |        222 |          2 |          9 |        233 |
+| ios\Runner                                                                      |          7 |        222 |          2 |          9 |        233 |
+| ios\Runner\Assets.xcassets                                                      |          3 |        148 |          0 |          4 |        152 |
+| ios\Runner\Assets.xcassets\AppIcon.appiconset                                   |          1 |        122 |          0 |          1 |        123 |
+| ios\Runner\Assets.xcassets\LaunchImage.imageset                                 |          2 |         26 |          0 |          3 |         29 |
+| ios\Runner\Base.lproj                                                           |          2 |         61 |          2 |          2 |         65 |
+| lib                                                                             |         32 |      2,371 |         40 |        476 |      2,887 |
+| lib\decoration                                                                  |          4 |        103 |          0 |         25 |        128 |
+| lib\l10n                                                                        |          3 |        141 |         28 |         24 |        193 |
+| lib\locale                                                                      |          1 |        244 |          2 |         43 |        289 |
+| lib\model                                                                       |          5 |        194 |          0 |         61 |        255 |
+| lib\screens                                                                     |          7 |        751 |          9 |        135 |        895 |
+| lib\utils                                                                       |          1 |         30 |          0 |          9 |         39 |
+| lib\widgets                                                                     |          8 |        755 |          0 |        151 |        906 |
+| test                                                                            |          1 |         14 |         10 |          7 |         31 |
++---------------------------------------------------------------------------------+------------+------------+------------+------------+------------+
+
+Files
++---------------------------------------------------------------------------------+------------+------------+------------+------------+------------+
+| filename                                                                        | language   | code       | comment    | blank      | total      |
++---------------------------------------------------------------------------------+------------+------------+------------+------------+------------+
+| d:\flutter\stackr\README.md                                                     | Markdown   |         10 |          0 |          7 |         17 |
+| d:\flutter\stackr\android\app\build.gradle                                      | Groovy     |         49 |          3 |         12 |         64 |
+| d:\flutter\stackr\android\app\src\debug\AndroidManifest.xml                     | XML        |          4 |          3 |          1 |          8 |
+| d:\flutter\stackr\android\app\src\main\AndroidManifest.xml                      | XML        |         31 |         16 |          1 |         48 |
+| d:\flutter\stackr\android\app\src\main\res\drawable\launch_background.xml       | XML        |          4 |          7 |          2 |         13 |
+| d:\flutter\stackr\android\app\src\main\res\values\styles.xml                    | XML        |          9 |          9 |          1 |         19 |
+| d:\flutter\stackr\android\app\src\profile\AndroidManifest.xml                   | XML        |          4 |          3 |          1 |          8 |
+| d:\flutter\stackr\android\build.gradle                                          | Groovy     |         27 |          0 |          5 |         32 |
+| d:\flutter\stackr\android\gradle.properties                                     | Properties |          4 |          0 |          1 |          5 |
+| d:\flutter\stackr\android\gradle\wrapper\gradle-wrapper.properties              | Properties |          5 |          1 |          1 |          7 |
+| d:\flutter\stackr\android\settings.gradle                                       | Groovy     |          8 |          0 |          4 |         12 |
+| d:\flutter\stackr\ios\Runner\AppDelegate.swift                                  | Swift      |         12 |          0 |          2 |         14 |
+| d:\flutter\stackr\ios\Runner\Assets.xcassets\AppIcon.appiconset\Contents.json   | JSON       |        122 |          0 |          1 |        123 |
+| d:\flutter\stackr\ios\Runner\Assets.xcassets\LaunchImage.imageset\Contents.json | JSON       |         23 |          0 |          1 |         24 |
+| d:\flutter\stackr\ios\Runner\Assets.xcassets\LaunchImage.imageset\README.md     | Markdown   |          3 |          0 |          2 |          5 |
+| d:\flutter\stackr\ios\Runner\Base.lproj\LaunchScreen.storyboard                 | XML        |         36 |          1 |          1 |         38 |
+| d:\flutter\stackr\ios\Runner\Base.lproj\Main.storyboard                         | XML        |         25 |          1 |          1 |         27 |
+| d:\flutter\stackr\ios\Runner\Runner-Bridging-Header.h                           | C++        |          1 |          0 |          1 |          2 |
+| d:\flutter\stackr\lib\constants.dart                                            | Dart       |         16 |          0 |          6 |         22 |
+| d:\flutter\stackr\lib\decoration\button_shadow.dart                             | Dart       |         14 |          0 |          5 |         19 |
+| d:\flutter\stackr\lib\decoration\shadow.dart                                    | Dart       |         19 |          0 |          6 |         25 |
+| d:\flutter\stackr\lib\decoration\stack_shadow.dart                              | Dart       |         17 |          0 |          5 |         22 |
+| d:\flutter\stackr\lib\decoration\textfield_border.dart                          | Dart       |         53 |          0 |          9 |         62 |
+| d:\flutter\stackr\lib\l10n\messages_all.dart                                    | Dart       |         47 |         10 |         10 |         67 |
+| d:\flutter\stackr\lib\l10n\messages_en.dart                                     | Dart       |         46 |          9 |          7 |         62 |
+| d:\flutter\stackr\lib\l10n\messages_nl.dart                                     | Dart       |         48 |          9 |          7 |         64 |
+| d:\flutter\stackr\lib\locale\localization.dart                                  | Dart       |        244 |          2 |         43 |        289 |
+| d:\flutter\stackr\lib\main.dart                                                 | Dart       |         60 |          1 |         10 |         71 |
+| d:\flutter\stackr\lib\model\db_helper.dart                                      | Dart       |         71 |          0 |         25 |         96 |
+| d:\flutter\stackr\lib\model\flashcard.dart                                      | Dart       |         19 |          0 |          4 |         23 |
+| d:\flutter\stackr\lib\model\language.dart                                       | Dart       |          5 |          0 |          2 |          7 |
+| d:\flutter\stackr\lib\model\user.dart                                           | Dart       |          5 |          0 |          2 |          7 |
+| d:\flutter\stackr\lib\model\user_inherited.dart                                 | Dart       |         94 |          0 |         28 |        122 |
+| d:\flutter\stackr\lib\screens\page_create.dart                                  | Dart       |        222 |          3 |         29 |        254 |
+| d:\flutter\stackr\lib\screens\page_home.dart                                    | Dart       |        113 |          0 |         22 |        135 |
+| d:\flutter\stackr\lib\screens\page_settings.dart                                | Dart       |        158 |          1 |         25 |        184 |
+| d:\flutter\stackr\lib\screens\page_study.dart                                   | Dart       |        127 |          4 |         35 |        166 |
+| d:\flutter\stackr\lib\screens\sheet_language.dart                               | Dart       |         32 |          0 |          7 |         39 |
+| d:\flutter\stackr\lib\screens\sheet_questions.dart                              | Dart       |         46 |          1 |          6 |         53 |
+| d:\flutter\stackr\lib\screens\sheet_textfield.dart                              | Dart       |         53 |          0 |         11 |         64 |
+| d:\flutter\stackr\lib\theme.dart                                                | Dart       |         77 |          0 |         12 |         89 |
+| d:\flutter\stackr\lib\utils\matrix_operation.dart                               | Dart       |         30 |          0 |          9 |         39 |
+| d:\flutter\stackr\lib\widgets\appbar_home.dart                                  | Dart       |         87 |          0 |         15 |        102 |
+| d:\flutter\stackr\lib\widgets\card_stack.dart                                   | Dart       |         67 |          0 |         13 |         80 |
+| d:\flutter\stackr\lib\widgets\card_study.dart                                   | Dart       |        191 |          0 |         49 |        240 |
+| d:\flutter\stackr\lib\widgets\draw.dart                                         | Dart       |        175 |          0 |         40 |        215 |
+| d:\flutter\stackr\lib\widgets\graph_stats.dart                                  | Dart       |         95 |          0 |          8 |        103 |
+| d:\flutter\stackr\lib\widgets\gridview_home.dart                                | Dart       |         63 |          0 |          8 |         71 |
+| d:\flutter\stackr\lib\widgets\pageview_feature.dart                             | Dart       |         53 |          0 |         11 |         64 |
+| d:\flutter\stackr\lib\widgets\sliver_header.dart                                | Dart       |         24 |          0 |          7 |         31 |
+| d:\flutter\stackr\pubspec.yaml                                                  | YAML       |         30 |         44 |         16 |         90 |
+| d:\flutter\stackr\test\widget_test.dart                                         | Dart       |         14 |         10 |          7 |         31 |
+| Total                                                                           |            |      2,792 |        138 |        544 |      3,474 |
++---------------------------------------------------------------------------------+------------+------------+------------+------------+------------+

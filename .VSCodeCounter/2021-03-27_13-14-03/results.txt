@@ -1,0 +1,130 @@
+Date : 2021-03-27 13:14:03
+Directory : d:\flutter\stackr
+Total : 72 files,  5263 codes, 174 comments, 967 blanks, all 6404 lines
+
+Languages
++------------+------------+------------+------------+------------+------------+
+| language   | files      | code       | comment    | blank      | total      |
++------------+------------+------------+------------+------------+------------+
+| Dart       |         53 |      4,838 |         94 |        905 |      5,837 |
+| JSON       |          2 |        145 |          0 |          2 |        147 |
+| XML        |          7 |        113 |         40 |          8 |        161 |
+| Groovy     |          3 |         84 |          3 |         21 |        108 |
+| YAML       |          1 |         48 |         36 |         17 |        101 |
+| Markdown   |          2 |         13 |          0 |          9 |         22 |
+| Swift      |          1 |         12 |          0 |          2 |         14 |
+| Properties |          2 |          9 |          1 |          2 |         12 |
+| C++        |          1 |          1 |          0 |          1 |          2 |
++------------+------------+------------+------------+------------+------------+
+
+Directories
++---------------------------------------------------------------------------------+------------+------------+------------+------------+------------+
+| path                                                                            | files      | code       | comment    | blank      | total      |
++---------------------------------------------------------------------------------+------------+------------+------------+------------+------------+
+| .                                                                               |         72 |      5,263 |        174 |        967 |      6,404 |
+| android                                                                         |         10 |        145 |         42 |         29 |        216 |
+| android\app                                                                     |          6 |        101 |         41 |         18 |        160 |
+| android\app\src                                                                 |          5 |         52 |         38 |          6 |         96 |
+| android\app\src\debug                                                           |          1 |          4 |          3 |          1 |          8 |
+| android\app\src\main                                                            |          3 |         44 |         32 |          4 |         80 |
+| android\app\src\main\res                                                        |          2 |         13 |         16 |          3 |         32 |
+| android\app\src\main\res\drawable                                               |          1 |          4 |          7 |          2 |         13 |
+| android\app\src\main\res\values                                                 |          1 |          9 |          9 |          1 |         19 |
+| android\app\src\profile                                                         |          1 |          4 |          3 |          1 |          8 |
+| android\gradle                                                                  |          1 |          5 |          1 |          1 |          7 |
+| android\gradle\wrapper                                                          |          1 |          5 |          1 |          1 |          7 |
+| ios                                                                             |          7 |        222 |          2 |          9 |        233 |
+| ios\Runner                                                                      |          7 |        222 |          2 |          9 |        233 |
+| ios\Runner\Assets.xcassets                                                      |          3 |        148 |          0 |          4 |        152 |
+| ios\Runner\Assets.xcassets\AppIcon.appiconset                                   |          1 |        122 |          0 |          1 |        123 |
+| ios\Runner\Assets.xcassets\LaunchImage.imageset                                 |          2 |         26 |          0 |          3 |         29 |
+| ios\Runner\Base.lproj                                                           |          2 |         61 |          2 |          2 |         65 |
+| lib                                                                             |         52 |      4,824 |         84 |        898 |      5,806 |
+| lib\decoration                                                                  |          4 |        145 |          0 |         30 |        175 |
+| lib\l10n                                                                        |          3 |        141 |         28 |         24 |        193 |
+| lib\locale                                                                      |          1 |        244 |          2 |         43 |        289 |
+| lib\model                                                                       |          6 |        326 |          0 |        101 |        427 |
+| lib\screens                                                                     |         12 |      1,921 |         22 |        347 |      2,290 |
+| lib\utils                                                                       |          4 |         70 |          0 |         23 |         93 |
+| lib\widgets                                                                     |         19 |      1,757 |         14 |        277 |      2,048 |
+| test                                                                            |          1 |         14 |         10 |          7 |         31 |
++---------------------------------------------------------------------------------+------------+------------+------------+------------+------------+
+
+Files
++---------------------------------------------------------------------------------+------------+------------+------------+------------+------------+
+| filename                                                                        | language   | code       | comment    | blank      | total      |
++---------------------------------------------------------------------------------+------------+------------+------------+------------+------------+
+| d:\flutter\stackr\README.md                                                     | Markdown   |         10 |          0 |          7 |         17 |
+| d:\flutter\stackr\android\app\build.gradle                                      | Groovy     |         49 |          3 |         12 |         64 |
+| d:\flutter\stackr\android\app\src\debug\AndroidManifest.xml                     | XML        |          4 |          3 |          1 |          8 |
+| d:\flutter\stackr\android\app\src\main\AndroidManifest.xml                      | XML        |         31 |         16 |          1 |         48 |
+| d:\flutter\stackr\android\app\src\main\res\drawable\launch_background.xml       | XML        |          4 |          7 |          2 |         13 |
+| d:\flutter\stackr\android\app\src\main\res\values\styles.xml                    | XML        |          9 |          9 |          1 |         19 |
+| d:\flutter\stackr\android\app\src\profile\AndroidManifest.xml                   | XML        |          4 |          3 |          1 |          8 |
+| d:\flutter\stackr\android\build.gradle                                          | Groovy     |         27 |          0 |          5 |         32 |
+| d:\flutter\stackr\android\gradle.properties                                     | Properties |          4 |          0 |          1 |          5 |
+| d:\flutter\stackr\android\gradle\wrapper\gradle-wrapper.properties              | Properties |          5 |          1 |          1 |          7 |
+| d:\flutter\stackr\android\settings.gradle                                       | Groovy     |          8 |          0 |          4 |         12 |
+| d:\flutter\stackr\ios\Runner\AppDelegate.swift                                  | Swift      |         12 |          0 |          2 |         14 |
+| d:\flutter\stackr\ios\Runner\Assets.xcassets\AppIcon.appiconset\Contents.json   | JSON       |        122 |          0 |          1 |        123 |
+| d:\flutter\stackr\ios\Runner\Assets.xcassets\LaunchImage.imageset\Contents.json | JSON       |         23 |          0 |          1 |         24 |
+| d:\flutter\stackr\ios\Runner\Assets.xcassets\LaunchImage.imageset\README.md     | Markdown   |          3 |          0 |          2 |          5 |
+| d:\flutter\stackr\ios\Runner\Base.lproj\LaunchScreen.storyboard                 | XML        |         36 |          1 |          1 |         38 |
+| d:\flutter\stackr\ios\Runner\Base.lproj\Main.storyboard                         | XML        |         25 |          1 |          1 |         27 |
+| d:\flutter\stackr\ios\Runner\Runner-Bridging-Header.h                           | C++        |          1 |          0 |          1 |          2 |
+| d:\flutter\stackr\lib\constants.dart                                            | Dart       |         53 |          0 |         12 |         65 |
+| d:\flutter\stackr\lib\decoration\card_shadow.dart                               | Dart       |         47 |          0 |         10 |         57 |
+| d:\flutter\stackr\lib\decoration\round_shadow.dart                              | Dart       |         27 |          0 |          9 |         36 |
+| d:\flutter\stackr\lib\decoration\shadow.dart                                    | Dart       |         21 |          0 |          5 |         26 |
+| d:\flutter\stackr\lib\decoration\textfield_border.dart                          | Dart       |         50 |          0 |          6 |         56 |
+| d:\flutter\stackr\lib\l10n\messages_all.dart                                    | Dart       |         47 |         10 |         10 |         67 |
+| d:\flutter\stackr\lib\l10n\messages_en.dart                                     | Dart       |         46 |          9 |          7 |         62 |
+| d:\flutter\stackr\lib\l10n\messages_nl.dart                                     | Dart       |         48 |          9 |          7 |         64 |
+| d:\flutter\stackr\lib\locale\localization.dart                                  | Dart       |        244 |          2 |         43 |        289 |
+| d:\flutter\stackr\lib\main.dart                                                 | Dart       |         90 |          0 |         19 |        109 |
+| d:\flutter\stackr\lib\model\db_helper.dart                                      | Dart       |        125 |          0 |         41 |        166 |
+| d:\flutter\stackr\lib\model\flashcard.dart                                      | Dart       |         27 |          0 |          5 |         32 |
+| d:\flutter\stackr\lib\model\language.dart                                       | Dart       |          5 |          0 |          2 |          7 |
+| d:\flutter\stackr\lib\model\studystack.dart                                     | Dart       |          5 |          0 |          2 |          7 |
+| d:\flutter\stackr\lib\model\user.dart                                           | Dart       |          5 |          0 |          2 |          7 |
+| d:\flutter\stackr\lib\model\user_inherited.dart                                 | Dart       |        159 |          0 |         49 |        208 |
+| d:\flutter\stackr\lib\screens\page_home.dart                                    | Dart       |        244 |          7 |         41 |        292 |
+| d:\flutter\stackr\lib\screens\page_intro.dart                                   | Dart       |         95 |          5 |         14 |        114 |
+| d:\flutter\stackr\lib\screens\page_settings.dart                                | Dart       |        247 |          0 |         39 |        286 |
+| d:\flutter\stackr\lib\screens\page_stack.dart                                   | Dart       |        417 |          2 |         72 |        491 |
+| d:\flutter\stackr\lib\screens\page_stats.dart                                   | Dart       |         22 |          0 |          3 |         25 |
+| d:\flutter\stackr\lib\screens\page_study.dart                                   | Dart       |        336 |          4 |         74 |        414 |
+| d:\flutter\stackr\lib\screens\sheet_flashcards.dart                             | Dart       |        153 |          3 |         26 |        182 |
+| d:\flutter\stackr\lib\screens\sheet_information.dart                            | Dart       |         24 |          0 |          4 |         28 |
+| d:\flutter\stackr\lib\screens\sheet_language.dart                               | Dart       |         32 |          0 |          7 |         39 |
+| d:\flutter\stackr\lib\screens\sheet_profile.dart                                | Dart       |        170 |          0 |         33 |        203 |
+| d:\flutter\stackr\lib\screens\sheet_review.dart                                 | Dart       |        111 |          1 |         20 |        132 |
+| d:\flutter\stackr\lib\screens\sheet_textfield.dart                              | Dart       |         70 |          0 |         14 |         84 |
+| d:\flutter\stackr\lib\theme.dart                                                | Dart       |         77 |         18 |         22 |        117 |
+| d:\flutter\stackr\lib\utils\list_operation.dart                                 | Dart       |         10 |          0 |          4 |         14 |
+| d:\flutter\stackr\lib\utils\matrix_operation.dart                               | Dart       |         30 |          0 |          9 |         39 |
+| d:\flutter\stackr\lib\utils\stopwatch_operation.dart                            | Dart       |         17 |          0 |          6 |         23 |
+| d:\flutter\stackr\lib\utils\string_operation.dart                               | Dart       |         13 |          0 |          4 |         17 |
+| d:\flutter\stackr\lib\widgets\appbar_home.dart                                  | Dart       |        131 |         10 |         27 |        168 |
+| d:\flutter\stackr\lib\widgets\appbar_page.dart                                  | Dart       |        109 |          0 |         14 |        123 |
+| d:\flutter\stackr\lib\widgets\button_icon.dart                                  | Dart       |         44 |          0 |          4 |         48 |
+| d:\flutter\stackr\lib\widgets\button_study.dart                                 | Dart       |        115 |          0 |         18 |        133 |
+| d:\flutter\stackr\lib\widgets\card_feature.dart                                 | Dart       |         90 |          0 |          6 |         96 |
+| d:\flutter\stackr\lib\widgets\card_flip.dart                                    | Dart       |         43 |          0 |         10 |         53 |
+| d:\flutter\stackr\lib\widgets\card_stack.dart                                   | Dart       |        155 |          2 |         20 |        177 |
+| d:\flutter\stackr\lib\widgets\card_stats.dart                                   | Dart       |         30 |          0 |          3 |         33 |
+| d:\flutter\stackr\lib\widgets\card_study.dart                                   | Dart       |         65 |          0 |          7 |         72 |
+| d:\flutter\stackr\lib\widgets\card_swipe.dart                                   | Dart       |        196 |          0 |         51 |        247 |
+| d:\flutter\stackr\lib\widgets\dialog_confirm.dart                               | Dart       |         60 |          0 |          6 |         66 |
+| d:\flutter\stackr\lib\widgets\graph_stats.dart                                  | Dart       |         99 |          0 |         17 |        116 |
+| d:\flutter\stackr\lib\widgets\gridview_home.dart                                | Dart       |         50 |          0 |         10 |         60 |
+| d:\flutter\stackr\lib\widgets\pageview_feature.dart                             | Dart       |        125 |          0 |         20 |        145 |
+| d:\flutter\stackr\lib\widgets\progress_circular.dart                            | Dart       |         79 |          0 |          6 |         85 |
+| d:\flutter\stackr\lib\widgets\searchbar.dart                                    | Dart       |        144 |          0 |         26 |        170 |
+| d:\flutter\stackr\lib\widgets\slidable.dart                                     | Dart       |         74 |          0 |          9 |         83 |
+| d:\flutter\stackr\lib\widgets\sliver_header.dart                                | Dart       |         24 |          0 |          7 |         31 |
+| d:\flutter\stackr\lib\widgets\tile_simple.dart                                  | Dart       |        124 |          2 |         16 |        142 |
+| d:\flutter\stackr\pubspec.yaml                                                  | YAML       |         48 |         36 |         17 |        101 |
+| d:\flutter\stackr\test\widget_test.dart                                         | Dart       |         14 |         10 |          7 |         31 |
+| Total                                                                           |            |      5,263 |        174 |        967 |      6,404 |
++---------------------------------------------------------------------------------+------------+------------+------------+------------+------------+
