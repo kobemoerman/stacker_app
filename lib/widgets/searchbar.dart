@@ -136,7 +136,7 @@ class _SearchOverrideState extends State<SearchOverride> {
         margin: const EdgeInsets.symmetric(horizontal: 10.0),
         child: ClipRect(
           child: AnimatedSwitcher(
-            duration: Duration(milliseconds: 750),
+            duration: Duration(seconds: 1),
             layoutBuilder: transitionLayout,
             transitionBuilder: transitionAnimation,
             child: widget.child,

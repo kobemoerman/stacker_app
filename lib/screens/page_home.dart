@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/animation.dart';
 import 'package:stackr/screens/page_study.dart';
+import 'package:stackr/widgets/textfield_platform.dart';
 
 import '../model/studystack.dart';
 import '../model/user_inherited.dart';
@@ -266,20 +267,18 @@ class _HomePageState extends State<HomePage> {
   }
 
   Widget _title() {
-    return Text('STACKS', style: Theme.of(context).textTheme.headline1);
+    return Container(
+      width: double.infinity,
+      child: Text('STACKS', style: Theme.of(context).textTheme.headline1),
+    );
   }
 
   Widget _search() {
-    return TextField(
-      focusNode: _focus,
+    return TextFieldPlatform(
       controller: _textCtrl,
-      autofocus: false,
-      style: Theme.of(context).textTheme.bodyText1,
-      decoration: InputDecoration(
-        hintText: 'Search for a stack...',
-        hintStyle: Theme.of(context).textTheme.subtitle1,
-        border: InputBorder.none,
-      ),
+      hint: 'Search for a stack...',
+      maxLines: 1,
+      focusNode: _focus,
     );
   }
 

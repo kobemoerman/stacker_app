@@ -5,18 +5,16 @@ import '../utils/string_operation.dart';
 class StudyCard extends StatefulWidget {
   final String title;
   final String content;
-  final int maxLines;
   final IconData icon;
   final Function callback;
 
-  const StudyCard(
-      {Key key,
-      @required this.title,
-      @required this.content,
-      this.icon,
-      this.callback,
-      @required this.maxLines})
-      : super(key: key);
+  const StudyCard({
+    Key key,
+    @required this.title,
+    @required this.content,
+    this.icon,
+    this.callback,
+  }) : super(key: key);
 
   @override
   _StudyCardState createState() => _StudyCardState();
@@ -47,11 +45,13 @@ class _StudyCardState extends State<StudyCard> {
           alignment: Alignment.centerLeft,
           child: Container(
             margin: const EdgeInsets.fromLTRB(20.0, 50.0, 10.0, 20.0),
-            child: Text(
-              body.formatCard(),
-              style: Theme.of(context).textTheme.subtitle1,
-              overflow: TextOverflow.ellipsis,
-              maxLines: widget.maxLines,
+            child: SingleChildScrollView(
+              physics: BouncingScrollPhysics(),
+              scrollDirection: Axis.vertical,
+              child: Text(
+                body.formatCard(),
+                style: Theme.of(context).textTheme.subtitle1,
+              ),
             ),
           ),
         ),

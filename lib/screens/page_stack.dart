@@ -9,6 +9,7 @@ import 'package:stackr/widgets/appbar_page.dart';
 import 'package:stackr/widgets/card_study.dart';
 import 'package:stackr/widgets/dialog_confirm.dart';
 import 'package:stackr/widgets/button_icon.dart';
+import 'package:stackr/widgets/textfield_platform.dart';
 
 import 'sheet_flashcards.dart';
 import '../constants.dart';
@@ -227,7 +228,6 @@ class _StackPageState extends State<StackPage> {
       child: StudyCard(
         title: this.showFront ? 'Question:' : 'Answer:',
         content: this.showFront ? this.question : this.answer,
-        maxLines: 10,
         icon: Icons.edit,
         callback: editCardContent,
       ),
@@ -242,20 +242,11 @@ class _StackPageState extends State<StackPage> {
   Widget headerField({String hint, TextEditingController controller}) {
     return Container(
       margin: const EdgeInsets.only(left: 10.0),
-      child: TextField(
-        autofocus: false,
+      child: TextFieldPlatform(
         controller: controller,
         maxLines: 1,
         maxLength: 50,
-        buildCounter: (_, {currentLength, maxLength, isFocused}) {
-          return TextFieldBorder(
-              current: currentLength, max: maxLength, theme: Theme.of(context));
-        },
-        decoration: InputDecoration(
-          hintText: hint.formatDBToString(),
-          isDense: true,
-          border: InputBorder.none,
-        ),
+        hint: hint.formatDBToString(),
       ),
     );
   }
@@ -413,22 +404,13 @@ class _EditStackState extends State<EditStack> {
       ),
       resizeToAvoidBottomPadding: false,
       body: SafeArea(
-        child: GestureDetector(
-          onTap: () {
-            FocusScopeNode currentFocus = FocusScope.of(context);
-
-            if (!currentFocus.hasPrimaryFocus) {
-              currentFocus.unfocus();
-            }
-          },
-          child: Padding(
-            padding: const EdgeInsets.only(top: 15.0),
-            child: StackPage(
-              study: _study,
-              theme: _theme,
-              cards: _cards,
-              callback: updateStack,
-            ),
+        child: Padding(
+          padding: const EdgeInsets.only(top: 15.0),
+          child: StackPage(
+            study: _study,
+            theme: _theme,
+            cards: _cards,
+            callback: updateStack,
           ),
         ),
       ),
@@ -508,19 +490,13 @@ class _CreateStackState extends State<CreateStack> {
       ),
       resizeToAvoidBottomPadding: false,
       body: SafeArea(
-        child: GestureDetector(
-          onTap: () {
-            FocusScopeNode currentFocus = FocusScope.of(context);
-            if (!currentFocus.hasPrimaryFocus) currentFocus.unfocus();
-          },
-          child: Padding(
-            padding: const EdgeInsets.only(top: 15.0),
-            child: StackPage(
-              study: '',
-              theme: '',
-              cards: _cards,
-              callback: createStack,
-            ),
+        child: Padding(
+          padding: const EdgeInsets.only(top: 15.0),
+          child: StackPage(
+            study: '',
+            theme: '',
+            cards: _cards,
+            callback: createStack,
           ),
         ),
       ),

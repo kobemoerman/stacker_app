@@ -2,6 +2,7 @@ import 'dart:io' show Platform;
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:stackr/widgets/textfield_platform.dart';
 
 class QuestionAnswerSheet extends StatefulWidget {
   final String question;
@@ -59,78 +60,51 @@ class _QuestionAnswerState extends State<QuestionAnswerSheet> {
 
   @override
   Widget build(BuildContext context) {
-    return PageView(
-      controller: _controller,
-      onPageChanged: (_) => FocusScope.of(context).unfocus(),
-      physics: ClampingScrollPhysics(),
-      scrollDirection: Axis.horizontal,
-      children: [
-        pageBuilder(
-          header: 'Question',
-          text: widget.question,
-          controller: _qCtrl,
+    return Scaffold(
+      resizeToAvoidBottomInset: true,
+      body: GestureDetector(
+        onTap: () {
+          FocusScopeNode currentFocus = FocusScope.of(context);
+          if (!currentFocus.hasPrimaryFocus) currentFocus.unfocus();
+        },
+        child: PageView(
+          controller: _controller,
+          onPageChanged: (_) => FocusScope.of(context).unfocus(),
+          physics: ClampingScrollPhysics(),
+          scrollDirection: Axis.horizontal,
+          children: [
+            pageBuilder(header: 'Question', controller: _qCtrl),
+            pageBuilder(header: 'Answer', controller: _aCtrl),
+          ],
         ),
-        pageBuilder(
-          header: 'Answer',
-          text: widget.answer,
-          controller: _aCtrl,
-        ),
-      ],
+      ),
     );
   }
 
-  Widget pageBuilder({String header, String text, controller}) {
+  Widget pageBuilder({String header, controller}) {
     return Container(
       padding: const EdgeInsets.all(10.0),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisAlignment: MainAxisAlignment.start,
         mainAxisSize: MainAxisSize.max,
-        children: pageContent(header, text, controller),
+        children: pageContent(header, controller),
       ),
     );
   }
 
-  List<Widget> pageContent(header, text, controller) {
+  List<Widget> pageContent(header, controller) {
     String hint = 'Type ${header.toLowerCase()} here...';
 
     return [
       Text('$header:', style: Theme.of(context).textTheme.headline2),
-      Platform.isIOS
-          ? iosTextField(hint, controller)
-          : androidTextField(hint, controller)
-    ];
-  }
-
-  Widget iosTextField(hint, controller) {
-    return CupertinoTextField(
-      decoration: BoxDecoration(color: Colors.transparent),
-      maxLength: 400,
-      maxLines: null,
-      autofocus: false,
-      maxLengthEnforced: true,
-      controller: controller,
-      placeholder: hint,
-      placeholderStyle: Theme.of(context).textTheme.subtitle1,
-      style: Theme.of(context).textTheme.bodyText1,
-      keyboardType: TextInputType.multiline,
-      scrollPhysics: BouncingScrollPhysics(),
-    );
-  }
-
-  Widget androidTextField(hint, controller) {
-    return TextField(
-      maxLength: 400,
-      maxLines: null,
-      maxLengthEnforced: true,
-      controller: controller,
-      keyboardType: TextInputType.multiline,
-      scrollPhysics: BouncingScrollPhysics(),
-      decoration: InputDecoration(
-        hintText: hint,
-        isDense: true,
-        border: InputBorder.none,
+      Expanded(
+        child: SingleChildScrollView(
+          physics: BouncingScrollPhysics(),
+          scrollDirection: Axis.vertical,
+          child: TextFieldPlatform(controller: controller, hint: hint),
+        ),
       ),
-    );
+    ];
   }
 }

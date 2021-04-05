@@ -124,7 +124,6 @@ class _SwipeCardState extends State<SwipeCard> {
                     content: this.showFront
                         ? widget.card.question
                         : widget.card.answer,
-                    maxLines: 8,
                   ),
             h: height,
             w: width,
