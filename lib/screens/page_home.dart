@@ -36,24 +36,29 @@ class _HomePageState extends State<HomePage> {
 
     if (offset < 0.0) offset = 0.0;
 
-    if (offset < 50.0 && _opacity > 0.0) {
-      _opacity = 0.0;
-      setState(() {});
+    double _pos;
+    bool _anim = false;
+    if (dir == ScrollDirection.reverse.index) {
+      if (offset > 0.0 && offset < 200.0) {
+        _anim = true;
+        _pos = 250.0;
+        _opacity = 1.0;
+      }
+    } else {
+      if (offset < 250.0 && offset > 50.0) {
+        _anim = true;
+        _pos = 0.0;
+        _opacity = 0.0;
+      }
     }
 
-    if (offset >= 50.0 && offset <= 100.0) {
-      _opacity = (offset / 100).clamp(0.0, 1.0);
-
-      if (_scrollCtrl.hasClients &&
-          _scrollCtrl.position.maxScrollExtent > 250.0) {
-        await _scrollCtrl.animateTo(
-          dir == ScrollDirection.reverse.index ? 250.0 : 0.0,
-          duration: Duration(milliseconds: 100),
-          curve: Curves.ease,
-        );
-      }
-
-      setState(() {});
+    double _max = MediaQuery.of(context).size.height / 3;
+    if (_anim &&
+        _scrollCtrl.hasClients &&
+        _scrollCtrl.position.maxScrollExtent > _max) {
+      await _scrollCtrl.animateTo(_pos,
+          duration: Duration(milliseconds: 75), curve: Curves.easeIn);
+      setState(() => _opacity);
     }
   }
 
