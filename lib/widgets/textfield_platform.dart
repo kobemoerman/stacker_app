@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 
 import '../constants.dart';
+import '../model/user_inherited.dart';
 
 class TextFieldPlatform extends StatefulWidget {
   final String hint;
@@ -95,6 +96,7 @@ class _TextFieldPlatformState extends State<TextFieldPlatform> {
       placeholder: widget.hint,
       placeholderStyle: Theme.of(context).textTheme.subtitle1,
       style: Theme.of(context).textTheme.bodyText1,
+      cursorColor: UserData.of(context).primaryColor,
       keyboardType: widget.maxLines == null
           ? TextInputType.multiline
           : TextInputType.text,
@@ -113,6 +115,7 @@ class _TextFieldPlatformState extends State<TextFieldPlatform> {
       maxLengthEnforced: widget.maxLength == null ? false : true,
       controller: widget.controller,
       style: Theme.of(context).textTheme.bodyText1,
+      cursorColor: UserData.of(context).primaryColor,
       keyboardType: widget.maxLines == null
           ? TextInputType.multiline
           : TextInputType.text,

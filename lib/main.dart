@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import 'screens/page_stats.dart';
 import 'theme.dart';
 import 'model/studystack.dart';
 import 'model/user_inherited.dart';
@@ -75,6 +76,7 @@ class RouteGenerator {
   static const ROUTE_HOME = "/home";
   static const ROUTE_STUDY = "/study";
   static const ROUTE_EDIT = "/edit";
+  static const ROUTE_STATS = "/stats";
   static const ROUTE_CREATE = "/create";
   static const ROUTE_SETTINGS = "/settings";
 
@@ -91,6 +93,10 @@ class RouteGenerator {
 
       case ROUTE_SETTINGS:
         final page = SettingsPage();
+        return MaterialPageRoute(builder: (context) => page);
+
+      case ROUTE_STATS:
+        final page = StatisticsPage();
         return MaterialPageRoute(builder: (context) => page);
 
       case ROUTE_CREATE:

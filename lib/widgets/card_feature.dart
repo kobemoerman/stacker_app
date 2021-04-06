@@ -58,32 +58,14 @@ class FeaturedCard extends StatelessWidget {
                       mainAxisSize: MainAxisSize.min,
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text(
-                          this.study.formatDBToString(),
-                          style: Theme.of(context).textTheme.headline2.copyWith(
-                              color: UserData.of(context).primaryColor),
-                          overflow: TextOverflow.ellipsis,
-                          maxLines: 2,
-                        ),
-                        Text(
-                          '$cards questions',
-                          style: Theme.of(context).textTheme.subtitle1,
-                        ),
+                        _cardHeader(context),
+                        _cardContent(context),
                       ],
                     ),
                   ),
                   Align(
                     alignment: Alignment.bottomCenter,
-                    child: LinearPercentIndicator(
-                      lineHeight: 5.0,
-                      animation: true,
-                      animateFromLastPercent: true,
-                      percent: this.percent,
-                      progressColor: UserData.of(context).primaryColor,
-                      backgroundColor:
-                          UserData.of(context).primaryColor.withAlpha(50),
-                      linearStrokeCap: LinearStrokeCap.roundAll,
-                    ),
+                    child: _progressIndicator(context),
                   ),
                 ],
               ),
@@ -91,6 +73,37 @@ class FeaturedCard extends StatelessWidget {
           ),
         );
       },
+    );
+  }
+
+  Widget _cardHeader(context) {
+    final _color = UserData.of(context).primaryColor;
+    final _theme = Theme.of(context).textTheme;
+
+    return Text(
+      this.study.formatDBToString(),
+      style: _theme.headline2.copyWith(color: _color),
+      overflow: TextOverflow.ellipsis,
+      maxLines: 2,
+    );
+  }
+
+  Widget _cardContent(context) {
+    final _theme = Theme.of(context).textTheme;
+    return Text('$cards questions', style: _theme.subtitle1);
+  }
+
+  Widget _progressIndicator(context) {
+    final _color = UserData.of(context).primaryColor;
+
+    return LinearPercentIndicator(
+      lineHeight: 5.0,
+      animation: true,
+      animateFromLastPercent: true,
+      percent: this.percent,
+      progressColor: _color,
+      backgroundColor: _color.withAlpha(50),
+      linearStrokeCap: LinearStrokeCap.roundAll,
     );
   }
 }

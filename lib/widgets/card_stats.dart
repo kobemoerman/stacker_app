@@ -1,33 +1,35 @@
-import 'package:animations/animations.dart';
 import 'package:flutter/material.dart';
-import 'package:stackr/screens/page_stats.dart';
 
+import '../decoration/card_shadow.dart';
 import 'graph_stats.dart';
 
 class StatisticsCard extends StatelessWidget {
+  final double radius;
+
+  const StatisticsCard({Key key, this.radius}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
-    return OpenContainer(
-      transitionDuration: Duration(milliseconds: 600),
-      closedColor: Theme.of(context).cardColor,
-      openColor: Theme.of(context).cardColor,
-      transitionType: ContainerTransitionType.fade,
-      closedElevation: 0.0,
-      closedShape:
-          RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.0)),
-      openBuilder: (context, closeContainer) => StatisticsPage(),
-      closedBuilder: (context, openContainer) {
-        return Material(
-          type: MaterialType.transparency,
-          child: InkWell(
-            onTap: openContainer,
+    return Container(
+      child: Material(
+        type: MaterialType.transparency,
+        child: InkWell(
+          borderRadius: BorderRadius.circular(this.radius),
+          onTap: () => Navigator.pushNamed(context, '/stats'),
+          child: Hero(
+            tag: 'stats_launch',
             child: Container(
               margin: const EdgeInsets.symmetric(vertical: 30.0),
               child: InfoGraphic(detailed: false),
             ),
           ),
-        );
-      },
+        ),
+      ),
+      decoration: CardDecoration(
+        radius: this.radius,
+        color: Theme.of(context).cardColor,
+        brightness: Theme.of(context).brightness,
+      ).shadow,
     );
   }
 }

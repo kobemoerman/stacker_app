@@ -18,6 +18,7 @@ class FeaturedView extends StatefulWidget {
 
 class _FeaturedViewState extends State<FeaturedView> {
   static const int PAGES = 2;
+  static const double RADIUS = 20.0;
 
   double _percent;
   String _cards;
@@ -85,7 +86,7 @@ class _FeaturedViewState extends State<FeaturedView> {
                   );
                   break;
                 case 1:
-                  child = StatisticsCard();
+                  child = StatisticsCard(radius: RADIUS);
                   break;
               }
 
@@ -134,7 +135,7 @@ class _FeaturedViewState extends State<FeaturedView> {
       curve: Curves.easeOutQuart,
       margin: EdgeInsets.fromLTRB(5.0, top / 2, 5.0, top / 2),
       decoration: CardDecoration(
-        radius: 20.0,
+        radius: RADIUS,
         color: Theme.of(context).cardColor,
         brightness: Theme.of(context).brightness,
       ).shadow,
