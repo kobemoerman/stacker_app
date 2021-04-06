@@ -3,6 +3,8 @@ import 'package:stackr/constants.dart';
 import 'package:stackr/model/flashcard.dart';
 import 'package:stackr/widgets/card_flip.dart';
 
+import '../locale/localization.dart';
+import '../model/user_inherited.dart';
 import 'card_study.dart';
 import 'progress_circular.dart';
 import '../utils/matrix_operation.dart';
@@ -10,6 +12,7 @@ import '../decoration/card_shadow.dart';
 
 enum Direction { NONE, LEFT, RIGHT, UP, DOWN }
 
+// ignore: must_be_immutable
 class SwipeCard extends StatefulWidget {
   double progress;
 
@@ -99,6 +102,7 @@ class _SwipeCardState extends State<SwipeCard> {
 
   @override
   Widget build(BuildContext context) {
+    final local = UserData.of(context).local;
     final width = MediaQuery.of(context).size.width;
     final height = MediaQuery.of(context).size.height / 2;
 
@@ -120,7 +124,9 @@ class _SwipeCardState extends State<SwipeCard> {
                     callback: widget.review,
                   )
                 : StudyCard(
-                    title: this.showFront ? 'Question:' : 'Answer:',
+                    title: this.showFront
+                        ? '${local.question}:'
+                        : '${local.answer}:',
                     content: this.showFront
                         ? widget.card.question
                         : widget.card.answer,

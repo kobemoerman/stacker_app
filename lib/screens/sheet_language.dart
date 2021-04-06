@@ -9,8 +9,10 @@ class LanguageSheet extends StatefulWidget {
 }
 
 class _LanguageSheetState extends State<LanguageSheet> {
-  _updateLanguage(UserDataState data, String tag, String subtag) {
-    if (data.language.tag != tag) data.updateLanguage(tag, subtag);
+  _updateLanguage(UserDataState data, tag, subtag) {
+    var currentTag = data.getFromDisk('lang_tag');
+
+    if (currentTag != tag) data.updateLanguage(tag, subtag);
 
     Navigator.pop(context);
   }

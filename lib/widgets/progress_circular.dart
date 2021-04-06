@@ -4,7 +4,8 @@ import 'package:stackr/decoration/round_shadow.dart';
 import 'package:stackr/model/user_inherited.dart';
 
 import '../constants.dart';
-import '../theme.dart';
+import '../locale/localization.dart';
+import 'button_icon.dart';
 
 class CircularProgress extends StatefulWidget {
   final Function callback;
@@ -21,30 +22,16 @@ class CircularProgress extends StatefulWidget {
 class _CircularProgressState extends State<CircularProgress> {
   @override
   Widget build(BuildContext context) {
+    final _local = UserData.of(context).local;
     return Stack(
       children: [
         Align(
           alignment: Alignment(0.9, 0.9),
-          child: Container(
-            decoration: RoundShadow(
-              focus: true,
-              color: UserData.of(context).primaryColor,
-              brightness: Theme.of(context).brightness,
-            ).shadow,
-            child: ClipOval(
-              child: Material(
-                type: MaterialType.transparency,
-                shape: CircleBorder(),
-                child: InkWell(
-                  onTap: () => widget.callback(),
-                  child: Icon(
-                    Icons.info_outline_rounded,
-                    size: 28,
-                    color: Colors.white,
-                  ),
-                ),
-              ),
-            ),
+          child: ButtonIcon(
+            margin: const EdgeInsets.all(2.5),
+            icon: Icons.info_outline_rounded,
+            size: 24,
+            onTap: () => widget.callback(),
           ),
         ),
         Align(
@@ -61,14 +48,14 @@ class _CircularProgressState extends State<CircularProgress> {
             header: Padding(
               padding: const EdgeInsets.all(15.0),
               child: Text(
-                'Stack Completed!',
+                _local.studyCompleteHeader,
                 style: Theme.of(context).textTheme.headline3,
               ),
             ),
             footer: Padding(
               padding: const EdgeInsets.all(15.0),
               child: Text(
-                'Tap information to review your wrong answers',
+                _local.studyCompleteSubtitle,
                 textAlign: TextAlign.center,
                 style: Theme.of(context).textTheme.bodyText2,
               ),

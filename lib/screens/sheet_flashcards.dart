@@ -5,10 +5,12 @@ import 'package:stackr/widgets/appbar_page.dart';
 
 import '../locale/localization.dart';
 import '../model/flashcard.dart';
+import '../model/user_inherited.dart';
 import '../widgets/slidable.dart';
 import '../widgets/searchbar.dart';
 import '../decoration/card_shadow.dart';
 
+// ignore: must_be_immutable
 class FlashCardSheet extends StatefulWidget {
   final Function callback;
   List<FlashCard> stack;
@@ -54,7 +56,7 @@ class _FlashCardSheetState extends State<FlashCardSheet> {
 
   @override
   Widget build(BuildContext context) {
-    final _local = AppLocalization.of(context);
+    final _local = UserData.of(context).local;
     var size = widget.stack.length;
 
     String title = '$size ${size == 1 ? _local.question : _local.questions}';
@@ -166,7 +168,7 @@ class _FlashCardSheetState extends State<FlashCardSheet> {
   }
 
   void _undoSnackBar(BuildContext context, FlashCard item, int index) {
-    final _local = AppLocalization.of(context);
+    final _local = UserData.of(context).local;
     var snackbar = SnackBar(
       content: Text('${_local.deleted} ${_local.question} ${index + 1}'),
       action: SnackBarAction(

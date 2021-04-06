@@ -273,7 +273,7 @@ class _HomePageState extends State<HomePage> {
   }
 
   Widget _title() {
-    final _local = AppLocalization.of(context);
+    final _local = UserData.of(context).local;
     final _theme = Theme.of(context);
     return Container(
       width: double.infinity,
@@ -282,7 +282,7 @@ class _HomePageState extends State<HomePage> {
   }
 
   Widget _search() {
-    final _local = AppLocalization.of(context);
+    final _local = UserData.of(context).local;
 
     return TextFieldPlatform(
       controller: _textCtrl,

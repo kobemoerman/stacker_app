@@ -4,11 +4,11 @@ import 'package:provider/provider.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import 'locale/localization.dart';
 import 'screens/page_stats.dart';
 import 'theme.dart';
 import 'model/studystack.dart';
 import 'model/user_inherited.dart';
-import 'locale/localization.dart';
 import 'screens/page_home.dart';
 import 'screens/page_study.dart';
 import 'screens/page_stack.dart';
@@ -20,15 +20,21 @@ void main() async {
 
   try {
     await Firebase.initializeApp();
+
     final pref = await SharedPreferences.getInstance();
 
     final intro = pref.getBool('intro') ?? true;
     if (intro) pref.setBool('intro', false);
 
+    final tag = pref.getString('lang_tag') ?? 'en';
+    final subtag = pref.getString('lang_subtag') ?? 'UK';
+    final local = await AppLocalization.load(Locale(tag, subtag));
+
     runApp(
       ChangeNotifierProvider<ThemeState>(
         create: (context) => ThemeState(),
         child: UserData(
+          local: local,
           preferences: pref,
           child: BuildApp(intro),
         ),
@@ -44,10 +50,9 @@ class BuildApp extends StatelessWidget {
 
   BuildApp(this.intro);
 
-  final _override = AppLocalizationDelegate(Locale('en', 'UK'));
-
   @override
   Widget build(BuildContext context) {
+    print('BUILDING APP');
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       theme: Provider.of<ThemeState>(context).theme == ThemeType.DARK
@@ -56,7 +61,6 @@ class BuildApp extends StatelessWidget {
       localizationsDelegates: [
         GlobalMaterialLocalizations.delegate,
         GlobalWidgetsLocalizations.delegate,
-        _override,
       ],
       supportedLocales: [const Locale('en', 'UK'), const Locale('nl', 'NL')],
       onGenerateRoute: (settings) =>

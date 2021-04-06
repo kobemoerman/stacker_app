@@ -56,8 +56,15 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Start studying"),
         "featured_empty_info":
             MessageLookupByLibrary.simpleMessage("No study to continue."),
+        "study_complete_header":
+            MessageLookupByLibrary.simpleMessage("Stack Completed!"),
+        "study_complete_subtitle": MessageLookupByLibrary.simpleMessage(
+            "Tap the information icon to review your wrong answers"),
+        "study_complete_review": MessageLookupByLibrary.simpleMessage("Review"),
+        "study_complete_repeat": MessageLookupByLibrary.simpleMessage("Repeat"),
         "missing": MessageLookupByLibrary.simpleMessage("Missing"),
         "undo": MessageLookupByLibrary.simpleMessage("Undo"),
+        "wrong": MessageLookupByLibrary.simpleMessage("Wrong"),
         "delete": MessageLookupByLibrary.simpleMessage("Delete"),
         "deleted": MessageLookupByLibrary.simpleMessage("Deleted"),
         "cancel": MessageLookupByLibrary.simpleMessage("Cancel"),

@@ -75,7 +75,7 @@ class _StackPageState extends State<StackPage> {
 
   @override
   Widget build(BuildContext context) {
-    final _local = AppLocalization.of(context);
+    final _local = UserData.of(context).local;
 
     return Column(
       mainAxisSize: MainAxisSize.min,
@@ -159,7 +159,7 @@ class _StackPageState extends State<StackPage> {
   }
 
   void createDBTable() async {
-    final _local = AppLocalization.of(context);
+    final _local = UserData.of(context).local;
 
     if (_name.text.isEmpty || _theme.text.isEmpty) {
       _showInformationBar(_local.infoMissingNameTheme);
@@ -193,7 +193,7 @@ class _StackPageState extends State<StackPage> {
   }
 
   void addQuestion() {
-    final _local = AppLocalization.of(context);
+    final _local = UserData.of(context).local;
     String message = '${_local.missing} ';
 
     if (question.isNotEmpty && answer.isNotEmpty) {
@@ -224,7 +224,7 @@ class _StackPageState extends State<StackPage> {
   }
 
   Widget cardInformation(double height, double width) {
-    final _local = AppLocalization.of(context);
+    final _local = UserData.of(context).local;
     var child = Container(
       key: ValueKey(this.showFront),
       height: height,
@@ -355,7 +355,7 @@ class _EditStackState extends State<EditStack> {
 
   updateStack(String name, String theme) async {
     final data = UserData.of(context);
-    final _local = AppLocalization.of(context);
+    final _local = UserData.of(context).local;
 
     if (this.table != name) {
       if (await data.dbClient.tableExist(table: name)) {
@@ -401,7 +401,7 @@ class _EditStackState extends State<EditStack> {
 
   @override
   Widget build(BuildContext context) {
-    final _local = AppLocalization.of(context);
+    final _local = UserData.of(context).local;
 
     return Scaffold(
       key: _scaffoldKey,
@@ -442,7 +442,7 @@ class _EditStackState extends State<EditStack> {
   }
 
   Widget appBarAction() {
-    final _local = AppLocalization.of(context);
+    final _local = UserData.of(context).local;
 
     return IconButton(
       icon: Icon(Icons.delete, color: cRed, size: 24),
@@ -472,7 +472,7 @@ class _CreateStackState extends State<CreateStack> {
 
   createStack(String name, String theme) async {
     final data = UserData.of(context);
-    final _local = AppLocalization.of(context);
+    final _local = UserData.of(context).local;
 
     if (await data.dbClient.tableExist(table: name)) {
       _showInformationBar(_local.infoStackExists);
@@ -493,7 +493,7 @@ class _CreateStackState extends State<CreateStack> {
 
   @override
   Widget build(BuildContext context) {
-    final _local = AppLocalization.of(context);
+    final _local = UserData.of(context).local;
 
     return Scaffold(
       key: _scaffoldKey,

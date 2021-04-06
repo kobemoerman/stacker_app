@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:stackr/widgets/button_icon.dart';
 import '../locale/localization.dart';
+import '../model/user_inherited.dart';
 import '../utils/string_operation.dart';
 
 class StudyCard extends StatefulWidget {
@@ -24,7 +25,7 @@ class StudyCard extends StatefulWidget {
 class _StudyCardState extends State<StudyCard> {
   @override
   Widget build(BuildContext context) {
-    final _local = AppLocalization.of(context);
+    final _local = UserData.of(context).local;
 
     String body = widget.content;
     if (body.isEmpty) body = _local.infoCardInit;

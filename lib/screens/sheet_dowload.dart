@@ -174,7 +174,7 @@ class _DownloadSheetState extends State<DownloadSheet> {
   }
 
   Container pageHeader() {
-    final local = AppLocalization.of(context);
+    final local = UserData.of(context).local;
     final theme = Theme.of(context).textTheme;
 
     final leading = ButtonIcon(

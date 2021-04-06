@@ -43,12 +43,12 @@ class _ProfileSheetState extends State<ProfileSheet> {
       children: [
         Padding(
           padding: const EdgeInsets.only(top: 5.0),
-          child: sectionHeader(AppLocalization.of(context).editPicHeader),
+          child: sectionHeader(UserData.of(context).local.editPicHeader),
         ),
         itemPicture(data),
-        sectionHeader(AppLocalization.of(context).editNameHeader),
+        sectionHeader(UserData.of(context).local.editNameHeader),
         itemName(data),
-        sectionHeader(AppLocalization.of(context).editThemeHeader),
+        sectionHeader(UserData.of(context).local.editThemeHeader),
         Container(height: 80.0, child: itemList(brightness)),
       ],
     );
@@ -106,7 +106,7 @@ class _ProfileSheetState extends State<ProfileSheet> {
   }
 
   Widget itemPicture(UserDataState data) {
-    AppLocalization loc = AppLocalization.of(context);
+    AppLocalization loc = UserData.of(context).local;
 
     final camera = Icon(Icons.camera_alt);
     final gallery = Icon(Icons.image);
@@ -120,7 +120,7 @@ class _ProfileSheetState extends State<ProfileSheet> {
   }
 
   Widget itemName(UserDataState data) {
-    final _local = AppLocalization.of(context);
+    final _local = UserData.of(context).local;
     final style = Theme.of(context).textTheme.bodyText2;
 
     return Material(
@@ -235,7 +235,7 @@ class EditNamePopup extends StatelessWidget {
   }
 
   Widget _header(context, textTheme) {
-    final _local = AppLocalization.of(context);
+    final _local = UserData.of(context).local;
     return Text(_local.editUsername, style: textTheme.headline2);
   }
 

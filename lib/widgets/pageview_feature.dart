@@ -126,8 +126,8 @@ class _FeaturedViewState extends State<FeaturedView> {
   }
 
   Widget featureWidget(bool active, Widget child) {
-    final double blur = active ? 5.0 : 1.0;
-    final double offset = active ? 2.5 : 1.0;
+    // final double blur = active ? 5.0 : 1.0;
+    // final double offset = active ? 2.5 : 1.0;
     final double top = active ? 20.0 : 50.0;
 
     return AnimatedContainer(

@@ -10,36 +10,36 @@ import 'package:stackr/model/user.dart';
 
 import '../locale/localization.dart';
 import 'db_helper.dart';
-import 'language.dart';
 
 import '../utils/list_operation.dart';
 import '../utils/string_operation.dart';
 
 class UserData extends StatefulWidget {
   final Widget child;
+  final AppLocalization local;
   final SharedPreferences preferences;
 
-  const UserData({@required this.child, @required this.preferences});
+  const UserData(
+      {@required this.child, @required this.local, @required this.preferences});
 
   static UserDataState of(BuildContext context) =>
       (context.dependOnInheritedWidgetOfExactType<_InheritedUserData>()).data;
 
   @override
-  UserDataState createState() => UserDataState(this.preferences);
+  UserDataState createState() => UserDataState(this.preferences, this.local);
 }
 
 class UserDataState extends State<UserData> {
+  AppLocalization local;
   final SharedPreferences preferences;
 
-  UserDataState(this.preferences);
+  UserDataState(this.preferences, this.local);
 
   DBHelper dbClient;
 
   User user = new User('', null);
   Color primaryColor = themeDarkColor[0];
   ImageProvider profile;
-
-  Language language;
 
   double percent = 0.0;
   String cards = '0';
@@ -69,15 +69,6 @@ class UserDataState extends State<UserData> {
     if (content is List<String>) {
       await preferences.setStringList(key, content);
     }
-  }
-
-  void updateLanguage(String tag, String subtag) {
-    language = Language(tag, subtag);
-    saveToDisk('lang_tag', tag);
-    saveToDisk('lang_subtag', subtag);
-    AppLocalization.load(Locale(tag, subtag));
-
-    this.refresh();
   }
 
   void updateThemeColor() async {
@@ -136,7 +127,6 @@ class UserDataState extends State<UserData> {
   }
 
   updateFeatured() async {
-    final _local = AppLocalization.of(context);
     percent = getFromDisk('featured_progress') ?? 0.0;
 
     List<StudyStack> _tables = [];
@@ -151,7 +141,7 @@ class UserDataState extends State<UserData> {
         study = featuredStudy(_tables);
         cards = featuredCards(_tables);
       } else {
-        study = _local.featuredEmptyHeader;
+        study = local.featuredEmptyHeader;
 
         cards = '0';
       }
@@ -159,28 +149,31 @@ class UserDataState extends State<UserData> {
     });
   }
 
+  updateLanguage(String tag, String subtag) async {
+    saveToDisk('lang_tag', tag);
+    saveToDisk('lang_subtag', subtag);
+
+    local = await AppLocalization.load(Locale(tag, subtag));
+
+    this.refresh();
+  }
+
   initUser() {
     var _name = getFromDisk('profile_name') ?? 'Student';
     var _photo = getFromDisk('profile_photo');
-
-    var _tag = getFromDisk('lang_tag') ?? 'en';
-    var _subtag = getFromDisk('lang_subtag') ?? 'UK';
 
     var _color = getFromDisk('theme_color') ?? 0;
 
     setState(() {
       user = User(_name, _photo);
-      language = Language(_tag, _subtag);
       profile = imageFromBase64String(user.photoUrl);
       primaryColor = getThemeColor(_color, Theme.of(context).brightness);
-      AppLocalization.load(Locale(_tag, _subtag));
     });
   }
 
   @override
   void initState() {
     super.initState();
-
     initUser();
     generateTableList();
     updateFeatured();

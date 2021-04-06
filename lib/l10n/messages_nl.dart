@@ -57,8 +57,17 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Zoek een stapel..."),
         "featured_empty_header":
             MessageLookupByLibrary.simpleMessage("Start met studeren"),
+        "study_complete_header":
+            MessageLookupByLibrary.simpleMessage("Stapel Voltooid!"),
+        "study_complete_subtitle": MessageLookupByLibrary.simpleMessage(
+            "Tik op het informatie icoon om uw foute antwoorden te bekijken"),
+        "study_complete_review":
+            MessageLookupByLibrary.simpleMessage("Herziening"),
+        "study_complete_repeat":
+            MessageLookupByLibrary.simpleMessage("Herhaal"),
         "missing": MessageLookupByLibrary.simpleMessage("Ontbreekt"),
         "undo": MessageLookupByLibrary.simpleMessage("Ontdoen"),
+        "wrong": MessageLookupByLibrary.simpleMessage("Verkeerde"),
         "delete": MessageLookupByLibrary.simpleMessage("Verwijderen"),
         "deleted": MessageLookupByLibrary.simpleMessage("Verwijderd"),
         "cancel": MessageLookupByLibrary.simpleMessage("Annuleer"),

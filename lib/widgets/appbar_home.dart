@@ -3,7 +3,6 @@ import 'package:stackr/decoration/round_shadow.dart';
 
 import '../constants.dart';
 import '../locale/localization.dart';
-import '../locale/localization.dart';
 import '../model/user_inherited.dart';
 
 class HomeAppBar extends StatefulWidget {
@@ -69,7 +68,6 @@ class _HomeAppBarState extends State<HomeAppBar> {
   Row userInfo() {
     TextTheme theme = Theme.of(context).textTheme;
     final user = UserData.of(context);
-    AppLocalization local = AppLocalization.of(context);
 
     Text _greet = Text('${getGreeting()},',
         style: theme.subtitle1.copyWith(fontSize: 10.0));
@@ -101,7 +99,7 @@ class _HomeAppBarState extends State<HomeAppBar> {
 
   String getGreeting() {
     var now = DateTime.now();
-    final _local = AppLocalization.of(context);
+    final _local = UserData.of(context).local;
 
     // CHRISTMAS
     if (now.difference(DateTime(now.year, 12, 25)).inDays == 0)

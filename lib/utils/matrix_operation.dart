@@ -31,7 +31,6 @@ extension MatrixOperation on Matrix4 {
       ..translate(origin.dx, origin.dy)
       ..multiply(Matrix4.identity()..scale(x, y))
       ..translate(-origin.dx, -origin.dy);
-    ;
   }
 }
 

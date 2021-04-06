@@ -11,6 +11,7 @@ class AppLocalization {
     final String name =
         locale.countryCode.isEmpty ? locale.languageCode : locale.toString();
     final String localeName = Intl.canonicalizedLocale(name);
+
     return initializeMessages(localeName).then((_) {
       Intl.defaultLocale = localeName;
       return AppLocalization();
@@ -222,6 +223,38 @@ class AppLocalization {
     );
   }
 
+  String get studyCompleteHeader {
+    return Intl.message(
+      "Stack Completed!",
+      name: 'study_complete_header',
+      desc: 'header of final study progress',
+    );
+  }
+
+  String get studyCompleteSubtitle {
+    return Intl.message(
+      "Tap the information icon to review your wrong answers",
+      name: 'study_complete_subtitle',
+      desc: 'subtitle of final study progress',
+    );
+  }
+
+  String get studyCompleteReview {
+    return Intl.message(
+      "Review",
+      name: 'study_complete_review',
+      desc: 'review wrong answers button',
+    );
+  }
+
+  String get studyCompleteRepeat {
+    return Intl.message(
+      "Repeat",
+      name: 'study_complete_repeat',
+      desc: 'restart stack button',
+    );
+  }
+
   String get missing {
     return Intl.message(
       "Missing",
@@ -235,6 +268,14 @@ class AppLocalization {
       "Undo",
       name: 'undo',
       desc: 'undo text',
+    );
+  }
+
+  String get wrong {
+    return Intl.message(
+      "Wrong",
+      name: 'wrong',
+      desc: 'wrong text',
     );
   }
 

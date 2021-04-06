@@ -3,6 +3,7 @@ import 'package:stackr/constants.dart';
 import 'package:stackr/decoration/card_shadow.dart';
 
 import '../locale/localization.dart';
+import '../model/user_inherited.dart';
 
 enum Side { LEFT, RIGHT }
 
@@ -94,7 +95,7 @@ class _SearchExpandState extends State<SearchExpand> {
   }
 
   Widget _searchField() {
-    final _local = AppLocalization.of(context);
+    final _local = UserData.of(context).local;
     Widget child;
 
     if (!isFolded) {

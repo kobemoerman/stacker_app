@@ -32,7 +32,7 @@ class FeaturedCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final _local = AppLocalization.of(context);
+    final _local = UserData.of(context).local;
     return OpenContainer(
       transitionDuration: Duration(milliseconds: 600),
       closedColor: Theme.of(context).cardColor,
@@ -91,7 +91,7 @@ class FeaturedCard extends StatelessWidget {
   }
 
   Widget _cardContent(context) {
-    final _local = AppLocalization.of(context);
+    final _local = UserData.of(context).local;
     final _theme = Theme.of(context).textTheme;
 
     var text = cards.length == 1 ? _local.question : _local.questions;

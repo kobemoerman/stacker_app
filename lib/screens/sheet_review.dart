@@ -3,6 +3,8 @@ import 'package:stackr/decoration/card_shadow.dart';
 import 'package:stackr/model/flashcard.dart';
 import 'package:stackr/widgets/appbar_page.dart';
 import 'package:stackr/widgets/tile_simple.dart';
+import '../locale/localization.dart';
+import '../model/user_inherited.dart';
 import '../utils/string_operation.dart';
 
 class CardModel {
@@ -39,13 +41,18 @@ class _ReviewSheetState extends State<ReviewSheet> {
     items = widget.cards
         .map<CardModel>((c) => CardModel(c.question, c.answer))
         .toList();
-
-    title =
-        '${widget.cards.length} Question${widget.cards.length == 1 ? '' : 's'} wrong';
   }
 
   @override
   Widget build(BuildContext context) {
+    final _local = UserData.of(context).local;
+
+    if (title == null) {
+      var size = widget.cards.length;
+      title =
+          '$size ${_local.wrong} ${(size == 1 ? _local.question : _local.questions).toLowerCase()}';
+    }
+
     return Scaffold(
       extendBodyBehindAppBar: true,
       appBar: PageAppBar(
@@ -85,8 +92,6 @@ class _ReviewSheetState extends State<ReviewSheet> {
       );
 
   Widget generateItem(BuildContext context, int index) {
-    double width = MediaQuery.of(context).size.width;
-
     CardModel card = items.elementAt(index);
 
     final title = TextSpan(

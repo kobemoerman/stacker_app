@@ -16,8 +16,6 @@ class DynamicGridView extends StatefulWidget {
 }
 
 class _DynamicGridViewState extends State<DynamicGridView> {
-  static const RAD = 20.0;
-
   @override
   Widget build(BuildContext context) {
     return SliverStaggeredGrid.countBuilder(

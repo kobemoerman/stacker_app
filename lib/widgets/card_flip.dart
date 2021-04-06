@@ -2,6 +2,7 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 
+// ignore: must_be_immutable
 class FlipCard extends StatefulWidget {
   bool showFront;
   final Widget child;

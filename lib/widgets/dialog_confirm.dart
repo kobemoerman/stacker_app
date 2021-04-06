@@ -63,7 +63,7 @@ class ConfirmDialog extends StatelessWidget {
   }
 
   confirmColor(BuildContext context) {
-    final _local = AppLocalization.of(context);
+    final _local = UserData.of(context).local;
 
     return confirm.contains(_local.delete)
         ? cRed

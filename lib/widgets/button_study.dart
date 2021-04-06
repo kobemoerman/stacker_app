@@ -3,9 +3,11 @@ import 'package:stackr/decoration/card_shadow.dart';
 import 'package:stackr/model/user_inherited.dart';
 
 import '../constants.dart';
+import '../locale/localization.dart';
 
 enum Side { L, R }
 
+// ignore: must_be_immutable
 class StudyButton extends StatefulWidget {
   final bool isComplete;
   int value;
@@ -72,7 +74,11 @@ class _StudyButtonState extends State<StudyButton> {
   }
 
   Container completeState() {
-    String text = widget.side == Side.R ? 'Repeat' : 'Review';
+    final _local = UserData.of(context).local;
+
+    String text = widget.side == Side.R
+        ? _local.studyCompleteRepeat
+        : _local.studyCompleteReview;
 
     return Container(
       height: 64.0,

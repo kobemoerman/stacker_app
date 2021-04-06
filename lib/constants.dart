@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 
-import 'locale/localization.dart';
-
 Color cRed = Color(0xFFD6737B);
 Color cYellow = Color(0xFFE2C421);
 Color cGreen = Color(0xFF80A78A);

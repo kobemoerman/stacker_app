@@ -1,7 +1,6 @@
 import 'package:intl/intl.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
-import 'package:stackr/constants.dart';
 import 'package:stackr/model/user_inherited.dart';
 
 class InfoGraphic extends StatefulWidget {

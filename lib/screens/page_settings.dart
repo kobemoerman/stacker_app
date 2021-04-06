@@ -61,7 +61,7 @@ class _SettingsPageState extends State<SettingsPage> {
   }
 
   _termsOfUse(BuildContext context) {
-    final _local = AppLocalization.of(context);
+    final _local = UserData.of(context).local;
     var header = _local.settingsTerms;
     var file = 'toc.txt';
 
@@ -69,7 +69,7 @@ class _SettingsPageState extends State<SettingsPage> {
   }
 
   _privacyPolicy(BuildContext context) {
-    final _local = AppLocalization.of(context);
+    final _local = UserData.of(context).local;
     var header = _local.settingsPrivacy;
     var file = 'privacy.txt';
 
@@ -152,34 +152,33 @@ class _SettingsPageState extends State<SettingsPage> {
 
   @override
   Widget build(BuildContext context) {
+    final _local = UserData.of(context).local;
     final _width = MediaQuery.of(context).size.width;
 
     List<Widget> _pref = [
-      _sectionHeader(AppLocalization.of(context).preferencesHeader),
-      _itemTile(AppLocalization.of(context).settingsLanguage, language,
-          _changeLanguage),
-      _itemSwitch(AppLocalization.of(context).settingsDark, dark,
+      _sectionHeader(_local.preferencesHeader),
+      _itemTile(_local.settingsLanguage, language, _changeLanguage),
+      _itemSwitch(_local.settingsDark, dark,
           Provider.of<ThemeState>(context).theme == ThemeType.DARK, darkMode)
     ];
 
     List<Widget> _dwnld = [
-      _sectionHeader(AppLocalization.of(context).downloadHeader),
-      _itemTile(AppLocalization.of(context).settingsDownload,
-          Icon(Icons.file_download), _downloadStack),
+      _sectionHeader(_local.downloadHeader),
+      _itemTile(
+          _local.settingsDownload, Icon(Icons.file_download), _downloadStack),
     ];
 
     List<Widget> _notif = [
-      _sectionHeader(AppLocalization.of(context).notificationHeader),
-      _itemSwitch(AppLocalization.of(context).settingsNotification,
-          notification, _temp, enableNotification)
+      _sectionHeader(_local.notificationHeader),
+      _itemSwitch(
+          _local.settingsNotification, notification, _temp, enableNotification)
     ];
 
     List<Widget> _supp = [
-      _sectionHeader(AppLocalization.of(context).supportHeader),
-      _itemTile(AppLocalization.of(context).settingsTerms, terms, _termsOfUse),
-      _itemTile(
-          AppLocalization.of(context).settingsPrivacy, privacy, _privacyPolicy),
-      _itemTile(AppLocalization.of(context).settingsHelp, help, _contactUs),
+      _sectionHeader(_local.supportHeader),
+      _itemTile(_local.settingsTerms, terms, _termsOfUse),
+      _itemTile(_local.settingsPrivacy, privacy, _privacyPolicy),
+      _itemTile(_local.settingsHelp, help, _contactUs),
     ];
 
     return Scaffold(
@@ -187,7 +186,7 @@ class _SettingsPageState extends State<SettingsPage> {
         color: Theme.of(context).cardColor,
         height: 72.0,
         elevation: 7.5,
-        title: AppLocalization.of(context).settingsHeader,
+        title: _local.settingsHeader,
         textColor: Theme.of(context).textSelectionColor,
       ),
       backgroundColor: Theme.of(context).backgroundColor,
