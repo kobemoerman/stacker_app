@@ -10,6 +10,7 @@ import 'package:stackr/screens/sheet_dowload.dart';
 import 'package:stackr/screens/sheet_information.dart';
 import 'package:stackr/screens/sheet_profile.dart';
 import 'package:stackr/widgets/appbar_page.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import '../theme.dart';
 import '../constants.dart';
@@ -31,7 +32,7 @@ class _SettingsPageState extends State<SettingsPage> {
 
   ProfileSheet profileSheet;
 
-  editProfile() async {
+  _editProfile() async {
     isEditing = !isEditing;
 
     var pos = _scrollCtrl.offset < SHEET_SIZE ? SHEET_SIZE : 0.0;
@@ -39,21 +40,50 @@ class _SettingsPageState extends State<SettingsPage> {
     await _scrollCtrl.animateTo(pos,
         duration: Duration(milliseconds: 250), curve: Curves.ease);
 
-    profileSheet = new ProfileSheet(key: UniqueKey(), callback: editProfile);
+    profileSheet = new ProfileSheet(key: UniqueKey(), callback: _editProfile);
 
     setState(() {});
   }
 
-  displayInformation(BuildContext context) {
+  _contactUs(BuildContext context) async {
+    final Uri params = Uri(
+      scheme: 'mailto',
+      path: 'studystackr@gmail.com',
+      query: 'subject=Stackr Feedback&body=App Version 3.23',
+    );
+
+    var url = params.toString();
+    if (await canLaunch(url)) {
+      await launch(url);
+    } else {
+      throw 'Could not launch $url';
+    }
+  }
+
+  _termsOfUse(BuildContext context) {
+    var header = 'Terms of Use';
+    var file = 'toc.txt';
+
+    _displayInformation(context, header, file);
+  }
+
+  _privacyPolicy(BuildContext context) {
+    var header = 'Privacy Policy';
+    var file = 'privacy.txt';
+
+    _displayInformation(context, header, file);
+  }
+
+  _displayInformation(context, header, file) {
     showBarModalBottomSheet(
       context: context,
       isDismissible: true,
       backgroundColor: Colors.transparent,
-      builder: (context) => InformationSheet(header: 'Information'),
+      builder: (context) => InformationSheet(header: header, file: file),
     );
   }
 
-  downloadStack(BuildContext context) async {
+  _downloadStack(BuildContext context) async {
     var list = await UserData.of(context).tables;
     showBarModalBottomSheet(
       context: context,
@@ -63,7 +93,7 @@ class _SettingsPageState extends State<SettingsPage> {
     );
   }
 
-  changeLanguage(BuildContext context) {
+  _changeLanguage(BuildContext context) {
     showBarModalBottomSheet(
       context: context,
       isDismissible: true,
@@ -115,7 +145,7 @@ class _SettingsPageState extends State<SettingsPage> {
     _scrollCtrl = ScrollController(initialScrollOffset: SHEET_SIZE);
     _scrollCtrl.addListener(() => _scrollListener());
 
-    profileSheet = new ProfileSheet(key: UniqueKey(), callback: editProfile);
+    profileSheet = new ProfileSheet(key: UniqueKey(), callback: _editProfile);
   }
 
   @override
@@ -125,14 +155,14 @@ class _SettingsPageState extends State<SettingsPage> {
     List<Widget> _pref = [
       _sectionHeader(AppLocalization.of(context).preferencesHeader),
       _itemTile(AppLocalization.of(context).settingsLanguage, language,
-          changeLanguage),
+          _changeLanguage),
       _itemSwitch(AppLocalization.of(context).settingsDark, dark,
           Provider.of<ThemeState>(context).theme == ThemeType.DARK, darkMode)
     ];
 
     List<Widget> _dwnld = [
       _sectionHeader('Download'),
-      _itemTile('Find a Stack', Icon(Icons.file_download), downloadStack),
+      _itemTile('Find a Stack', Icon(Icons.file_download), _downloadStack),
     ];
 
     List<Widget> _notif = [
@@ -143,12 +173,10 @@ class _SettingsPageState extends State<SettingsPage> {
 
     List<Widget> _supp = [
       _sectionHeader(AppLocalization.of(context).supportHeader),
+      _itemTile(AppLocalization.of(context).settingsTerms, terms, _termsOfUse),
       _itemTile(
-          AppLocalization.of(context).settingsTerms, terms, displayInformation),
-      _itemTile(AppLocalization.of(context).settingsPrivacy, privacy,
-          displayInformation),
-      _itemTile(
-          AppLocalization.of(context).settingsHelp, help, displayInformation),
+          AppLocalization.of(context).settingsPrivacy, privacy, _privacyPolicy),
+      _itemTile(AppLocalization.of(context).settingsHelp, help, _contactUs),
     ];
 
     return Scaffold(
@@ -232,7 +260,7 @@ class _SettingsPageState extends State<SettingsPage> {
           type: MaterialType.transparency,
           child: InkWell(
             borderRadius: BorderRadius.circular(20.0),
-            onTap: () => editProfile(),
+            onTap: () => _editProfile(),
             child: Stack(
               children: [
                 Align(
