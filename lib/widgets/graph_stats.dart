@@ -21,7 +21,7 @@ class _InfoGraphicState extends State<InfoGraphic> {
   Widget build(BuildContext context) {
     return Container(
       width: double.infinity,
-      height: widget.height,
+      height: double.infinity,
       color: Colors.transparent,
       child: LineChart(chart),
     );
@@ -94,7 +94,7 @@ class _InfoGraphicState extends State<InfoGraphic> {
   String retrieveTitles(int index) {
     var now = DateTime.now().subtract(Duration(days: 6 - index));
 
-    return getDayOfWeek(context, DateFormat('EEEE').format(now));
+    return DateFormat('EEEE').format(now)[0].toUpperCase();
   }
 
   List<double> retrieveStats() {

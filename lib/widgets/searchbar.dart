@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:stackr/constants.dart';
 import 'package:stackr/decoration/card_shadow.dart';
 
+import '../locale/localization.dart';
+
 enum Side { LEFT, RIGHT }
 
 class SearchExpand extends StatefulWidget {
@@ -92,6 +94,7 @@ class _SearchExpandState extends State<SearchExpand> {
   }
 
   Widget _searchField() {
+    final _local = AppLocalization.of(context);
     Widget child;
 
     if (!isFolded) {
@@ -99,7 +102,7 @@ class _SearchExpandState extends State<SearchExpand> {
         style: TextStyle(color: Colors.white),
         controller: _textCtrl,
         decoration: InputDecoration(
-          hintText: 'Search',
+          hintText: _local.search,
           hintStyle: TextStyle(color: Colors.white54),
           border: InputBorder.none,
         ),

@@ -54,15 +54,3 @@ Color getThemeColor(int index, Brightness brightness) =>
     brightness == Brightness.light
         ? themeLightColor[index]
         : themeDarkColor[index];
-
-String getDayOfWeek(BuildContext context, String day) {
-  if (day == 'Monday') return AppLocalization.of(context).mond;
-  if (day == 'Tuesday') return AppLocalization.of(context).tues;
-  if (day == 'Wednesday') return AppLocalization.of(context).wed;
-  if (day == 'Thursday') return AppLocalization.of(context).thur;
-  if (day == 'Friday') return AppLocalization.of(context).fri;
-  if (day == 'Saturday') return AppLocalization.of(context).sat;
-  if (day == 'Sunday') return AppLocalization.of(context).sun;
-
-  return '';
-}

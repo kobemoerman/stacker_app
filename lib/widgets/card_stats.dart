@@ -10,26 +10,26 @@ class StatisticsCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      child: Material(
-        type: MaterialType.transparency,
-        child: InkWell(
-          borderRadius: BorderRadius.circular(this.radius),
-          onTap: () => Navigator.pushNamed(context, '/stats'),
-          child: Hero(
-            tag: 'stats_launch',
+    return Hero(
+      tag: 'stats_launch',
+      child: Container(
+        child: Material(
+          type: MaterialType.transparency,
+          child: InkWell(
+            borderRadius: BorderRadius.circular(this.radius),
+            onTap: () => Navigator.pushNamed(context, '/stats'),
             child: Container(
-              margin: const EdgeInsets.symmetric(vertical: 30.0),
+              margin: const EdgeInsets.symmetric(vertical: 20.0),
               child: InfoGraphic(detailed: false),
             ),
           ),
         ),
+        decoration: CardDecoration(
+          radius: this.radius,
+          color: Theme.of(context).cardColor,
+          brightness: Theme.of(context).brightness,
+        ).shadow,
       ),
-      decoration: CardDecoration(
-        radius: this.radius,
-        color: Theme.of(context).cardColor,
-        brightness: Theme.of(context).brightness,
-      ).shadow,
     );
   }
 }

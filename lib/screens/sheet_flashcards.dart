@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:stackr/widgets/appbar_page.dart';
 
+import '../locale/localization.dart';
 import '../model/flashcard.dart';
 import '../widgets/slidable.dart';
 import '../widgets/searchbar.dart';
@@ -53,8 +54,10 @@ class _FlashCardSheetState extends State<FlashCardSheet> {
 
   @override
   Widget build(BuildContext context) {
-    String title =
-        '${widget.stack.length} Question${widget.stack.length == 1 ? '' : 's'}';
+    final _local = AppLocalization.of(context);
+    var size = widget.stack.length;
+
+    String title = '$size ${size == 1 ? _local.question : _local.questions}';
 
     return Scaffold(
       key: _scaffoldKey,
@@ -163,10 +166,11 @@ class _FlashCardSheetState extends State<FlashCardSheet> {
   }
 
   void _undoSnackBar(BuildContext context, FlashCard item, int index) {
+    final _local = AppLocalization.of(context);
     var snackbar = SnackBar(
-      content: Text('Deleted Question ${index + 1}'),
+      content: Text('${_local.deleted} ${_local.question} ${index + 1}'),
       action: SnackBarAction(
-        label: 'Undo',
+        label: _local.undo,
         onPressed: () {
           widget.stack.insert(index, item);
           filterListener(filter);

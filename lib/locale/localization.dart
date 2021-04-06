@@ -22,132 +22,19 @@ class AppLocalization {
   }
 
   // list of locales
-
-  String get userHeader {
+  String get editStackHeader {
     return Intl.message(
-      "Good Morning,",
-      name: 'user_header',
-      desc: 'home page header',
+      "Edit Stack",
+      name: 'edit_stack_header',
+      desc: 'Edit Stack Title',
     );
   }
 
-  String get statsHeader {
+  String get createStackHeader {
     return Intl.message(
-      "STATS",
-      name: 'stats_header',
-      desc: 'statistics title',
-    );
-  }
-
-  String get stackHeader {
-    return Intl.message(
-      "STACKS:",
-      name: 'stack_header',
-      desc: 'stack list title',
-    );
-  }
-
-  String get statStreak {
-    return Intl.message(
-      "Streak",
-      name: 'stat_streak',
-      desc: 'stat day streak',
-    );
-  }
-
-  String get statAverage {
-    return Intl.message(
-      "Last 7 days",
-      name: 'stat_average',
-      desc: 'stat 7 day average',
-    );
-  }
-
-  String get statExam {
-    return Intl.message(
-      "Next exam",
-      name: 'stat_exam',
-      desc: 'stat next exam',
-    );
-  }
-
-  String get streakInfo {
-    return Intl.message(
-      "days",
-      name: 'streak_info',
-      desc: 'streak number of days',
-    );
-  }
-
-  String get averageInfo {
-    return Intl.message(
-      "minutes",
-      name: 'average_info',
-      desc: 'average minutes studied',
-    );
-  }
-
-  String get examInfo {
-    return Intl.message(
-      "days",
-      name: 'exam_info',
-      desc: 'days until next exam',
-    );
-  }
-
-  String get mond {
-    return Intl.message(
-      "M",
-      name: 'mond',
-      desc: 'Monday',
-    );
-  }
-
-  String get tues {
-    return Intl.message(
-      "T",
-      name: 'tues',
-      desc: 'Tuesday',
-    );
-  }
-
-  String get wed {
-    return Intl.message(
-      "W",
-      name: 'wed',
-      desc: 'Wednesday',
-    );
-  }
-
-  String get thur {
-    return Intl.message(
-      "T",
-      name: 'thur',
-      desc: 'Thursday',
-    );
-  }
-
-  String get fri {
-    return Intl.message(
-      "F",
-      name: 'fri',
-      desc: 'Friday',
-    );
-  }
-
-  String get sat {
-    return Intl.message(
-      "S",
-      name: 'sat',
-      desc: 'Saturday',
-    );
-  }
-
-  String get sun {
-    return Intl.message(
-      "S",
-      name: 'sun',
-      desc: 'Sunday',
+      "Create Stack",
+      name: 'create_stack_header',
+      desc: 'Create Stack Title',
     );
   }
 
@@ -164,6 +51,14 @@ class AppLocalization {
       "Preferences",
       name: 'preferences_header',
       desc: 'preferences title',
+    );
+  }
+
+  String get downloadHeader {
+    return Intl.message(
+      "Download",
+      name: 'download_header',
+      desc: 'download header',
     );
   }
 
@@ -199,6 +94,14 @@ class AppLocalization {
     );
   }
 
+  String get settingsDownload {
+    return Intl.message(
+      "Find a Stack",
+      name: 'settings_download',
+      desc: 'download a stack online',
+    );
+  }
+
   String get settingsNotification {
     return Intl.message(
       "Allow Notifications",
@@ -231,9 +134,25 @@ class AppLocalization {
     );
   }
 
+  String get avilableStackHeader {
+    return Intl.message(
+      "Available Stacks",
+      name: 'available_stacks_header',
+      desc: 'header to download available stacks',
+    );
+  }
+
+  String get editThemeHeader {
+    return Intl.message(
+      "Theme",
+      name: 'edit_theme_header',
+      desc: 'change your user color theme',
+    );
+  }
+
   String get editNameHeader {
     return Intl.message(
-      "Change Name",
+      "Name",
       name: 'edit_name_header',
       desc: 'change your name header',
     );
@@ -241,7 +160,7 @@ class AppLocalization {
 
   String get editPicHeader {
     return Intl.message(
-      "Change Profile Picture",
+      "Picture",
       name: 'edit_pic_header',
       desc: 'change picture header',
     );
@@ -263,11 +182,307 @@ class AppLocalization {
     );
   }
 
-  String get editCancel {
+  String get editUsername {
+    return Intl.message(
+      "Edit Username",
+      name: 'edit_username',
+      desc: 'change profile username',
+    );
+  }
+
+  String get stacksHeader {
+    return Intl.message(
+      "STACKS",
+      name: 'stacks_header',
+      desc: 'header for stack gridview',
+    );
+  }
+
+  String get stacksSearch {
+    return Intl.message(
+      "Search for a stack...",
+      name: 'stacks_search',
+      desc: 'search for stack gridview',
+    );
+  }
+
+  String get featuredEmptyHeader {
+    return Intl.message(
+      "Start studying",
+      name: 'featured_empty_header',
+      desc: 'content inside empty featured card',
+    );
+  }
+
+  String get featuredEmptyInfo {
+    return Intl.message(
+      "No study to continue",
+      name: 'featured_empty_info',
+      desc: 'Message to display when user tries to continue studying',
+    );
+  }
+
+  String get missing {
+    return Intl.message(
+      "Missing",
+      name: 'missing',
+      desc: 'missing text',
+    );
+  }
+
+  String get undo {
+    return Intl.message(
+      "Undo",
+      name: 'undo',
+      desc: 'undo text',
+    );
+  }
+
+  String get delete {
+    return Intl.message(
+      "Delete",
+      name: 'delete',
+      desc: 'delete text',
+    );
+  }
+
+  String get deleted {
+    return Intl.message(
+      "Deleted",
+      name: 'deleted',
+      desc: 'deleted text',
+    );
+  }
+
+  String get cancel {
     return Intl.message(
       "Cancel",
-      name: 'edit_cancel',
-      desc: 'cancel edit profile',
+      name: 'cancel',
+      desc: 'cancel text',
+    );
+  }
+
+  String get search {
+    return Intl.message(
+      "Search",
+      name: 'search',
+      desc: 'search text',
+    );
+  }
+
+  String get questions {
+    return Intl.message(
+      "Questions",
+      name: 'questions',
+      desc: 'questions text',
+    );
+  }
+
+  String get question {
+    return Intl.message(
+      "Question",
+      name: 'question',
+      desc: 'question text',
+    );
+  }
+
+  String get answer {
+    return Intl.message(
+      "Answer",
+      name: 'answer',
+      desc: 'answer text',
+    );
+  }
+
+  String get tableName {
+    return Intl.message(
+      "Study",
+      name: 'table_name',
+      desc: 'table name',
+    );
+  }
+
+  String get tableTheme {
+    return Intl.message(
+      "Stack name",
+      name: 'table_theme',
+      desc: 'table theme',
+    );
+  }
+
+  String get merryChristmas {
+    return Intl.message(
+      "Merry Christmas",
+      name: 'merry_christmas',
+      desc: 'christmas greeting',
+    );
+  }
+
+  String get happyThanksgiving {
+    return Intl.message(
+      "Happy Thanksgiving",
+      name: 'happy_thanksgiving',
+      desc: 'thanksgiving greeting',
+    );
+  }
+
+  String get happyEaster {
+    return Intl.message(
+      "Happy Easter",
+      name: 'happy_easter',
+      desc: 'easter greeting',
+    );
+  }
+
+  String get mothersDay {
+    return Intl.message(
+      "Happy Mothers Day",
+      name: 'mothers_day',
+      desc: 'mothers day greeting',
+    );
+  }
+
+  String get fathersDay {
+    return Intl.message(
+      "Happy Fathers Day",
+      name: 'fathers_day',
+      desc: 'fathers day greeting',
+    );
+  }
+
+  String get happyHalloween {
+    return Intl.message(
+      "Happy Halloween",
+      name: 'happy_halloween',
+      desc: 'halloween greeting',
+    );
+  }
+
+  String get happyValentines {
+    return Intl.message(
+      "Happy Valentine's Day",
+      name: 'happy_valentines',
+      desc: 'valentines greeting',
+    );
+  }
+
+  String get happyPatricks {
+    return Intl.message(
+      "Happy Saint Patrick's Day",
+      name: 'happy_patricks',
+      desc: 'patricks greeting',
+    );
+  }
+
+  String get happyNYE {
+    return Intl.message(
+      "Happy New Years Eve",
+      name: 'happy_nye',
+      desc: 'nye greeting',
+    );
+  }
+
+  String get happyNYD {
+    return Intl.message(
+      "Happy New Years Day",
+      name: 'happy_nyd',
+      desc: 'nyd greeting',
+    );
+  }
+
+  String get goodNight {
+    return Intl.message(
+      "Good Night",
+      name: 'good_night',
+      desc: 'good night greeting',
+    );
+  }
+
+  String get goodEvening {
+    return Intl.message(
+      "Good Evening",
+      name: 'good_evening',
+      desc: 'good evening greeting',
+    );
+  }
+
+  String get goodAfternoon {
+    return Intl.message(
+      "Good Afternoon",
+      name: 'good_afternoon',
+      desc: 'good afternoon greeting',
+    );
+  }
+
+  String get goodMorning {
+    return Intl.message(
+      "Good Morning",
+      name: 'good_morning',
+      desc: 'good morning greeting',
+    );
+  }
+
+  String get infoMissingNameTheme {
+    return Intl.message(
+      "Missing stack name or theme",
+      name: 'info_missing_name_theme',
+      desc: 'info dialogue',
+    );
+  }
+
+  String get infoNameLetterStart {
+    return Intl.message(
+      "Study name must start with letter",
+      name: 'info_name_letter_start',
+      desc: 'info dialogue',
+    );
+  }
+
+  String get infoThemeLetterStart {
+    return Intl.message(
+      "Stack name must start with letter",
+      name: 'info_theme_letter_start',
+      desc: 'info dialogue',
+    );
+  }
+
+  String get infoMoreQuestion {
+    return Intl.message(
+      "Stack must contain at least one questions",
+      name: 'info_more_question',
+      desc: 'info dialogue',
+    );
+  }
+
+  String get infoStackExists {
+    return Intl.message(
+      "This stack already exists.",
+      name: 'info_stack_exists',
+      desc: 'info dialogue',
+    );
+  }
+
+  String get infoDeleteHeader {
+    return Intl.message(
+      "Delete Stack?",
+      name: 'info_delete_header',
+      desc: 'info dialogue',
+    );
+  }
+
+  String get infoDeleteStack {
+    return Intl.message(
+      "Are you sure you want to proceed with this action?",
+      name: 'info_delete_stack',
+      desc: 'info dialogue',
+    );
+  }
+
+  String get infoCardInit {
+    return Intl.message(
+      "Tap the card to flip it.\nTap the edit icon to set content.",
+      name: 'info_card_init',
+      desc: 'info dialogue',
     );
   }
 }

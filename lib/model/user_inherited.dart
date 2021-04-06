@@ -8,6 +8,7 @@ import 'package:stackr/locale/localization.dart';
 import 'package:stackr/model/studystack.dart';
 import 'package:stackr/model/user.dart';
 
+import '../locale/localization.dart';
 import 'db_helper.dart';
 import 'language.dart';
 
@@ -42,7 +43,7 @@ class UserDataState extends State<UserData> {
 
   double percent = 0.0;
   String cards = '0';
-  String study = 'Start studying';
+  String study = '';
   List<StudyStack> featured = [];
 
   Future<List<StudyStack>> tables;
@@ -71,8 +72,9 @@ class UserDataState extends State<UserData> {
   }
 
   void updateLanguage(String tag, String subtag) {
-    language.tag = saveToDisk('lang_tag', tag);
-    language.subtag = saveToDisk('lang_subtag', subtag);
+    language = Language(tag, subtag);
+    saveToDisk('lang_tag', tag);
+    saveToDisk('lang_subtag', subtag);
     AppLocalization.load(Locale(tag, subtag));
 
     this.refresh();
@@ -134,6 +136,7 @@ class UserDataState extends State<UserData> {
   }
 
   updateFeatured() async {
+    final _local = AppLocalization.of(context);
     percent = getFromDisk('featured_progress') ?? 0.0;
 
     List<StudyStack> _tables = [];
@@ -148,7 +151,8 @@ class UserDataState extends State<UserData> {
         study = featuredStudy(_tables);
         cards = featuredCards(_tables);
       } else {
-        study = 'Start studying';
+        study = _local.featuredEmptyHeader;
+
         cards = '0';
       }
       featured = _tables;

@@ -2,7 +2,6 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flushbar/flushbar.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
-import 'package:stackr/decoration/textfield_border.dart';
 import 'package:stackr/model/studystack.dart';
 import 'package:stackr/screens/sheet_qna.dart';
 import 'package:stackr/widgets/appbar_page.dart';
@@ -11,6 +10,7 @@ import 'package:stackr/widgets/dialog_confirm.dart';
 import 'package:stackr/widgets/button_icon.dart';
 import 'package:stackr/widgets/textfield_platform.dart';
 
+import '../locale/localization.dart';
 import 'sheet_flashcards.dart';
 import '../constants.dart';
 import '../model/flashcard.dart';
@@ -75,6 +75,8 @@ class _StackPageState extends State<StackPage> {
 
   @override
   Widget build(BuildContext context) {
+    final _local = AppLocalization.of(context);
+
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
@@ -86,8 +88,8 @@ class _StackPageState extends State<StackPage> {
               Flexible(
                 child: Column(
                   children: [
-                    headerField(hint: 'Stack name', controller: _name),
-                    headerField(hint: 'Study theme', controller: _theme),
+                    headerField(hint: _local.tableName, controller: _name),
+                    headerField(hint: _local.tableTheme, controller: _theme),
                   ],
                 ),
               ),
@@ -157,23 +159,25 @@ class _StackPageState extends State<StackPage> {
   }
 
   void createDBTable() async {
+    final _local = AppLocalization.of(context);
+
     if (_name.text.isEmpty || _theme.text.isEmpty) {
-      _showInformationBar('Missing stack name or theme');
+      _showInformationBar(_local.infoMissingNameTheme);
       return;
     }
 
     if (_name.text.startsWith(new RegExp('[0-9]'))) {
-      _showInformationBar('Stack name must start with letter');
+      _showInformationBar(_local.infoNameLetterStart);
       return;
     }
 
     if (_theme.text.startsWith(new RegExp('[0-9]'))) {
-      _showInformationBar('Stack theme must start with letter');
+      _showInformationBar(_local.infoThemeLetterStart);
       return;
     }
 
     if (widget.cards.length < 1) {
-      _showInformationBar('Stack must contain at least one questions');
+      _showInformationBar(_local.infoMoreQuestion);
       return;
     }
 
@@ -189,7 +193,8 @@ class _StackPageState extends State<StackPage> {
   }
 
   void addQuestion() {
-    String message = 'Missing ';
+    final _local = AppLocalization.of(context);
+    String message = '${_local.missing} ';
 
     if (question.isNotEmpty && answer.isNotEmpty) {
       widget.cards.add(FlashCard(question: this.question, answer: this.answer));
@@ -202,9 +207,11 @@ class _StackPageState extends State<StackPage> {
       return;
     }
 
-    if (question.isEmpty) message = message + 'question';
+    if (question.isEmpty) message = message + _local.question.toLowerCase();
     if (answer.isEmpty)
-      message = message + '${question.isEmpty ? ' and ' : ''}' + 'answer';
+      message = message +
+          '${question.isEmpty ? ' and ' : ''}' +
+          _local.answer.toLowerCase();
 
     _showInformationBar(message);
   }
@@ -217,6 +224,7 @@ class _StackPageState extends State<StackPage> {
   }
 
   Widget cardInformation(double height, double width) {
+    final _local = AppLocalization.of(context);
     var child = Container(
       key: ValueKey(this.showFront),
       height: height,
@@ -226,7 +234,7 @@ class _StackPageState extends State<StackPage> {
         brightness: Theme.of(context).brightness,
       ).shadow,
       child: StudyCard(
-        title: this.showFront ? 'Question:' : 'Answer:',
+        title: this.showFront ? '${_local.question}:' : '${_local.answer}:',
         content: this.showFront ? this.question : this.answer,
         icon: Icons.edit,
         callback: editCardContent,
@@ -346,11 +354,12 @@ class _EditStackState extends State<EditStack> {
   }
 
   updateStack(String name, String theme) async {
-    var data = UserData.of(context);
+    final data = UserData.of(context);
+    final _local = AppLocalization.of(context);
 
     if (this.table != name) {
       if (await data.dbClient.tableExist(table: name)) {
-        _showInformationBar('This stack already exists');
+        _showInformationBar(_local.infoStackExists);
         return;
       }
     }
@@ -392,13 +401,15 @@ class _EditStackState extends State<EditStack> {
 
   @override
   Widget build(BuildContext context) {
+    final _local = AppLocalization.of(context);
+
     return Scaffold(
       key: _scaffoldKey,
       appBar: PageAppBar(
         color: Theme.of(context).cardColor,
         height: 72.0,
         elevation: 7.5,
-        title: 'Edit Stack',
+        title: _local.editStackHeader,
         textColor: Theme.of(context).textSelectionColor,
         action: appBarAction(),
       ),
@@ -431,17 +442,19 @@ class _EditStackState extends State<EditStack> {
   }
 
   Widget appBarAction() {
+    final _local = AppLocalization.of(context);
+
     return IconButton(
       icon: Icon(Icons.delete, color: cRed, size: 24),
       onPressed: () => showDialog(
         context: context,
         builder: (BuildContext context) => ConfirmDialog(
           color: Theme.of(context).cardColor,
-          title: 'Delete stack?',
-          message: 'Are you sure you want to proceed with this action?',
-          confirm: 'Delete',
+          title: _local.infoDeleteHeader,
+          message: _local.infoDeleteStack,
+          confirm: _local.delete,
           onConfirmPress: dropTable,
-          dismiss: 'Cancel',
+          dismiss: _local.cancel,
           radius: 15.0,
         ),
       ),
@@ -458,10 +471,11 @@ class _CreateStackState extends State<CreateStack> {
   List<FlashCard> _cards = [];
 
   createStack(String name, String theme) async {
-    var data = UserData.of(context);
+    final data = UserData.of(context);
+    final _local = AppLocalization.of(context);
 
     if (await data.dbClient.tableExist(table: name)) {
-      _showInformationBar('This stack already exists');
+      _showInformationBar(_local.infoStackExists);
       return;
     }
 
@@ -479,13 +493,15 @@ class _CreateStackState extends State<CreateStack> {
 
   @override
   Widget build(BuildContext context) {
+    final _local = AppLocalization.of(context);
+
     return Scaffold(
       key: _scaffoldKey,
       appBar: PageAppBar(
         color: Theme.of(context).cardColor,
         height: 72.0,
         elevation: 7.5,
-        title: 'Create Stack',
+        title: _local.createStackHeader,
         textColor: Theme.of(context).textSelectionColor,
       ),
       resizeToAvoidBottomPadding: false,

@@ -5,6 +5,7 @@ import 'package:flutter/animation.dart';
 import 'package:stackr/screens/page_study.dart';
 import 'package:stackr/widgets/textfield_platform.dart';
 
+import '../locale/localization.dart';
 import '../model/studystack.dart';
 import '../model/user_inherited.dart';
 import '../widgets/searchbar.dart';
@@ -272,16 +273,20 @@ class _HomePageState extends State<HomePage> {
   }
 
   Widget _title() {
+    final _local = AppLocalization.of(context);
+    final _theme = Theme.of(context);
     return Container(
       width: double.infinity,
-      child: Text('STACKS', style: Theme.of(context).textTheme.headline1),
+      child: Text(_local.stacksHeader, style: _theme.textTheme.headline1),
     );
   }
 
   Widget _search() {
+    final _local = AppLocalization.of(context);
+
     return TextFieldPlatform(
       controller: _textCtrl,
-      hint: 'Search for a stack...',
+      hint: _local.stacksSearch,
       maxLines: 1,
       focusNode: _focus,
     );

@@ -3,6 +3,7 @@ import 'package:stackr/decoration/round_shadow.dart';
 
 import '../constants.dart';
 import '../locale/localization.dart';
+import '../locale/localization.dart';
 import '../model/user_inherited.dart';
 
 class HomeAppBar extends StatefulWidget {
@@ -100,17 +101,18 @@ class _HomeAppBarState extends State<HomeAppBar> {
 
   String getGreeting() {
     var now = DateTime.now();
+    final _local = AppLocalization.of(context);
 
     // CHRISTMAS
     if (now.difference(DateTime(now.year, 12, 25)).inDays == 0)
-      return 'Merry Christmas';
+      return _local.merryChristmas;
 
     // THANKSGIVING
     if (now.month == DateTime.november &&
         now.day >= 22 &&
         now.day <= 28 &&
         now.weekday == DateTime.thursday) {
-      return 'Happy Thanksgiving';
+      return _local.happyThanksgiving;
     }
 
     // MOTHER'S DAY
@@ -118,7 +120,7 @@ class _HomeAppBarState extends State<HomeAppBar> {
         now.day >= 8 &&
         now.day <= 14 &&
         now.weekday == DateTime.sunday) {
-      return "Happy Mother's Day";
+      return _local.mothersDay;
     }
 
     // EASTER
@@ -126,7 +128,7 @@ class _HomeAppBarState extends State<HomeAppBar> {
         now.day >= 22 &&
         now.day <= 28 &&
         now.weekday == DateTime.sunday) {
-      return 'Happy Easter';
+      return _local.happyEaster;
     }
 
     // FATHER'S DAY
@@ -134,35 +136,35 @@ class _HomeAppBarState extends State<HomeAppBar> {
         now.day >= 15 &&
         now.day <= 21 &&
         now.weekday == DateTime.sunday) {
-      return "Happy Father's Day";
+      return _local.fathersDay;
     }
 
     // HALLOWEEN
     if (now.difference(DateTime(now.year, 10, 31)).inDays == 0)
-      return 'Happy Halloween';
+      return _local.happyHalloween;
 
     // VALENTINE'S
     if (now.difference(DateTime(now.year, 2, 14)).inDays == 0)
-      return "Happy Valentine's Day";
+      return _local.happyValentines;
 
     // SAINT PATRICKS
     if (now.difference(DateTime(now.year, 3, 17)).inDays == 0)
-      return "Happy Saint Patrick's Day";
+      return _local.happyPatricks;
 
     // NEW YEARS
     if (now.difference(DateTime(now.year, 12, 31)).inDays == 0)
-      return "Happy New Years Eve";
+      return _local.happyNYE;
 
     // NEW YEARS
     if (now.difference(DateTime(now.year, 1, 1)).inDays == 0)
-      return "Happy New Years Day";
+      return _local.happyNYD;
 
     var hour = now.hour;
 
-    if (hour < 4 || hour > 21) return 'Good Night';
-    if (hour < 12) return 'Good Morning';
-    if (hour < 18) return 'Good Afternoon';
+    if (hour < 4 || hour > 21) return _local.goodNight;
+    if (hour < 12) return _local.goodMorning;
+    if (hour < 18) return _local.goodAfternoon;
 
-    return 'Good Evening';
+    return _local.goodEvening;
   }
 }

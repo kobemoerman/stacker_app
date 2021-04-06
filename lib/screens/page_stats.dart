@@ -36,7 +36,10 @@ class _StatisticsPageState extends State<StatisticsPage> {
       body: SafeArea(
         child: Column(
           children: [
-            weekReview(),
+            Hero(
+              tag: 'stats_launch',
+              child: weekReview(),
+            ),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
@@ -65,15 +68,7 @@ class _StatisticsPageState extends State<StatisticsPage> {
       width: double.infinity,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          header,
-          Expanded(
-            child: Hero(
-              tag: 'stats_launch',
-              child: InfoGraphic(detailed: true),
-            ),
-          )
-        ],
+        children: [header, Expanded(child: InfoGraphic(detailed: true))],
       ),
       decoration: _cardDecoration(false),
     );

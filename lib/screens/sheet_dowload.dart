@@ -9,6 +9,7 @@ import 'package:stackr/model/user_inherited.dart';
 import 'package:stackr/widgets/button_icon.dart';
 import 'package:stackr/widgets/searchbar.dart';
 import 'package:stackr/widgets/sliver_header.dart';
+import '../locale/localization.dart';
 import '../utils/string_operation.dart';
 
 class DownloadSheet extends StatefulWidget {
@@ -101,6 +102,7 @@ class _DownloadSheetState extends State<DownloadSheet> {
         child: Stack(
           children: [
             _body,
+            pageHeader(),
             searchBuilder(),
             _isDownloading ? downloadOverlay() : Container(),
           ],
@@ -132,26 +134,23 @@ class _DownloadSheetState extends State<DownloadSheet> {
       key: Key('scroll_download'),
       physics: BouncingScrollPhysics(),
       slivers: [
-        /// APP BAR
+        /// HEADER
         SliverPadding(
-          padding: const EdgeInsets.only(bottom: 10.0),
+          padding: const EdgeInsets.only(top: 62.0),
           sliver: SliverPersistentHeader(
-            pinned: true,
-            delegate: pageHeader(),
+            pinned: false,
+            delegate: listHeader(),
           ),
         ),
 
-        /// HEADER
-        SliverPersistentHeader(
-          pinned: false,
-          delegate: listHeader(),
-        ),
-
         /// LIST VIEW
-        SliverList(
-          delegate: SliverChildBuilderDelegate(
-            (context, index) => listItem(list[index]),
-            childCount: list.length,
+        SliverPadding(
+          padding: const EdgeInsets.only(bottom: 125.0),
+          sliver: SliverList(
+            delegate: SliverChildBuilderDelegate(
+              (context, index) => listItem(list[index]),
+              childCount: list.length,
+            ),
           ),
         ),
       ],
@@ -174,7 +173,8 @@ class _DownloadSheetState extends State<DownloadSheet> {
     );
   }
 
-  PersistentHeader pageHeader() {
+  Container pageHeader() {
+    final local = AppLocalization.of(context);
     final theme = Theme.of(context).textTheme;
 
     final leading = ButtonIcon(
@@ -183,11 +183,11 @@ class _DownloadSheetState extends State<DownloadSheet> {
       onTap: () => _downloadData(),
     );
 
-    final title = Text('Available Stacks', style: theme.headline3);
+    final title = Text(local.avilableStackHeader, style: theme.headline3);
 
-    return PersistentHeader(
+    return Container(
       height: 56.0,
-      widget: Stack(
+      child: Stack(
         children: [
           ClipRect(
             child: Container(

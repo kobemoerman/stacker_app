@@ -61,14 +61,16 @@ class _SettingsPageState extends State<SettingsPage> {
   }
 
   _termsOfUse(BuildContext context) {
-    var header = 'Terms of Use';
+    final _local = AppLocalization.of(context);
+    var header = _local.settingsTerms;
     var file = 'toc.txt';
 
     _displayInformation(context, header, file);
   }
 
   _privacyPolicy(BuildContext context) {
-    var header = 'Privacy Policy';
+    final _local = AppLocalization.of(context);
+    var header = _local.settingsPrivacy;
     var file = 'privacy.txt';
 
     _displayInformation(context, header, file);
@@ -161,8 +163,9 @@ class _SettingsPageState extends State<SettingsPage> {
     ];
 
     List<Widget> _dwnld = [
-      _sectionHeader('Download'),
-      _itemTile('Find a Stack', Icon(Icons.file_download), _downloadStack),
+      _sectionHeader(AppLocalization.of(context).downloadHeader),
+      _itemTile(AppLocalization.of(context).settingsDownload,
+          Icon(Icons.file_download), _downloadStack),
     ];
 
     List<Widget> _notif = [
@@ -184,7 +187,7 @@ class _SettingsPageState extends State<SettingsPage> {
         color: Theme.of(context).cardColor,
         height: 72.0,
         elevation: 7.5,
-        title: 'Settings',
+        title: AppLocalization.of(context).settingsHeader,
         textColor: Theme.of(context).textSelectionColor,
       ),
       backgroundColor: Theme.of(context).backgroundColor,

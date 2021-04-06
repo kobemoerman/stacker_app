@@ -9,7 +9,7 @@ class LanguageSheet extends StatefulWidget {
 }
 
 class _LanguageSheetState extends State<LanguageSheet> {
-  void _updateLanguage(UserDataState data, String tag, String subtag) {
+  _updateLanguage(UserDataState data, String tag, String subtag) {
     if (data.language.tag != tag) data.updateLanguage(tag, subtag);
 
     Navigator.pop(context);

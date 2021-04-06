@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:stackr/constants.dart';
 
+import '../locale/localization.dart';
+import '../model/user_inherited.dart';
+
 class ConfirmDialog extends StatelessWidget {
   final Color color;
   final String title;
@@ -26,7 +29,7 @@ class ConfirmDialog extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      elevation: 2.0,
+      elevation: 0.0,
       title: title != null ? Text(title) : null,
       content: message != null ? Text(message) : null,
       backgroundColor: color,
@@ -47,7 +50,7 @@ class ConfirmDialog extends StatelessWidget {
         if (dismiss != null)
           FlatButton(
             child: Text(dismiss),
-            textColor: Theme.of(context).accentColor,
+            textColor: UserData.of(context).primaryColor,
             onPressed: () {
               Navigator.of(context).pop();
               if (onDismissPress != null) {
@@ -60,6 +63,10 @@ class ConfirmDialog extends StatelessWidget {
   }
 
   confirmColor(BuildContext context) {
-    return confirm.contains('Delete') ? cRed : Theme.of(context).accentColor;
+    final _local = AppLocalization.of(context);
+
+    return confirm.contains(_local.delete)
+        ? cRed
+        : Theme.of(context).accentColor;
   }
 }

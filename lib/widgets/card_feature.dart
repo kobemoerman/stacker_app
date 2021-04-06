@@ -6,6 +6,7 @@ import 'package:stackr/model/studystack.dart';
 import 'package:stackr/model/user_inherited.dart';
 import 'package:stackr/screens/page_study.dart';
 
+import '../locale/localization.dart';
 import '../utils/string_operation.dart';
 
 class FeaturedCard extends StatelessWidget {
@@ -31,6 +32,7 @@ class FeaturedCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final _local = AppLocalization.of(context);
     return OpenContainer(
       transitionDuration: Duration(milliseconds: 600),
       closedColor: Theme.of(context).cardColor,
@@ -46,7 +48,7 @@ class FeaturedCard extends StatelessWidget {
           type: MaterialType.transparency,
           child: InkWell(
             onTap: () => tables.isEmpty
-                ? _showInformationBar('No study to continue.', context)
+                ? _showInformationBar(_local.featuredEmptyInfo, context)
                 : openContainer(),
             child: Container(
               padding: const EdgeInsets.all(15.0),
@@ -89,8 +91,12 @@ class FeaturedCard extends StatelessWidget {
   }
 
   Widget _cardContent(context) {
+    final _local = AppLocalization.of(context);
     final _theme = Theme.of(context).textTheme;
-    return Text('$cards questions', style: _theme.subtitle1);
+
+    var text = cards.length == 1 ? _local.question : _local.questions;
+
+    return Text('$cards ${text.toLowerCase()}', style: _theme.subtitle1);
   }
 
   Widget _progressIndicator(context) {

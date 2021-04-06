@@ -10,8 +10,6 @@ import 'package:stackr/decoration/textfield_border.dart';
 import 'package:stackr/locale/localization.dart';
 import 'package:stackr/model/user_inherited.dart';
 
-import '../theme.dart';
-
 class ProfileSheet extends StatefulWidget {
   final Function callback;
 
@@ -45,12 +43,12 @@ class _ProfileSheetState extends State<ProfileSheet> {
       children: [
         Padding(
           padding: const EdgeInsets.only(top: 5.0),
-          child: sectionHeader('Picture'),
+          child: sectionHeader(AppLocalization.of(context).editPicHeader),
         ),
         itemPicture(data),
-        sectionHeader('Name'),
+        sectionHeader(AppLocalization.of(context).editNameHeader),
         itemName(data),
-        sectionHeader('Theme'),
+        sectionHeader(AppLocalization.of(context).editThemeHeader),
         Container(height: 80.0, child: itemList(brightness)),
       ],
     );
@@ -122,8 +120,8 @@ class _ProfileSheetState extends State<ProfileSheet> {
   }
 
   Widget itemName(UserDataState data) {
-    final style =
-        Theme.of(context).textTheme.bodyText2.copyWith(color: Colors.white);
+    final _local = AppLocalization.of(context);
+    final style = Theme.of(context).textTheme.bodyText2;
 
     return Material(
       type: MaterialType.transparency,
@@ -134,7 +132,8 @@ class _ProfileSheetState extends State<ProfileSheet> {
         ),
         title: Transform.translate(
           offset: Offset(-20, 0),
-          child: Text('Edit username', style: style),
+          child: Text(_local.editUsername,
+              style: style.copyWith(color: Colors.white)),
         ),
         trailing: Icon(
           Icons.keyboard_arrow_right,
@@ -212,7 +211,7 @@ class EditNamePopup extends StatelessWidget {
                 children: [
                   Align(
                     alignment: Alignment.topLeft,
-                    child: _header(textTheme),
+                    child: _header(context, textTheme),
                   ),
                   Align(
                     alignment: Alignment.topRight,
@@ -235,8 +234,9 @@ class EditNamePopup extends StatelessWidget {
     );
   }
 
-  Widget _header(textTheme) {
-    return Text('Edit Username', style: textTheme.headline2);
+  Widget _header(context, textTheme) {
+    final _local = AppLocalization.of(context);
+    return Text(_local.editUsername, style: textTheme.headline2);
   }
 
   Widget _completeAction(context, textTheme) {
