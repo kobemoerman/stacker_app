@@ -304,6 +304,7 @@ class _StudyPageState extends State<StudyPage> {
     _correct = 0;
     _total = cardContent.length;
     isComplete = false;
+    isSwipped = false;
 
     timer.reset();
     render = Timer.periodic(Duration(minutes: 1), updateTimer);
@@ -332,6 +333,7 @@ class _StudyPageState extends State<StudyPage> {
     _correct = 0;
     _total = cardContent.length;
     isComplete = false;
+    isSwipped = false;
 
     timer.reset();
     render = Timer.periodic(Duration(minutes: 1), updateTimer);
@@ -384,9 +386,11 @@ class _StudyPageState extends State<StudyPage> {
       cardDesign[1].progress = getPercentage();
       Future.delayed(
           Duration(milliseconds: 500), () => setState(() => isComplete = true));
+    } else {
+      print('HELLO');
+      isSwipped = false;
     }
 
-    isSwipped = false;
     setState(() => cardDesign);
 
     return cardDesign[0];
