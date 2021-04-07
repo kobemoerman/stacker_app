@@ -58,7 +58,7 @@ class _HomePageState extends State<HomePage> {
         _scrollCtrl.hasClients &&
         _scrollCtrl.position.maxScrollExtent > _max) {
       await _scrollCtrl.animateTo(_pos,
-          duration: Duration(milliseconds: 75), curve: Curves.easeIn);
+          duration: Duration(milliseconds: 100), curve: Curves.easeIn);
       setState(() => _opacity);
     }
   }
@@ -68,7 +68,7 @@ class _HomePageState extends State<HomePage> {
 
     if (_focus.hasFocus) {
       await _scrollCtrl.animateTo(maxPos > 250.0 ? 250.0 : maxPos,
-          duration: Duration(milliseconds: 100), curve: Curves.ease);
+          duration: Duration(milliseconds: 250), curve: Curves.ease);
 
       setState(() {});
     }
@@ -222,7 +222,7 @@ class _HomePageState extends State<HomePage> {
     return Container(
       margin: EdgeInsets.only(right: (study.isEmpty ? 0.0 : 10.0)),
       child: OpenContainer(
-        transitionDuration: Duration(milliseconds: 600),
+        transitionDuration: Duration(milliseconds: 250),
         closedShape: CircleBorder(),
         closedColor: UserData.of(context).primaryColor,
         closedElevation: 4.0,

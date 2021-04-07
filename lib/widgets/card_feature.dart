@@ -1,13 +1,12 @@
 import 'package:animations/animations.dart';
-import 'package:flushbar/flushbar.dart';
 import 'package:flutter/material.dart';
 import 'package:percent_indicator/percent_indicator.dart';
 import 'package:stackr/model/studystack.dart';
 import 'package:stackr/model/user_inherited.dart';
 import 'package:stackr/screens/page_study.dart';
 
-import '../locale/localization.dart';
 import '../utils/string_operation.dart';
+import 'dialog_information.dart';
 
 class FeaturedCard extends StatelessWidget {
   final double percent;
@@ -15,26 +14,16 @@ class FeaturedCard extends StatelessWidget {
   final String study;
   final List<StudyStack> tables;
 
-  const FeaturedCard(
-      {Key key, this.percent, this.cards, this.study, this.tables})
+  FeaturedCard({Key key, this.percent, this.cards, this.study, this.tables})
       : super(key: key);
 
-  void _showInformationBar(message, context) {
-    Flushbar(
-      message: message,
-      isDismissible: true,
-      duration: Duration(seconds: 3),
-      flushbarStyle: FlushbarStyle.GROUNDED,
-      icon: Icon(Icons.info_outline, size: 28.0, color: Colors.white),
-      leftBarIndicatorColor: UserData.of(context).primaryColor,
-    )..show(context);
-  }
+  final _scaffoldKey = GlobalKey<ScaffoldState>();
 
   @override
   Widget build(BuildContext context) {
     final _local = UserData.of(context).local;
     return OpenContainer(
-      transitionDuration: Duration(milliseconds: 600),
+      transitionDuration: Duration(milliseconds: 250),
       closedColor: Theme.of(context).cardColor,
       openColor: Theme.of(context).cardColor,
       transitionType: ContainerTransitionType.fade,
@@ -48,7 +37,8 @@ class FeaturedCard extends StatelessWidget {
           type: MaterialType.transparency,
           child: InkWell(
             onTap: () => tables.isEmpty
-                ? _showInformationBar(_local.featuredEmptyInfo, context)
+                ? InfoDialog.of(context, _scaffoldKey)
+                    .displaySnackBar(text: _local.featuredEmptyInfo)
                 : openContainer(),
             child: Container(
               padding: const EdgeInsets.all(15.0),

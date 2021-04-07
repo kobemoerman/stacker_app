@@ -24,7 +24,7 @@ class _StudyButtonState extends State<StudyButton> {
   @override
   Widget build(BuildContext context) {
     return AnimatedSwitcher(
-      duration: Duration(seconds: 1),
+      duration: Duration(milliseconds: 750),
       switchInCurve: Curves.easeOutBack,
       switchOutCurve: Curves.ease,
       layoutBuilder: transitionLayout,

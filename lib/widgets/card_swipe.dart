@@ -173,7 +173,7 @@ class _SwipeCardState extends State<SwipeCard> {
     return AnimatedContainer(
       key: key,
       curve: Curves.easeOut,
-      duration: Duration(milliseconds: isMoving ? 0 : 300),
+      duration: Duration(milliseconds: isMoving ? 0 : 250),
       transform: Matrix4.identity()
         ..translate(posX, posY, 0)
         ..rotateDegrees(angle, origin: centerOffset)

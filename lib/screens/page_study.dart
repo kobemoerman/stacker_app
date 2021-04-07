@@ -411,7 +411,7 @@ class _StudyPageState extends State<StudyPage> with TickerProviderStateMixin {
       timer.stop();
       render.cancel();
       cardDesign[1].progress = getPercentage();
-      Future.delayed(Duration(milliseconds: 500), () {
+      Future.delayed(Duration(milliseconds: 250), () {
         setState(() => isComplete = true);
       });
     } else {

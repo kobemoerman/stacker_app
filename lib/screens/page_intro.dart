@@ -11,9 +11,14 @@ class _IntroductionPageState extends State<IntroductionPage> {
   final introKey = GlobalKey<IntroductionScreenState>();
 
   Widget _buildImage(String assetName) {
-    return Align(
-      child: Image.asset('assets/$assetName.gif'),
-      alignment: Alignment.bottomCenter,
+    return Container(
+      margin: const EdgeInsets.fromLTRB(20.0, 50.0, 20.0, 0.0),
+      child: Center(
+        child: ClipRRect(
+          borderRadius: BorderRadius.circular(20.0),
+          child: Image.asset('assets/$assetName.gif', fit: BoxFit.contain),
+        ),
+      ),
     );
   }
 
@@ -56,7 +61,7 @@ class _IntroductionPageState extends State<IntroductionPage> {
 
   @override
   Widget build(BuildContext context) {
-    initPreferences(context);
+    // initPreferences(context);
 
     const bodyStyle = TextStyle(fontSize: 19.0);
 

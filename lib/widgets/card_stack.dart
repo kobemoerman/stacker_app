@@ -51,7 +51,7 @@ class StackCard extends StatelessWidget {
         brightness: Theme.of(context).brightness,
       ).shadow,
       child: OpenContainer(
-        transitionDuration: Duration(milliseconds: 600),
+        transitionDuration: Duration(milliseconds: 250),
         closedElevation: 0.0,
         closedColor: Theme.of(context).cardColor,
         openColor: Theme.of(context).cardColor,
@@ -92,7 +92,7 @@ class StackCard extends StatelessWidget {
               height: 50,
               color:
                   color.withOpacity(study.containsKey(table.table) ? 1.0 : 0.5),
-              duration: Duration(milliseconds: 400),
+              duration: Duration(milliseconds: 250),
               padding: this.padding,
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,

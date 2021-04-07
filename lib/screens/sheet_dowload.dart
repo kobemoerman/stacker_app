@@ -107,6 +107,7 @@ class _DownloadSheetState extends State<DownloadSheet> {
     return Scaffold(
       backgroundColor: Theme.of(context).backgroundColor,
       body: SafeArea(
+        bottom: false,
         child: Stack(
           children: [
             _body,
@@ -294,7 +295,7 @@ class _DownloadSheetState extends State<DownloadSheet> {
       ),
       child: AnimatedOpacity(
         curve: Curves.decelerate,
-        duration: Duration(milliseconds: 400),
+        duration: Duration(milliseconds: 250),
         opacity: _selected.containsKey(item) ? 1.0 : 0.0,
         child: Icon(Icons.check, color: color),
       ),

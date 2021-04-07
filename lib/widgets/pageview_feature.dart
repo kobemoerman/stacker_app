@@ -108,7 +108,7 @@ class _FeaturedViewState extends State<FeaturedView> {
       mainAxisSize: MainAxisSize.min,
       children: List.generate(PAGES, (idx) {
         return AnimatedContainer(
-          duration: Duration(milliseconds: 300),
+          duration: Duration(milliseconds: 250),
           margin: const EdgeInsets.symmetric(horizontal: 2.5),
           height: 7.5,
           width: idx == _pageActive ? 15.0 : 7.5,
@@ -131,7 +131,7 @@ class _FeaturedViewState extends State<FeaturedView> {
     final double top = active ? 20.0 : 50.0;
 
     return AnimatedContainer(
-      duration: Duration(milliseconds: 750),
+      duration: Duration(milliseconds: 500),
       curve: Curves.easeOutQuart,
       margin: EdgeInsets.fromLTRB(5.0, top / 2, 5.0, top / 2),
       decoration: CardDecoration(
