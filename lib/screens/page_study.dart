@@ -387,7 +387,6 @@ class _StudyPageState extends State<StudyPage> {
       Future.delayed(
           Duration(milliseconds: 500), () => setState(() => isComplete = true));
     } else {
-      print('HELLO');
       isSwipped = false;
     }
 

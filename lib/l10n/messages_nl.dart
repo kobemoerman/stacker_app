@@ -52,6 +52,16 @@ class MessageLookup extends MessageLookupByLibrary {
         "edit_pic_gallery": MessageLookupByLibrary.simpleMessage("Gallerij"),
         "edit_username":
             MessageLookupByLibrary.simpleMessage("Gebruikersnaam bewerken"),
+        "stats_header": MessageLookupByLibrary.simpleMessage("Statistieken"),
+        "stats_weeks_review":
+            MessageLookupByLibrary.simpleMessage("Dagen beoordeling"),
+        "stats_best_stack":
+            MessageLookupByLibrary.simpleMessage("Beste Stapel"),
+        "stats_correct_cards":
+            MessageLookupByLibrary.simpleMessage("Correcte Kaarten"),
+        "stats_hours_studied":
+            MessageLookupByLibrary.simpleMessage("Uren Gestudeerd"),
+        "stats_streak": MessageLookupByLibrary.simpleMessage("Streak"),
         "stacks_header": MessageLookupByLibrary.simpleMessage("STAPELS"),
         "stacks_search":
             MessageLookupByLibrary.simpleMessage("Zoek een stapel..."),
@@ -65,6 +75,7 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Herziening"),
         "study_complete_repeat":
             MessageLookupByLibrary.simpleMessage("Herhaal"),
+        "days": MessageLookupByLibrary.simpleMessage("Dagen"),
         "missing": MessageLookupByLibrary.simpleMessage("Ontbreekt"),
         "undo": MessageLookupByLibrary.simpleMessage("Ontdoen"),
         "wrong": MessageLookupByLibrary.simpleMessage("Verkeerde"),

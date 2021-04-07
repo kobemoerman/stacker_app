@@ -12,6 +12,8 @@
 import 'package:intl/intl.dart';
 import 'package:intl/message_lookup_by_library.dart';
 
+import 'messages_nl.dart';
+
 final messages = new MessageLookup();
 
 typedef String MessageIfAbsent(String messageStr, List<dynamic> args);
@@ -49,6 +51,15 @@ class MessageLookup extends MessageLookupByLibrary {
         "edit_pic_camera": MessageLookupByLibrary.simpleMessage("Camera"),
         "edit_pic_gallery": MessageLookupByLibrary.simpleMessage("Gallery"),
         "edit_username": MessageLookupByLibrary.simpleMessage("Edit username"),
+        "stats_header": MessageLookupByLibrary.simpleMessage("Statistics"),
+        "stats_weeks_review":
+            MessageLookupByLibrary.simpleMessage("Days Review"),
+        "stats_best_stack": MessageLookupByLibrary.simpleMessage("Best Stack"),
+        "stats_correct_cards":
+            MessageLookupByLibrary.simpleMessage("Correct Cards"),
+        "stats_hours_studied":
+            MessageLookupByLibrary.simpleMessage("Hours Studied"),
+        "stats_streak": MessageLookupByLibrary.simpleMessage("Streak"),
         "stacks_header": MessageLookupByLibrary.simpleMessage("STACKS"),
         "stacks_search":
             MessageLookupByLibrary.simpleMessage("Search for a stack..."),
@@ -62,6 +73,7 @@ class MessageLookup extends MessageLookupByLibrary {
             "Tap the information icon to review your wrong answers"),
         "study_complete_review": MessageLookupByLibrary.simpleMessage("Review"),
         "study_complete_repeat": MessageLookupByLibrary.simpleMessage("Repeat"),
+        "days": MessageLookupByLibrary.simpleMessage("Days"),
         "missing": MessageLookupByLibrary.simpleMessage("Missing"),
         "undo": MessageLookupByLibrary.simpleMessage("Undo"),
         "wrong": MessageLookupByLibrary.simpleMessage("Wrong"),

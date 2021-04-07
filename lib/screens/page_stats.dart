@@ -24,12 +24,14 @@ class _StatisticsPageState extends State<StatisticsPage> {
 
   @override
   Widget build(BuildContext context) {
+    final _local = UserData.of(context).local;
+
     return Scaffold(
       appBar: PageAppBar(
         color: Theme.of(context).cardColor,
         height: 72.0,
         elevation: 7.5,
-        title: 'Statistics',
+        title: _local.statsHeader,
         textColor: UserData.of(context).primaryColor,
       ),
       backgroundColor: Theme.of(context).backgroundColor,
@@ -54,11 +56,12 @@ class _StatisticsPageState extends State<StatisticsPage> {
   }
 
   Widget weekReview() {
-    final theme = Theme.of(context);
+    final theme = Theme.of(context).textTheme;
+    final local = UserData.of(context).local;
 
     var header = Padding(
       padding: const EdgeInsets.fromLTRB(10.0, 0.0, 0.0, 15.0),
-      child: Text('7 Days Review:', style: theme.textTheme.bodyText1),
+      child: Text('7 ${local.statsWeekReview}:', style: theme.bodyText1),
     );
 
     return Container(
@@ -86,7 +89,7 @@ class _StatisticsPageState extends State<StatisticsPage> {
 
     String study = data.getFromDisk('stats_best_stack').split('-').first;
 
-    var header = Text('Best stack', style: theme.bodyText1);
+    var header = Text(data.local.statsBestStack, style: theme.bodyText1);
     var content = Text(study.formatTable().last, style: theme.subtitle1);
 
     return Container(
@@ -118,11 +121,12 @@ class _StatisticsPageState extends State<StatisticsPage> {
       count = '0';
     }
 
-    var header = Text('Streak', style: theme.bodyText1);
+    var header = Text(data.local.statsStreak, style: theme.bodyText1);
     var content = Text(count,
         style: theme.bodyText1
             .copyWith(fontSize: 80, height: 0.75, color: data.primaryColor));
-    var subtitle = Text('days', style: theme.bodyText1.copyWith(fontSize: 20));
+    var subtitle = Text(data.local.days.toLowerCase(),
+        style: theme.bodyText1.copyWith(fontSize: 20));
 
     return Container(
       margin: const EdgeInsets.fromLTRB(20.0, 10.0, 10.0, 10.0),
@@ -161,7 +165,7 @@ class _StatisticsPageState extends State<StatisticsPage> {
       ratio = 0.0;
     }
 
-    var header = Text('Correct cards', style: theme.bodyText1);
+    var header = Text(data.local.statsCorrectCards, style: theme.bodyText1);
     var content = CircularPercentIndicator(
       radius: 80.0,
       lineWidth: 5.0,
@@ -202,7 +206,7 @@ class _StatisticsPageState extends State<StatisticsPage> {
     });
     sum /= 60;
 
-    var header = Text('Hours studied', style: theme.bodyText1);
+    var header = Text(data.local.statsHoursStudied, style: theme.bodyText1);
     var content = Text(sum.round().toString(),
         style: theme.headline1
             .copyWith(fontSize: 45, height: 0.8, color: data.primaryColor));

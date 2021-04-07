@@ -191,6 +191,54 @@ class AppLocalization {
     );
   }
 
+  String get statsHeader {
+    return Intl.message(
+      "Satistics",
+      name: 'stats_header',
+      desc: 'stats title',
+    );
+  }
+
+  String get statsWeekReview {
+    return Intl.message(
+      "Days Review",
+      name: 'stats_weeks_review',
+      desc: 'stats graph title',
+    );
+  }
+
+  String get statsBestStack {
+    return Intl.message(
+      "Best Stack",
+      name: 'stats_best_stack',
+      desc: 'stats best stack title',
+    );
+  }
+
+  String get statsCorrectCards {
+    return Intl.message(
+      "Correct Cards",
+      name: 'stats_correct_cards',
+      desc: 'stats correct cards title',
+    );
+  }
+
+  String get statsHoursStudied {
+    return Intl.message(
+      "Hours Studied",
+      name: 'stats_hours_studied',
+      desc: 'stats hours studied title',
+    );
+  }
+
+  String get statsStreak {
+    return Intl.message(
+      "Streak",
+      name: 'stats_streak',
+      desc: 'stats streak title',
+    );
+  }
+
   String get stacksHeader {
     return Intl.message(
       "STACKS",
@@ -252,6 +300,14 @@ class AppLocalization {
       "Repeat",
       name: 'study_complete_repeat',
       desc: 'restart stack button',
+    );
+  }
+
+  String get days {
+    return Intl.message(
+      "Days",
+      name: 'days',
+      desc: 'days text',
     );
   }
 

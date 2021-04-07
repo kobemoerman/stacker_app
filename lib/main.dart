@@ -52,7 +52,6 @@ class BuildApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    print('BUILDING APP');
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       theme: Provider.of<ThemeState>(context).theme == ThemeType.DARK
