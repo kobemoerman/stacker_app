@@ -120,6 +120,7 @@ class StackCard extends StatelessWidget {
       );
 
   Widget studyStack(BuildContext context) {
+    final _local = UserData.of(context).local;
     String text = this.table.table.formatTable().last;
 
     return Container(
@@ -136,7 +137,7 @@ class StackCard extends StatelessWidget {
             style: theme.textTheme.bodyText2,
           ),
           Text(
-            '${this.table.cards} cards',
+            '${this.table.cards} ${_local.cards}',
             style: theme.textTheme.subtitle2,
           ),
         ],

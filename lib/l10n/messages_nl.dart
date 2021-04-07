@@ -22,9 +22,9 @@ class MessageLookup extends MessageLookupByLibrary {
   final messages = _notInlinedMessages(_notInlinedMessages);
   static _notInlinedMessages(_) => <String, Function>{
         "edit_stack_header":
-            MessageLookupByLibrary.simpleMessage("Stapel Bewerken"),
+            MessageLookupByLibrary.simpleMessage("Stack Bewerken"),
         "create_stack_header":
-            MessageLookupByLibrary.simpleMessage("Maak een Stapel"),
+            MessageLookupByLibrary.simpleMessage("Maak een Stack"),
         "settings_header": MessageLookupByLibrary.simpleMessage("Instellingen"),
         "preferences_header":
             MessageLookupByLibrary.simpleMessage("Voorkeuren"),
@@ -35,7 +35,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "settings_languages": MessageLookupByLibrary.simpleMessage("Taal"),
         "settings_dark": MessageLookupByLibrary.simpleMessage("Donkere Stand"),
         "settings_download":
-            MessageLookupByLibrary.simpleMessage("Vind een Stapel"),
+            MessageLookupByLibrary.simpleMessage("Vind een stack"),
         "settings_notifications":
             MessageLookupByLibrary.simpleMessage("Meldingen Toestaan"),
         "settings_terms":
@@ -44,7 +44,7 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Privacybeleid"),
         "settings_help": MessageLookupByLibrary.simpleMessage("Help"),
         "available_stacks_header":
-            MessageLookupByLibrary.simpleMessage("Beschikbare stapels"),
+            MessageLookupByLibrary.simpleMessage("Beschikbare stacks"),
         "edit_name_header": MessageLookupByLibrary.simpleMessage("Naam"),
         "edit_pic_header": MessageLookupByLibrary.simpleMessage("Profielfoto"),
         "edit_theme_header": MessageLookupByLibrary.simpleMessage("Thema"),
@@ -55,20 +55,19 @@ class MessageLookup extends MessageLookupByLibrary {
         "stats_header": MessageLookupByLibrary.simpleMessage("Statistieken"),
         "stats_weeks_review":
             MessageLookupByLibrary.simpleMessage("Dagen beoordeling"),
-        "stats_best_stack":
-            MessageLookupByLibrary.simpleMessage("Beste Stapel"),
+        "stats_best_stack": MessageLookupByLibrary.simpleMessage("Beste Stack"),
         "stats_correct_cards":
             MessageLookupByLibrary.simpleMessage("Correcte Kaarten"),
         "stats_hours_studied":
             MessageLookupByLibrary.simpleMessage("Uren Gestudeerd"),
         "stats_streak": MessageLookupByLibrary.simpleMessage("Streak"),
-        "stacks_header": MessageLookupByLibrary.simpleMessage("STAPELS"),
+        "stacks_header": MessageLookupByLibrary.simpleMessage("STACKS"),
         "stacks_search":
-            MessageLookupByLibrary.simpleMessage("Zoek een stapel..."),
+            MessageLookupByLibrary.simpleMessage("Zoek een stack..."),
         "featured_empty_header":
             MessageLookupByLibrary.simpleMessage("Start met studeren"),
         "study_complete_header":
-            MessageLookupByLibrary.simpleMessage("Stapel Voltooid!"),
+            MessageLookupByLibrary.simpleMessage("Stack Voltooid!"),
         "study_complete_subtitle": MessageLookupByLibrary.simpleMessage(
             "Tik op het informatie icoon om uw foute antwoorden te bekijken"),
         "study_complete_review":
@@ -82,13 +81,14 @@ class MessageLookup extends MessageLookupByLibrary {
         "delete": MessageLookupByLibrary.simpleMessage("Verwijderen"),
         "deleted": MessageLookupByLibrary.simpleMessage("Verwijderd"),
         "cancel": MessageLookupByLibrary.simpleMessage("Annuleer"),
+        "cards": MessageLookupByLibrary.simpleMessage("kaart"),
         "search": MessageLookupByLibrary.simpleMessage("Zoeken"),
         "and": MessageLookupByLibrary.simpleMessage("en"),
         "questions": MessageLookupByLibrary.simpleMessage("Vragen"),
         "question": MessageLookupByLibrary.simpleMessage("Vraag"),
         "answer": MessageLookupByLibrary.simpleMessage("Antwoord"),
         "table_name": MessageLookupByLibrary.simpleMessage("Studie"),
-        "table_theme": MessageLookupByLibrary.simpleMessage("Stapel naam"),
+        "table_theme": MessageLookupByLibrary.simpleMessage("Stack naam"),
         "featured_empty_info": MessageLookupByLibrary.simpleMessage(
             "Geen onderzoek om door te gaan."),
         "merry_christmas":
@@ -123,11 +123,11 @@ class MessageLookup extends MessageLookupByLibrary {
         "info_more_question": MessageLookupByLibrary.simpleMessage(
             "Stapel moet ten minste één vraag bevatten."),
         "info_stack_exists":
-            MessageLookupByLibrary.simpleMessage("Deze stapel bestaat al."),
+            MessageLookupByLibrary.simpleMessage("Deze stack bestaat al."),
         "info_delete_stack": MessageLookupByLibrary.simpleMessage(
             "Weet u zeker dat u door wilt gaan met deze actie?"),
         "info_delete_header":
-            MessageLookupByLibrary.simpleMessage("Stapel verwijderen?"),
+            MessageLookupByLibrary.simpleMessage("Stack verwijderen?"),
         "info_card_init": MessageLookupByLibrary.simpleMessage(
             "Tik op de kaart om deze om te draaien.\nTik op het bewerkings icoon om inhoud in te stellen."),
       };

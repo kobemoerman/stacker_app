@@ -10,6 +10,7 @@ import 'package:stackr/screens/sheet_dowload.dart';
 import 'package:stackr/screens/sheet_information.dart';
 import 'package:stackr/screens/sheet_profile.dart';
 import 'package:stackr/widgets/appbar_page.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import '../theme.dart';
 import '../constants.dart';
@@ -45,7 +46,18 @@ class _SettingsPageState extends State<SettingsPage> {
   }
 
   _contactUs(BuildContext context) async {
-    print('WHATs UP DUDE');
+    final Uri params = Uri(
+      scheme: 'mailto',
+      path: 'studystackr@gmail.com',
+      query: 'subject=Stackr Feedback&body=App Version 3.23',
+    );
+
+    var url = params.toString();
+    if (await canLaunch(url)) {
+      await launch(url);
+    } else {
+      throw 'Could not launch $url';
+    }
   }
 
   _termsOfUse(BuildContext context) {

@@ -367,6 +367,14 @@ class AppLocalization {
     );
   }
 
+  String get cards {
+    return Intl.message(
+      "cards",
+      name: 'cards',
+      desc: 'cards text',
+    );
+  }
+
   String get and {
     return Intl.message(
       "and",

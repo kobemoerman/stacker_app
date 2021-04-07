@@ -189,7 +189,7 @@ class _SwipeCardState extends State<SwipeCard> {
   }
 
   void _onPanStart(DragStartDetails details, double height) {
-    if (widget.card == null) return;
+    if (widget.card == null || widget.listener == null) return;
 
     isMoving = true;
 

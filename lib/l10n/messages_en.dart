@@ -80,6 +80,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "delete": MessageLookupByLibrary.simpleMessage("Delete"),
         "deleted": MessageLookupByLibrary.simpleMessage("Deleted"),
         "cancel": MessageLookupByLibrary.simpleMessage("Cancel"),
+        "cards": MessageLookupByLibrary.simpleMessage("cards"),
         "search": MessageLookupByLibrary.simpleMessage("Search"),
         "and": MessageLookupByLibrary.simpleMessage("and"),
         "questions": MessageLookupByLibrary.simpleMessage("Questions"),
