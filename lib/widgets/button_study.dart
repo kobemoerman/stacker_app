@@ -3,7 +3,6 @@ import 'package:stackr/decoration/card_shadow.dart';
 import 'package:stackr/model/user_inherited.dart';
 
 import '../constants.dart';
-import '../locale/localization.dart';
 
 enum Side { L, R }
 

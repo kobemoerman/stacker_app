@@ -2,8 +2,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:stackr/widgets/appbar_page.dart';
+import 'package:stackr/widgets/dialog_information.dart';
 
-import '../locale/localization.dart';
 import '../model/flashcard.dart';
 import '../model/user_inherited.dart';
 import '../widgets/slidable.dart';
@@ -163,25 +163,19 @@ class _FlashCardSheetState extends State<FlashCardSheet> {
       widget.callback(_removed);
     } else {
       filterListener(filter);
-      _undoSnackBar(context, _removed, idx);
+      _undoAction(context, _removed, idx);
     }
   }
 
-  void _undoSnackBar(BuildContext context, FlashCard item, int index) {
+  void _undoAction(BuildContext context, FlashCard item, int index) {
     final _local = UserData.of(context).local;
-    var snackbar = SnackBar(
-      content: Text('${_local.deleted} ${_local.question} ${index + 1}'),
-      action: SnackBarAction(
-        label: _local.undo,
-        onPressed: () {
-          widget.stack.insert(index, item);
-          filterListener(filter);
-        },
-      ),
-    );
 
-    _scaffoldKey.currentState
-      ..removeCurrentSnackBar()
-      ..showSnackBar(snackbar);
+    InfoDialog.of(context, _scaffoldKey).undoSnackBar(
+      onPressed: () {
+        widget.stack.insert(index, item);
+        filterListener(filter);
+      },
+      text: '${_local.deleted} ${_local.question} ${index + 1}',
+    );
   }
 }

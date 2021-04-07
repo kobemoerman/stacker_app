@@ -83,6 +83,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "deleted": MessageLookupByLibrary.simpleMessage("Verwijderd"),
         "cancel": MessageLookupByLibrary.simpleMessage("Annuleer"),
         "search": MessageLookupByLibrary.simpleMessage("Zoeken"),
+        "and": MessageLookupByLibrary.simpleMessage("en"),
         "questions": MessageLookupByLibrary.simpleMessage("Vragen"),
         "question": MessageLookupByLibrary.simpleMessage("Vraag"),
         "answer": MessageLookupByLibrary.simpleMessage("Antwoord"),

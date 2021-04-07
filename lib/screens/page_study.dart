@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:lottie/lottie.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:percent_indicator/percent_indicator.dart';
 import 'package:stackr/utils/stopwatch_operation.dart';
@@ -178,6 +179,11 @@ class _StudyPageState extends State<StudyPage> {
 
   @override
   Widget build(BuildContext context) {
+    final _animation = Align(
+      alignment: Alignment.bottomCenter,
+      child: Lottie.asset('assets/study_complete.json', height: 100.0),
+    );
+
     return Scaffold(
       backgroundColor: Theme.of(context).backgroundColor,
       appBar: PageAppBar(
@@ -191,56 +197,61 @@ class _StudyPageState extends State<StudyPage> {
         onPress: featuredStudy,
       ),
       body: SafeArea(
-        child: Column(
+        child: Stack(
           children: [
-            Expanded(
-              child: LayoutBuilder(
-                builder: (BuildContext ctx, BoxConstraints constraints) {
-                  return Column(
-                    children: [
-                      /// PROGRESS INFORMATION
-                      Container(
-                        margin: const EdgeInsets.symmetric(horizontal: 20.0),
-                        height: 0.15 * constraints.maxHeight,
-                        alignment: Alignment.center,
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                          children: [
-                            timerIndicator(),
-                            SizedBox(width: 10.0),
-                            Expanded(child: progressIndicator()),
-                          ],
-                        ),
-                      ),
-
-                      /// QUESTION SHEET
-                      Container(
-                        height: 0.85 * constraints.maxHeight,
-                        child: Stack(children: cardDesign),
-                      ),
-                    ],
-                  );
-                },
-              ),
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            this.isComplete && getPercentage() > 0.5 ? _animation : null,
+            Column(
               children: [
-                StudyButton(
-                  side: Side.L,
-                  value: _wrong,
-                  isComplete: isComplete,
-                  callback: isComplete ? reviewCards : swipeCard,
+                Expanded(
+                  child: LayoutBuilder(
+                    builder: (BuildContext ctx, BoxConstraints constraints) {
+                      return Column(
+                        children: [
+                          /// PROGRESS INFORMATION
+                          Container(
+                            margin: const EdgeInsets.symmetric(horizontal: 20),
+                            height: 0.15 * constraints.maxHeight,
+                            alignment: Alignment.center,
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                              children: [
+                                timerIndicator(),
+                                SizedBox(width: 10.0),
+                                Expanded(child: progressIndicator()),
+                              ],
+                            ),
+                          ),
+
+                          /// QUESTION SHEET
+                          Container(
+                            height: 0.85 * constraints.maxHeight,
+                            child: Stack(children: cardDesign),
+                          ),
+                        ],
+                      );
+                    },
+                  ),
                 ),
-                StudyButton(
-                  side: Side.R,
-                  value: _correct,
-                  isComplete: isComplete,
-                  callback: isComplete ? restartCards : swipeCard,
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    StudyButton(
+                      side: Side.L,
+                      value: _wrong,
+                      isComplete: isComplete,
+                      callback: isComplete ? reviewCards : swipeCard,
+                    ),
+                    StudyButton(
+                      side: Side.R,
+                      value: _correct,
+                      isComplete: isComplete,
+                      callback: isComplete ? restartCards : swipeCard,
+                    ),
+                  ],
                 ),
               ],
             ),
-          ],
+          ].where((e) => e != null).toList(),
         ),
       ),
     );
@@ -384,8 +395,9 @@ class _StudyPageState extends State<StudyPage> {
       timer.stop();
       render.cancel();
       cardDesign[1].progress = getPercentage();
-      Future.delayed(
-          Duration(milliseconds: 500), () => setState(() => isComplete = true));
+      Future.delayed(Duration(milliseconds: 500), () {
+        setState(() => isComplete = true);
+      });
     } else {
       isSwipped = false;
     }

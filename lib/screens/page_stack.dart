@@ -8,9 +8,9 @@ import 'package:stackr/widgets/appbar_page.dart';
 import 'package:stackr/widgets/card_study.dart';
 import 'package:stackr/widgets/dialog_confirm.dart';
 import 'package:stackr/widgets/button_icon.dart';
+import 'package:stackr/widgets/dialog_information.dart';
 import 'package:stackr/widgets/textfield_platform.dart';
 
-import '../locale/localization.dart';
 import 'sheet_flashcards.dart';
 import '../constants.dart';
 import '../model/flashcard.dart';
@@ -28,7 +28,15 @@ class StackPage extends StatefulWidget {
 
   final Function callback;
 
-  StackPage({Key key, this.study, this.theme, this.cards, this.callback})
+  final GlobalKey<ScaffoldState> scaffold;
+
+  const StackPage(
+      {Key key,
+      this.study,
+      this.theme,
+      this.cards,
+      this.callback,
+      @required this.scaffold})
       : super(key: key);
 
   @override
@@ -159,25 +167,21 @@ class _StackPageState extends State<StackPage> {
   }
 
   void createDBTable() async {
+    final _regex = RegExp('[0-9]');
     final _local = UserData.of(context).local;
 
-    if (_name.text.isEmpty || _theme.text.isEmpty) {
-      _showInformationBar(_local.infoMissingNameTheme);
-      return;
-    }
+    var msg;
+    if (_name.text.isEmpty || _theme.text.isEmpty)
+      msg = _local.infoMissingNameTheme;
 
-    if (_name.text.startsWith(new RegExp('[0-9]'))) {
-      _showInformationBar(_local.infoNameLetterStart);
-      return;
-    }
+    if (_name.text.startsWith(_regex)) msg = _local.infoNameLetterStart;
 
-    if (_theme.text.startsWith(new RegExp('[0-9]'))) {
-      _showInformationBar(_local.infoThemeLetterStart);
-      return;
-    }
+    if (_theme.text.startsWith(_regex)) msg = _local.infoThemeLetterStart;
 
-    if (widget.cards.length < 1) {
-      _showInformationBar(_local.infoMoreQuestion);
+    if (widget.cards.length < 1) msg = _local.infoMoreQuestion;
+
+    if (msg != null) {
+      InfoDialog.of(context, widget.scaffold).displaySnackBar(text: msg);
       return;
     }
 
@@ -208,12 +212,12 @@ class _StackPageState extends State<StackPage> {
     }
 
     if (question.isEmpty) message = message + _local.question.toLowerCase();
-    if (answer.isEmpty)
-      message = message +
-          '${question.isEmpty ? ' and ' : ''}' +
-          _local.answer.toLowerCase();
+    if (answer.isEmpty) {
+      var concat = question.isEmpty ? ' ${_local.and} ' : '';
+      message = message + concat + _local.answer.toLowerCase();
+    }
 
-    _showInformationBar(message);
+    InfoDialog.of(context, widget.scaffold).displaySnackBar(text: message);
   }
 
   void editQuestion(FlashCard card) {
@@ -301,19 +305,6 @@ class _StackPageState extends State<StackPage> {
       }),
     );
   }
-
-  void _showInformationBar(String message) {
-    final color = UserData.of(context).primaryColor;
-
-    Flushbar(
-      message: message,
-      isDismissible: true,
-      duration: Duration(seconds: 3),
-      flushbarStyle: FlushbarStyle.GROUNDED,
-      icon: Icon(Icons.info_outline, size: 28.0, color: color),
-      leftBarIndicatorColor: color,
-    )..show(context);
-  }
 }
 
 class EditStack extends StatefulWidget {
@@ -359,7 +350,8 @@ class _EditStackState extends State<EditStack> {
 
     if (this.table != name) {
       if (await data.dbClient.tableExist(table: name)) {
-        _showInformationBar(_local.infoStackExists);
+        InfoDialog.of(context, _scaffoldKey)
+            .displaySnackBar(text: _local.infoStackExists);
         return;
       }
     }
@@ -418,6 +410,7 @@ class _EditStackState extends State<EditStack> {
         child: Padding(
           padding: const EdgeInsets.only(top: 15.0),
           child: StackPage(
+            scaffold: _scaffoldKey,
             study: _study,
             theme: _theme,
             cards: _cards,
@@ -426,19 +419,6 @@ class _EditStackState extends State<EditStack> {
         ),
       ),
     );
-  }
-
-  void _showInformationBar(String message) {
-    final color = UserData.of(context).primaryColor;
-
-    Flushbar(
-      message: message,
-      isDismissible: true,
-      duration: Duration(seconds: 3),
-      flushbarStyle: FlushbarStyle.GROUNDED,
-      icon: Icon(Icons.info_outline, size: 28.0, color: color),
-      leftBarIndicatorColor: color,
-    )..show(context);
   }
 
   Widget appBarAction() {
@@ -475,7 +455,8 @@ class _CreateStackState extends State<CreateStack> {
     final _local = UserData.of(context).local;
 
     if (await data.dbClient.tableExist(table: name)) {
-      _showInformationBar(_local.infoStackExists);
+      InfoDialog.of(context, _scaffoldKey)
+          .displaySnackBar(text: _local.infoStackExists);
       return;
     }
 
@@ -509,6 +490,7 @@ class _CreateStackState extends State<CreateStack> {
         child: Padding(
           padding: const EdgeInsets.only(top: 15.0),
           child: StackPage(
+            scaffold: _scaffoldKey,
             study: '',
             theme: '',
             cards: _cards,
@@ -517,18 +499,5 @@ class _CreateStackState extends State<CreateStack> {
         ),
       ),
     );
-  }
-
-  void _showInformationBar(String message) {
-    final color = UserData.of(context).primaryColor;
-
-    Flushbar(
-      message: message,
-      isDismissible: true,
-      duration: Duration(seconds: 3),
-      flushbarStyle: FlushbarStyle.GROUNDED,
-      icon: Icon(Icons.info_outline, size: 28.0, color: color),
-      leftBarIndicatorColor: color,
-    )..show(context);
   }
 }

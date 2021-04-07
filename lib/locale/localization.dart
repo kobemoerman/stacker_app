@@ -367,6 +367,14 @@ class AppLocalization {
     );
   }
 
+  String get and {
+    return Intl.message(
+      "and",
+      name: 'and',
+      desc: 'and text',
+    );
+  }
+
   String get questions {
     return Intl.message(
       "Questions",

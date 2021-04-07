@@ -2,6 +2,7 @@ import 'dart:ui';
 
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
+import 'package:lottie/lottie.dart';
 import 'package:stackr/decoration/card_shadow.dart';
 import 'package:stackr/model/fb_helper.dart';
 import 'package:stackr/model/studystack.dart';
@@ -9,7 +10,6 @@ import 'package:stackr/model/user_inherited.dart';
 import 'package:stackr/widgets/button_icon.dart';
 import 'package:stackr/widgets/searchbar.dart';
 import 'package:stackr/widgets/sliver_header.dart';
-import '../locale/localization.dart';
 import '../utils/string_operation.dart';
 
 class DownloadSheet extends StatefulWidget {
@@ -93,7 +93,11 @@ class _DownloadSheetState extends State<DownloadSheet> {
 
   @override
   Widget build(BuildContext context) {
-    Widget _body = Container();
+    Widget _body = Container(
+      alignment: Alignment.center,
+      child: Lottie.asset('assets/connection.json'),
+    );
+
     if (_isInit) _body = dataBuilder(_filter);
 
     return Scaffold(
@@ -104,8 +108,8 @@ class _DownloadSheetState extends State<DownloadSheet> {
             _body,
             pageHeader(),
             searchBuilder(),
-            _isDownloading ? downloadOverlay() : Container(),
-          ],
+            _isDownloading ? downloadOverlay() : null,
+          ].where((e) => e != null).toList(),
         ),
       ),
     );
@@ -158,18 +162,12 @@ class _DownloadSheetState extends State<DownloadSheet> {
   }
 
   Widget downloadOverlay() {
-    final color = UserData.of(context).primaryColor;
-    final animatedColor = AlwaysStoppedAnimation<Color>(color);
-
     return Container(
       color: Colors.black45,
       height: double.infinity,
       width: double.infinity,
       alignment: Alignment.center,
-      child: CircularProgressIndicator(
-        valueColor: animatedColor,
-        backgroundColor: Colors.transparent,
-      ),
+      child: Lottie.asset('assets/loading.json'),
     );
   }
 
