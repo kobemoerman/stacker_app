@@ -181,7 +181,7 @@ class _StudyPageState extends State<StudyPage> {
   Widget build(BuildContext context) {
     final _animation = Align(
       alignment: Alignment.bottomCenter,
-      child: Lottie.asset('assets/study_complete.json', height: 100.0),
+      child: Lottie.asset('assets/on_complete.json', height: 100.0),
     );
 
     return Scaffold(

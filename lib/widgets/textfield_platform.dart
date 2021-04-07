@@ -94,8 +94,8 @@ class _TextFieldPlatformState extends State<TextFieldPlatform> {
       maxLengthEnforced: widget.maxLength == null ? false : true,
       controller: widget.controller,
       placeholder: widget.hint,
-      placeholderStyle: Theme.of(context).textTheme.subtitle1,
-      style: Theme.of(context).textTheme.bodyText1,
+      placeholderStyle: Theme.of(context).textTheme.subtitle2,
+      style: Theme.of(context).textTheme.bodyText2,
       cursorColor: UserData.of(context).primaryColor,
       keyboardType: widget.maxLines == null
           ? TextInputType.multiline
@@ -114,7 +114,7 @@ class _TextFieldPlatformState extends State<TextFieldPlatform> {
       buildCounter: (context, {currentLength, isFocused, maxLength}) => null,
       maxLengthEnforced: widget.maxLength == null ? false : true,
       controller: widget.controller,
-      style: Theme.of(context).textTheme.bodyText1,
+      style: Theme.of(context).textTheme.bodyText2,
       cursorColor: UserData.of(context).primaryColor,
       keyboardType: widget.maxLines == null
           ? TextInputType.multiline
@@ -122,7 +122,7 @@ class _TextFieldPlatformState extends State<TextFieldPlatform> {
       scrollPhysics: BouncingScrollPhysics(),
       decoration: InputDecoration(
         hintText: widget.hint,
-        hintStyle: Theme.of(context).textTheme.subtitle1,
+        hintStyle: Theme.of(context).textTheme.subtitle2,
         isDense: true,
         border: InputBorder.none,
       ),
