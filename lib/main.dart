@@ -112,7 +112,7 @@ class RouteGenerator {
         return MaterialPageRoute(builder: (context) => page);
 
       default:
-        final page = intro ? IntroductionPage() : HomePage();
+        final page = intro ? IntroductionPage() : IntroductionPage();
         return MaterialPageRoute(builder: (context) => page);
     }
   }

@@ -12,7 +12,7 @@ class _IntroductionPageState extends State<IntroductionPage> {
 
   Widget _buildImage(String assetName) {
     return Align(
-      child: Image.asset('assets/profile.jpeg', width: 350.0),
+      child: Image.asset('assets/$assetName.gif'),
       alignment: Alignment.bottomCenter,
     );
   }
@@ -73,33 +73,31 @@ class _IntroductionPageState extends State<IntroductionPage> {
         PageViewModel(
           title: "Welcome",
           body: "Here we only display the logo with welcome text!",
-          image: _buildImage('img1'),
+          //image: _buildImage('img1'),
           decoration: pageDecoration,
         ),
         PageViewModel(
-          title: "Create a Stack",
+          title: "Create a new stack",
           body: "Whatever we want to explain.",
-          image: _buildImage('img2'),
+          image: _buildImage('create'),
           decoration: pageDecoration,
         ),
         PageViewModel(
-          title: "Start Studying",
-          body:
-              "Kids and teens can track their stocks 24/7 and place trades that you approve.",
-          image: _buildImage('img3'),
+          title: "Download available stacks",
+          body: "Whatever we want to explain.",
+          image: _buildImage('download'),
           decoration: pageDecoration,
         ),
         PageViewModel(
-          title: "Edit Content",
-          bodyWidget: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: const [
-              Text("Tap ", style: bodyStyle),
-              Icon(Icons.edit),
-              Text(" to edit a stack", style: bodyStyle),
-            ],
-          ),
-          image: _buildImage('img1'),
+          title: "Select stacks you want to study",
+          body: "Whatever we want to explain.",
+          image: _buildImage('study'),
+          decoration: pageDecoration,
+        ),
+        PageViewModel(
+          title: "Study your flashcards",
+          body: "Whatever we want to explain.",
+          image: _buildImage('swipe'),
           decoration: pageDecoration,
         ),
       ],
