@@ -30,7 +30,9 @@ class StudyPage extends StatefulWidget {
   State<StatefulWidget> createState() => _StudyPageState();
 }
 
-class _StudyPageState extends State<StudyPage> {
+class _StudyPageState extends State<StudyPage> with TickerProviderStateMixin {
+  AnimationController _completeCtrl;
+
   String _study;
   String _theme;
 
@@ -99,6 +101,8 @@ class _StudyPageState extends State<StudyPage> {
 
     timer.start();
     render = Timer.periodic(Duration(minutes: 1), updateTimer);
+
+    _completeCtrl = AnimationController(vsync: this);
 
     _study = widget.table
         .map((e) => e.table.formatTable().first)
@@ -179,9 +183,21 @@ class _StudyPageState extends State<StudyPage> {
 
   @override
   Widget build(BuildContext context) {
-    final _animation = Align(
-      alignment: Alignment.bottomCenter,
-      child: Lottie.asset('assets/on_complete.json', height: 100.0),
+    final _animation = IgnorePointer(
+      child: Align(
+        alignment: Alignment.bottomCenter,
+        child: Lottie.asset(
+          'assets/on_complete.json',
+          controller: _completeCtrl,
+          onLoaded: (composition) {
+            if (_completeCtrl.isCompleted) _completeCtrl.reset();
+
+            _completeCtrl
+              ..duration = composition.duration
+              ..forward();
+          },
+        ),
+      ),
     );
 
     return Scaffold(
@@ -199,7 +215,6 @@ class _StudyPageState extends State<StudyPage> {
       body: SafeArea(
         child: Stack(
           children: [
-            this.isComplete && getPercentage() > 0.5 ? _animation : null,
             Column(
               children: [
                 Expanded(
@@ -251,6 +266,7 @@ class _StudyPageState extends State<StudyPage> {
                 ),
               ],
             ),
+            this.isComplete && getPercentage() > 0.75 ? _animation : null,
           ].where((e) => e != null).toList(),
         ),
       ),

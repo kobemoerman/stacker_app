@@ -93,9 +93,13 @@ class _DownloadSheetState extends State<DownloadSheet> {
 
   @override
   Widget build(BuildContext context) {
+    final _connecting = Theme.of(context).brightness == Brightness.light
+        ? 'assets/connecting_light.json'
+        : 'assets/connecting_dark.json';
+
     Widget _body = Container(
       alignment: Alignment.center,
-      child: Lottie.asset('assets/connection.json'),
+      child: Lottie.asset(_connecting, height: 75, width: 75),
     );
 
     if (_isInit) _body = dataBuilder(_filter);
@@ -167,7 +171,7 @@ class _DownloadSheetState extends State<DownloadSheet> {
       height: double.infinity,
       width: double.infinity,
       alignment: Alignment.center,
-      child: Lottie.asset('assets/loading.json'),
+      child: Lottie.asset('assets/loading.json', width: 150, height: 150),
     );
   }
 
