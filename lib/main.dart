@@ -61,7 +61,12 @@ class BuildApp extends StatelessWidget {
         GlobalMaterialLocalizations.delegate,
         GlobalWidgetsLocalizations.delegate,
       ],
-      supportedLocales: [const Locale('en', 'UK'), const Locale('nl', 'NL')],
+      supportedLocales: [
+        const Locale('en', 'UK'),
+        const Locale('nl', 'NL'),
+        const Locale('de', 'DE'),
+        const Locale('fr', 'FR'),
+      ],
       onGenerateRoute: (settings) =>
           RouteGenerator.generateRoute(settings, this.intro),
     );

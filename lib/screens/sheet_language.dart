@@ -33,6 +33,16 @@ class _LanguageSheetState extends State<LanguageSheet> {
           title: Text("Nederlands"),
           trailing: arrowRight,
           onTap: () => _updateLanguage(data, 'nl', 'NL'),
+        ),
+        ListTile(
+          title: Text("Deutsche"),
+          trailing: arrowRight,
+          onTap: () => _updateLanguage(data, 'de', 'DE'),
+        ),
+        ListTile(
+          title: Text("Français"),
+          trailing: arrowRight,
+          onTap: () => _updateLanguage(data, 'fr', 'FR'),
         )
       ],
     );

@@ -66,6 +66,8 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Zoek een stack..."),
         "featured_empty_header":
             MessageLookupByLibrary.simpleMessage("Start met studeren"),
+        "featured_empty_info": MessageLookupByLibrary.simpleMessage(
+            "Geen onderzoek om door te gaan."),
         "study_complete_header":
             MessageLookupByLibrary.simpleMessage("Stack Voltooid!"),
         "study_complete_subtitle": MessageLookupByLibrary.simpleMessage(
@@ -89,8 +91,6 @@ class MessageLookup extends MessageLookupByLibrary {
         "answer": MessageLookupByLibrary.simpleMessage("Antwoord"),
         "table_name": MessageLookupByLibrary.simpleMessage("Studie"),
         "table_theme": MessageLookupByLibrary.simpleMessage("Stack naam"),
-        "featured_empty_info": MessageLookupByLibrary.simpleMessage(
-            "Geen onderzoek om door te gaan."),
         "merry_christmas":
             MessageLookupByLibrary.simpleMessage("Vrolijk Kerstfeest"),
         "happy_thanksgiving":
