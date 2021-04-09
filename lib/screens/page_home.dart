@@ -148,14 +148,14 @@ class _HomePageState extends State<HomePage> {
                       /// FEATURED PAGE VIEW
                       featureWidget,
 
-                      /// SEARCH WIDGET
-                      SliverToBoxAdapter(child: searchWidget),
-
                       /// LIST TITLE
                       SliverPadding(
-                        padding: EdgeInsets.fromLTRB(15.0, 0.0, 15.0, 15.0),
+                        padding: EdgeInsets.all(15.0),
                         sliver: titleWidget,
                       ),
+
+                      /// SEARCH WIDGET
+                      SliverToBoxAdapter(child: searchWidget),
 
                       /// GRID VIEW
                       SliverPadding(

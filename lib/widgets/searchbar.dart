@@ -145,7 +145,7 @@ class _SearchHiddenState extends State<SearchHidden> {
       duration: Duration(milliseconds: 250),
       height: widget.isSearching ? 40.0 : 0.0,
       width: _width,
-      margin: const EdgeInsets.symmetric(vertical: 10.0),
+      margin: EdgeInsets.only(bottom: widget.isSearching ? 10.0 : 0.0),
       child: FittedBox(
         alignment: Alignment.topCenter,
         child: Container(
