@@ -23,8 +23,8 @@ Icon sendY = Icon(Icons.send, color: Colors.white);
 Icon sendN = Icon(Icons.send, color: Colors.red);
 
 List<Color> themeDarkColor = [
-  Colors.blue[300],
   Colors.indigo[300],
+  Colors.blue[300],
   Colors.blueGrey[300],
   Colors.teal[300],
   Colors.green[300],
@@ -36,8 +36,8 @@ List<Color> themeDarkColor = [
 ];
 
 List<Color> themeLightColor = [
-  Colors.blue[400],
   Colors.indigo[400],
+  Colors.blue[400],
   Colors.blueGrey[400],
   Colors.teal[400],
   Colors.green[400],

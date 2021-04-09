@@ -97,6 +97,7 @@ class _StackPageState extends State<StackPage> {
                 child: Column(
                   children: [
                     headerField(hint: _local.tableName, controller: _name),
+                    const SizedBox(height: 10.0),
                     headerField(hint: _local.tableTheme, controller: _theme),
                   ],
                 ),

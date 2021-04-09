@@ -81,7 +81,7 @@ class UserDataState extends State<UserData> {
   }
 
   featuredStudy(List<StudyStack> list) => list
-      .map((e) => e.table.formatTable().first)
+      .map((e) => e.table.formatTable().last)
       .toList()
       .getOccurences()
       .join(', ');

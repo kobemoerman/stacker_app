@@ -123,7 +123,7 @@ class _StudyPageState extends State<StudyPage> with TickerProviderStateMixin {
   void didChangeDependencies() async {
     super.didChangeDependencies();
 
-    if (cardDesign.isNotEmpty) return;
+    if (cardDesign.isNotEmpty || data != null) return;
 
     data = UserData.of(context);
 

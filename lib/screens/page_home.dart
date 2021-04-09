@@ -227,7 +227,11 @@ class _HomePageState extends State<HomePage> {
         closedColor: UserData.of(context).primaryColor,
         closedElevation: 4.0,
         transitionType: ContainerTransitionType.fade,
-        onClosed: (_) => study.clear(),
+        onClosed: (_) {
+          _textCtrl.clear();
+          isSearching = false;
+          study.clear();
+        },
         closedBuilder: (context, openContainer) => Material(
           type: MaterialType.transparency,
           child: InkWell(
