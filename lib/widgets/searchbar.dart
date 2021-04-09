@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:stackr/constants.dart';
 import 'package:stackr/decoration/card_shadow.dart';
+import 'package:stackr/widgets/textfield_platform.dart';
 
-import '../locale/localization.dart';
 import '../model/user_inherited.dart';
 
 enum Side { LEFT, RIGHT }
@@ -119,56 +119,69 @@ class _SearchExpandState extends State<SearchExpand> {
   }
 }
 
-class SearchOverride extends StatefulWidget {
-  final Offset begin;
+class SearchHidden extends StatefulWidget {
+  final bool isSearching;
+  final FocusNode focus;
+  final TextEditingController controller;
 
-  final Widget child;
-
-  const SearchOverride({Key key, this.begin, this.child}) : super(key: key);
+  const SearchHidden({
+    Key key,
+    @required this.isSearching,
+    @required this.controller,
+    @required this.focus,
+  }) : super(key: key);
 
   @override
-  _SearchOverrideState createState() => _SearchOverrideState();
+  _SearchHiddenState createState() => _SearchHiddenState();
 }
 
-class _SearchOverrideState extends State<SearchOverride> {
+class _SearchHiddenState extends State<SearchHidden> {
   @override
   Widget build(BuildContext context) {
-    return Expanded(
-      child: Container(
-        height: 50.0,
-        alignment: Alignment.centerLeft,
-        margin: const EdgeInsets.symmetric(horizontal: 10.0),
-        child: ClipRect(
-          child: AnimatedSwitcher(
-            duration: Duration(seconds: 1),
-            layoutBuilder: transitionLayout,
-            transitionBuilder: transitionAnimation,
-            child: widget.child,
+    final _local = UserData.of(context).local;
+    final _width = MediaQuery.of(context).size.width;
+
+    return AnimatedContainer(
+      duration: Duration(milliseconds: 250),
+      height: widget.isSearching ? 40.0 : 0.0,
+      width: _width,
+      margin: const EdgeInsets.symmetric(vertical: 10.0),
+      child: FittedBox(
+        alignment: Alignment.topCenter,
+        child: Container(
+          margin: const EdgeInsets.symmetric(horizontal: 15.0),
+          padding: const EdgeInsets.symmetric(horizontal: 10.0),
+          width: _width,
+          decoration: CardDecoration(
+            focus: true,
+            radius: 7.5,
+            color: Theme.of(context).cardColor,
+            brightness: Theme.of(context).brightness,
+          ).shadow,
+          child: Stack(
+            alignment: Alignment.center,
+            children: [
+              Align(
+                alignment: Alignment.centerLeft,
+                child: TextFieldPlatform(
+                  maxLines: 1,
+                  hint: _local.stacksSearch,
+                  controller: widget.controller,
+                  focusNode: widget.focus,
+                ),
+              ),
+              Align(
+                alignment: Alignment.centerRight,
+                child: InkWell(
+                  onTap: () => widget.controller.clear(),
+                  child: Icon(Icons.close,
+                      color: UserData.of(context).primaryColor),
+                ),
+              ),
+            ],
           ),
         ),
       ),
-    );
-  }
-
-  Widget transitionLayout(Widget currentChild, List<Widget> previousChildren) {
-    List<Widget> children = previousChildren;
-    if (currentChild != null) children = children.toList()..add(currentChild);
-    return Stack(
-      children: children,
-      alignment:
-          widget.begin.dx < 0.0 ? Alignment.centerLeft : Alignment.centerRight,
-    );
-  }
-
-  Widget transitionAnimation(Widget child, Animation<double> animation) {
-    Offset end = Offset(0.0, 0.0);
-    Offset begin = widget.begin;
-
-    final steps = Tween<Offset>(begin: begin, end: end).animate(animation);
-
-    return FadeTransition(
-      opacity: animation,
-      child: SlideTransition(position: steps, child: child),
     );
   }
 }

@@ -5,7 +5,6 @@ import 'package:flutter/animation.dart';
 import 'package:stackr/screens/page_study.dart';
 import 'package:stackr/widgets/textfield_platform.dart';
 
-import '../locale/localization.dart';
 import '../model/studystack.dart';
 import '../model/user_inherited.dart';
 import '../widgets/searchbar.dart';
@@ -54,9 +53,14 @@ class _HomePageState extends State<HomePage> {
     }
 
     double _max = MediaQuery.of(context).size.height / 3;
-    if (_anim &&
-        _scrollCtrl.hasClients &&
-        _scrollCtrl.position.maxScrollExtent > _max) {
+    if (_scrollCtrl.position.maxScrollExtent < _max) return;
+
+    if (_focus.hasFocus && offset < 225.0)
+      setState(() => _scrollCtrl.jumpTo(225.0));
+
+    if (_focus.hasFocus) return;
+
+    if (_anim && _scrollCtrl.hasClients) {
       await _scrollCtrl.animateTo(_pos,
           duration: Duration(milliseconds: 100), curve: Curves.easeIn);
       setState(() => _opacity);
@@ -67,8 +71,8 @@ class _HomePageState extends State<HomePage> {
     var maxPos = _scrollCtrl.position.maxScrollExtent;
 
     if (_focus.hasFocus) {
-      await _scrollCtrl.animateTo(maxPos > 250.0 ? 250.0 : maxPos,
-          duration: Duration(milliseconds: 250), curve: Curves.ease);
+      await _scrollCtrl.animateTo(maxPos > 225.0 ? 225.0 : maxPos,
+          duration: Duration(milliseconds: 100), curve: Curves.easeIn);
 
       setState(() {});
     }
@@ -110,6 +114,12 @@ class _HomePageState extends State<HomePage> {
 
     final titleWidget = SliverToBoxAdapter(child: _gridFilter());
 
+    final searchWidget = SearchHidden(
+      focus: _focus,
+      controller: _textCtrl,
+      isSearching: this.isSearching,
+    );
+
     return Scaffold(
       backgroundColor: _theme.backgroundColor,
       resizeToAvoidBottomInset: true,
@@ -138,9 +148,12 @@ class _HomePageState extends State<HomePage> {
                       /// FEATURED PAGE VIEW
                       featureWidget,
 
+                      /// SEARCH WIDGET
+                      SliverToBoxAdapter(child: searchWidget),
+
                       /// LIST TITLE
                       SliverPadding(
-                        padding: const EdgeInsets.all(15.0),
+                        padding: EdgeInsets.fromLTRB(15.0, 0.0, 15.0, 15.0),
                         sliver: titleWidget,
                       ),
 
@@ -257,21 +270,28 @@ class _HomePageState extends State<HomePage> {
             color: Colors.transparent,
             child: InkWell(
               onTap: () => setState(() {
-                if (isSearching) _textCtrl.clear();
+                if (isSearching) {
+                  _textCtrl.clear();
+                  _focus.unfocus();
+                }
                 isSearching = !isSearching;
               }),
-              child: Icon(
-                Icons.search,
-                key: UniqueKey(),
-                color: UserData.of(context).primaryColor,
+              child: AnimatedSwitcher(
+                duration: Duration(milliseconds: 250),
+                child: Icon(
+                  isSearching ? Icons.arrow_back_ios : Icons.search,
+                  key: ValueKey(isSearching),
+                  color: UserData.of(context).primaryColor,
+                ),
+                transitionBuilder: (Widget child, Animation<double> animation) {
+                  return ScaleTransition(scale: animation, child: child);
+                },
               ),
             ),
           ),
         ),
-        SearchOverride(
-          begin: Offset(-2.0, 0.0),
-          child: isSearching ? _search() : _title(),
-        ),
+        const SizedBox(width: 10.0),
+        _title(),
       ],
     );
   }
@@ -280,19 +300,7 @@ class _HomePageState extends State<HomePage> {
     final _local = UserData.of(context).local;
     final _theme = Theme.of(context);
     return Container(
-      width: double.infinity,
       child: Text(_local.stacksHeader, style: _theme.textTheme.headline1),
-    );
-  }
-
-  Widget _search() {
-    final _local = UserData.of(context).local;
-
-    return TextFieldPlatform(
-      controller: _textCtrl,
-      hint: _local.stacksSearch,
-      maxLines: 1,
-      focusNode: _focus,
     );
   }
 
