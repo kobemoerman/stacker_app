@@ -99,7 +99,7 @@ class UserDataState extends State<UserData> {
   void generateTableList({String filter = ''}) {
     if (this.dbClient == null) this.dbClient = new DBHelper();
 
-    this.tables = dbClient.tableList(dbClient.study, filter.toLowerCase());
+    this.tables = dbClient.tableList(filter.toLowerCase());
   }
 
   void saveImage(String value) {
@@ -132,7 +132,7 @@ class UserDataState extends State<UserData> {
     List<StudyStack> _tables = [];
     var _study = getFromDisk('featured_stack') ?? [];
     for (var i = 0; i < _study.length; i++) {
-      var amount = await dbClient.tableLength(table: _study[i]);
+      var amount = await dbClient.tableLength(name: _study[i]);
       _tables.add(StudyStack(_study[i], amount));
     }
 

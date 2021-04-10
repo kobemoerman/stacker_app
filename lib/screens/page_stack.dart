@@ -327,7 +327,7 @@ class _EditStackState extends State<EditStack> {
 
   _EditStackState(this.table);
 
-  getCards(table) => UserData.of(context).dbClient.cardList(table: table);
+  getCards(table) => UserData.of(context).dbClient.cardList(name: table);
 
   dropTable() async {
     var data = UserData.of(context);
@@ -350,7 +350,7 @@ class _EditStackState extends State<EditStack> {
     final _local = UserData.of(context).local;
 
     if (this.table != name) {
-      if (await data.dbClient.tableExist(table: name)) {
+      if (await data.dbClient.tableExist(name: name)) {
         InfoDialog.of(context, _scaffoldKey)
             .displaySnackBar(text: _local.infoStackExists);
         return;
@@ -360,8 +360,8 @@ class _EditStackState extends State<EditStack> {
     await data.dbClient.dropStack(name: this.table);
     await data.dbClient.createStack(name: name);
 
-    _cards = data.dbClient.initStack(table: name, cards: _cards);
-    data.dbClient.batchInsertCard(table: name, cards: _cards);
+    _cards = data.dbClient.initStack(name: name, cards: _cards);
+    data.dbClient.batchInsertCard(name: name, cards: _cards);
     data.generateTableList();
 
     List<String> list = data.featured.map((e) => e.table).toList();
@@ -455,7 +455,7 @@ class _CreateStackState extends State<CreateStack> {
     final data = UserData.of(context);
     final _local = UserData.of(context).local;
 
-    if (await data.dbClient.tableExist(table: name)) {
+    if (await data.dbClient.tableExist(name: name)) {
       InfoDialog.of(context, _scaffoldKey)
           .displaySnackBar(text: _local.infoStackExists);
       return;
@@ -463,8 +463,8 @@ class _CreateStackState extends State<CreateStack> {
 
     await data.dbClient.createStack(name: name);
 
-    _cards = data.dbClient.initStack(table: name, cards: _cards);
-    data.dbClient.batchInsertCard(table: name, cards: _cards);
+    _cards = data.dbClient.initStack(name: name, cards: _cards);
+    data.dbClient.batchInsertCard(name: name, cards: _cards);
     data.generateTableList();
 
     data.refresh();

@@ -9,7 +9,9 @@ import 'package:stackr/model/user_inherited.dart';
 class FBHelper {
   final BuildContext context;
 
-  FBHelper(this.context) : assert(context != null);
+  const FBHelper(this.context) : assert(context != null);
+
+  static FBHelper of(BuildContext context) => FBHelper(context);
 
   Future<bool> downloadList(List<String> list, storage.Reference ref) async {
     try {
@@ -47,20 +49,25 @@ class FBHelper {
         .toList();
 
     name = name.substring(0, name.length - 4);
-    final list = List<FlashCard>();
 
+    final list = _buildStack(table);
+
+    final data = UserData.of(this.context);
+    await data.dbClient.createStack(name: name);
+    data.dbClient.batchInsertCard(name: name, cards: list);
+    data.generateTableList();
+
+    data.refresh();
+  }
+
+  List<FlashCard> _buildStack(List<List<dynamic>> table) {
+    final list = List<FlashCard>();
     for (var i = 0; i < table.length; i++) {
       var r = table[i];
       var card = FlashCard(
           key: i, theme: r[1], question: r[2], answer: r[3], isSwipped: 0);
       list.add(card);
     }
-
-    final data = UserData.of(this.context);
-    await data.dbClient.createStack(name: name);
-    data.dbClient.batchInsertCard(table: name, cards: list);
-    data.generateTableList();
-
-    data.refresh();
+    return list;
   }
 }

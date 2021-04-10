@@ -54,7 +54,7 @@ class _StudyPageState extends State<StudyPage> with TickerProviderStateMixin {
 
   UserDataState data;
 
-  getCards(String table) => data.dbClient.cardList(table: table);
+  getCards(String table) => data.dbClient.cardList(name: table);
   double getProgress() => (_wrong + _correct) / (_total ?? double.infinity);
   double getPercentage() => (_correct) / (_total ?? double.infinity);
 
@@ -65,7 +65,7 @@ class _StudyPageState extends State<StudyPage> with TickerProviderStateMixin {
 
     if (cardDesign[0].card == null && cardDesign[1].card == null) {
       widget.table.forEach((e) async {
-        await data.dbClient.batchResetCard(table: e.table, length: e.cards);
+        await data.dbClient.batchResetCard(name: e.table, length: e.cards);
       });
     }
 
@@ -145,7 +145,7 @@ class _StudyPageState extends State<StudyPage> with TickerProviderStateMixin {
     for (var i = 0; i < widget.table.length; i++) {
       if (widget.init) {
         await data.dbClient.batchResetCard(
-          table: widget.table[i].table,
+          name: widget.table[i].table,
           length: widget.table[i].cards,
         );
       }
@@ -304,7 +304,7 @@ class _StudyPageState extends State<StudyPage> with TickerProviderStateMixin {
     var best = data.getFromDisk('stats_best_stack').split('-');
 
     for (var i = 0; i < widget.table.length; i++) {
-      var ratio = await data.dbClient.tableRatio(table: widget.table[i].table);
+      var ratio = await data.dbClient.tableRatio(name: widget.table[i].table);
       if (ratio > res) {
         table = widget.table[i].table;
         res = ratio;
@@ -349,7 +349,7 @@ class _StudyPageState extends State<StudyPage> with TickerProviderStateMixin {
 
     for (var i = 0; i < widget.table.length; i++) {
       await data.dbClient.batchResetCard(
-        table: widget.table[i].table,
+        name: widget.table[i].table,
         length: widget.table[i].cards,
       );
       var list = await getCards(widget.table[i].table);

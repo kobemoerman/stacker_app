@@ -13,11 +13,16 @@ class FeaturedCard extends StatelessWidget {
   final String cards;
   final String study;
   final List<StudyStack> tables;
+  final GlobalKey<ScaffoldState> scaffold;
 
-  FeaturedCard({Key key, this.percent, this.cards, this.study, this.tables})
-      : super(key: key);
-
-  final _scaffoldKey = GlobalKey<ScaffoldState>();
+  FeaturedCard({
+    Key key,
+    this.percent,
+    this.cards,
+    this.study,
+    this.tables,
+    @required this.scaffold,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -37,7 +42,7 @@ class FeaturedCard extends StatelessWidget {
           type: MaterialType.transparency,
           child: InkWell(
             onTap: () => tables.isEmpty
-                ? InfoDialog.of(context, _scaffoldKey)
+                ? InfoDialog.of(context, this.scaffold)
                     .displaySnackBar(text: _local.featuredEmptyInfo)
                 : openContainer(),
             child: Container(

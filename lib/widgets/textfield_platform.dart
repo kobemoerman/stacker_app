@@ -32,7 +32,6 @@ class _TextFieldPlatformState extends State<TextFieldPlatform> {
   Color _decorationColor;
 
   void maxLengthListener() {
-    print(widget.controller.text.length);
     _decorationColor = widget.controller.text.length < widget.maxLength
         ? Theme.of(context).shadowColor
         : cRed;

@@ -6,9 +6,9 @@ import 'package:stackr/animation/route_hero.dart';
 import 'package:stackr/animation/tween_rectangle.dart';
 import 'package:stackr/constants.dart';
 import 'package:stackr/decoration/card_shadow.dart';
-import 'package:stackr/decoration/textfield_border.dart';
 import 'package:stackr/locale/localization.dart';
 import 'package:stackr/model/user_inherited.dart';
+import 'package:stackr/widgets/textfield_platform.dart';
 
 class ProfileSheet extends StatefulWidget {
   final Function callback;
@@ -259,28 +259,13 @@ class EditNamePopup extends StatelessWidget {
   }
 
   Widget _userTextField(context, textTheme) {
-    final data = UserData.of(context);
+    final _data = UserData.of(context);
 
-    final textDecoration = InputDecoration(
-      isDense: true,
-      hintText: data.user.name,
-      hintStyle: textTheme.subtitle2,
-      border: InputBorder.none,
-    );
-
-    return TextField(
+    return TextFieldPlatform(
       controller: nameCtrl,
+      hint: _data.user.name,
       maxLines: 1,
       maxLength: MAX_LEN,
-      style: textTheme.bodyText2,
-      buildCounter: _buildCounter,
-      decoration: textDecoration,
     );
-  }
-
-  Widget _buildCounter(context,
-      {int currentLength, bool isFocused, int maxLength}) {
-    return TextFieldBorder(
-        current: currentLength, max: maxLength, theme: Theme.of(context));
   }
 }

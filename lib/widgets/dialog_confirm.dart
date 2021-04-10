@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:stackr/constants.dart';
 
-import '../locale/localization.dart';
 import '../model/user_inherited.dart';
 
 class ConfirmDialog extends StatelessWidget {

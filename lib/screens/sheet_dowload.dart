@@ -56,7 +56,8 @@ class _DownloadSheetState extends State<DownloadSheet> {
       if (!value) temp.add(key);
     });
 
-    FBHelper(context).downloadList(temp, _storage).then((value) {
+    FBHelper.of(context).downloadList(temp, _storage).then((value) {
+      if (value == false) throw ('Could not download tables!!');
       _isDownloading = false;
       Navigator.pop(context);
     });

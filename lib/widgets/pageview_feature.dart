@@ -6,9 +6,10 @@ import 'package:stackr/widgets/card_feature.dart';
 import 'package:stackr/widgets/card_stats.dart';
 
 class FeaturedView extends StatefulWidget {
+  final GlobalKey<ScaffoldState> scaffold;
   final double height;
 
-  const FeaturedView({Key key, this.height})
+  const FeaturedView({Key key, this.height, @required this.scaffold})
       : assert(height != null),
         super(key: key);
 
@@ -79,6 +80,7 @@ class _FeaturedViewState extends State<FeaturedView> {
               switch (idx) {
                 case 0:
                   child = FeaturedCard(
+                    scaffold: widget.scaffold,
                     tables: this._tables,
                     cards: this._cards,
                     study: this._study,

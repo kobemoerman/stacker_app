@@ -102,6 +102,8 @@ class _HomePageState extends State<HomePage> {
     _scrollCtrl.dispose();
   }
 
+  final _scaffoldKey = GlobalKey<ScaffoldState>();
+
   @override
   Widget build(BuildContext context) {
     final _client = UserData.of(context);
@@ -121,6 +123,7 @@ class _HomePageState extends State<HomePage> {
     );
 
     return Scaffold(
+      key: _scaffoldKey,
       backgroundColor: _theme.backgroundColor,
       resizeToAvoidBottomInset: true,
       body: SafeArea(
@@ -308,7 +311,7 @@ class _HomePageState extends State<HomePage> {
     return PersistentHeader(
       color: Theme.of(context).backgroundColor,
       height: 225.0,
-      widget: FeaturedView(height: 225.0),
+      widget: FeaturedView(scaffold: _scaffoldKey, height: 225.0),
     );
   }
 }
