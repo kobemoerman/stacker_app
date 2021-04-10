@@ -3,16 +3,14 @@ import 'package:introduction_screen/introduction_screen.dart';
 import 'package:stackr/decoration/card_shadow.dart';
 import 'package:stackr/model/user_inherited.dart';
 
+const _kColor = Color(0xFF7986CB);
+
 class IntroductionPage extends StatefulWidget {
   @override
   _IntroductionPageState createState() => _IntroductionPageState();
 }
 
 class _IntroductionPageState extends State<IntroductionPage> {
-  static const _color = Color(0xFF7986CB);
-
-  final introKey = GlobalKey<IntroductionScreenState>();
-
   Widget _buildImage(String assetName) {
     return Center(
       child: Container(
@@ -28,9 +26,13 @@ class _IntroductionPageState extends State<IntroductionPage> {
     );
   }
 
+  final introKey = GlobalKey<IntroductionScreenState>();
+
   @override
   Widget build(BuildContext context) {
-    initPreferences(context);
+    final _theme = Theme.of(context);
+
+    initPreferences();
 
     const pageDecoration = const PageDecoration(
       titleTextStyle: TextStyle(fontSize: 22.0, fontWeight: FontWeight.w700),
@@ -39,6 +41,15 @@ class _IntroductionPageState extends State<IntroductionPage> {
       imagePadding: const EdgeInsets.only(left: 10.0, right: 10.0, top: 25.0),
       contentPadding: const EdgeInsets.all(10.0),
       titlePadding: const EdgeInsets.only(top: 10.0, bottom: 10.0),
+    );
+
+    const dotDecoration = const DotsDecorator(
+      activeColor: _kColor,
+      size: Size(10.0, 10.0),
+      color: Color(0xFFBDBDBD),
+      activeSize: Size(22.0, 10.0),
+      activeShape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.all(Radius.circular(25.0))),
     );
 
     return IntroductionScreen(
@@ -77,29 +88,28 @@ class _IntroductionPageState extends State<IntroductionPage> {
           decoration: pageDecoration,
         ),
       ],
-      showNextButton: false,
-      globalBackgroundColor: Theme.of(context).backgroundColor,
-      onDone: () => Navigator.pushReplacementNamed(context, '/home'),
+      globalBackgroundColor: _theme.backgroundColor,
       showSkipButton: true,
-      skipFlex: 0,
+      showNextButton: false,
       nextFlex: 0,
-      skip: const Text('Skip'),
-      done: const Text('Done',
-          style: TextStyle(
-              fontSize: 18.0, fontWeight: FontWeight.w600, color: _color)),
-      dotsDecorator: const DotsDecorator(
-        activeColor: _color,
-        size: Size(10.0, 10.0),
-        color: Color(0xFFBDBDBD),
-        activeSize: Size(22.0, 10.0),
-        activeShape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.all(Radius.circular(25.0)),
-        ),
-      ),
+      skipFlex: 0,
+      skip: Text('Skip', style: _touchStyle(_theme.cursorColor)),
+      done: Text('Done', style: _touchStyle(_kColor)),
+      onDone: () => Navigator.pushReplacementNamed(context, '/home'),
+      dotsDecorator: dotDecoration,
     );
   }
 
-  void initPreferences(context) {
+  TextStyle _touchStyle(color) {
+    return TextStyle(
+      fontFamily: 'CormorantGaramond',
+      fontSize: 18,
+      fontWeight: FontWeight.w600,
+      color: color,
+    );
+  }
+
+  void initPreferences() {
     final data = UserData.of(context);
     final day = DateTime.now();
 

@@ -5,7 +5,6 @@ import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:stackr/animation/tween_rectangle.dart';
 import 'package:stackr/decoration/round_shadow.dart';
 import 'package:stackr/decoration/card_shadow.dart';
-import 'package:stackr/locale/localization.dart';
 import 'package:stackr/screens/sheet_dowload.dart';
 import 'package:stackr/screens/sheet_information.dart';
 import 'package:stackr/screens/sheet_profile.dart';
@@ -17,28 +16,27 @@ import '../constants.dart';
 import '../model/user_inherited.dart';
 import '../screens/sheet_language.dart';
 
+const double _kSize = 425.0;
+const Cubic _cScroll = Curves.easeIn;
+const Duration _dScroll = Duration(milliseconds: 250);
+
 class SettingsPage extends StatefulWidget {
   @override
   _SettingsPageState createState() => _SettingsPageState();
 }
 
 class _SettingsPageState extends State<SettingsPage> {
-  static const double SHEET_SIZE = 425;
-
   bool _temp;
   bool isEditing = false;
 
-  ScrollController _scrollCtrl;
-
   ProfileSheet profileSheet;
+  ScrollController _scrollCtrl;
 
   _editProfile() async {
     isEditing = !isEditing;
 
-    var pos = _scrollCtrl.offset < SHEET_SIZE ? SHEET_SIZE : 0.0;
-
-    await _scrollCtrl.animateTo(pos,
-        duration: Duration(milliseconds: 250), curve: Curves.ease);
+    var _pos = _scrollCtrl.offset < _kSize ? _kSize : 0.0;
+    await _scrollCtrl.animateTo(_pos, duration: _dScroll, curve: _cScroll);
 
     profileSheet = new ProfileSheet(key: UniqueKey(), callback: _editProfile);
 
@@ -104,14 +102,15 @@ class _SettingsPageState extends State<SettingsPage> {
     );
   }
 
-  void darkMode(bool value) {
+  void _setDarkMode(bool value) {
+    final _client = UserData.of(context);
+
     Provider.of<ThemeState>(context, listen: false).theme =
         value ? ThemeType.DARK : ThemeType.LIGHT;
-
-    UserData.of(context).updateThemeColor();
+    _client.updateThemeColor();
   }
 
-  void enableNotification(bool value) {
+  void _enableNotification(bool value) {
     setState(() => _temp = value);
   }
 
@@ -124,19 +123,18 @@ class _SettingsPageState extends State<SettingsPage> {
       return;
     }
 
-    if (offset < SHEET_SIZE) {
-      if (!isEditing && dir == ScrollDirection.forward.index) {
-        _scrollCtrl.jumpTo(SHEET_SIZE);
-      }
+    if (offset > _kSize) return;
 
-      if (isEditing && dir == ScrollDirection.reverse.index) {
-        isEditing = false;
-        await _scrollCtrl.animateTo(SHEET_SIZE,
-            duration: Duration(milliseconds: 250), curve: Curves.ease);
-      }
-
-      setState(() {});
+    if (!isEditing && dir == ScrollDirection.forward.index) {
+      _scrollCtrl.jumpTo(_kSize);
     }
+
+    if (isEditing && dir == ScrollDirection.reverse.index) {
+      isEditing = false;
+      await _scrollCtrl.animateTo(_kSize, duration: _dScroll, curve: _cScroll);
+    }
+
+    setState(() {});
   }
 
   @override
@@ -144,7 +142,7 @@ class _SettingsPageState extends State<SettingsPage> {
     super.initState();
 
     _temp = false;
-    _scrollCtrl = ScrollController(initialScrollOffset: SHEET_SIZE);
+    _scrollCtrl = ScrollController(initialScrollOffset: _kSize);
     _scrollCtrl.addListener(() => _scrollListener());
 
     profileSheet = new ProfileSheet(key: UniqueKey(), callback: _editProfile);
@@ -152,26 +150,30 @@ class _SettingsPageState extends State<SettingsPage> {
 
   @override
   Widget build(BuildContext context) {
+    final _theme = Theme.of(context);
     final _local = UserData.of(context).local;
+
+    final _height = MediaQuery.of(context).size.height;
     final _width = MediaQuery.of(context).size.width;
+
+    final _mode = Provider.of<ThemeState>(context).theme;
 
     List<Widget> _pref = [
       _sectionHeader(_local.preferencesHeader),
       _itemTile(_local.settingsLanguage, language, _changeLanguage),
-      _itemSwitch(_local.settingsDark, dark,
-          Provider.of<ThemeState>(context).theme == ThemeType.DARK, darkMode)
+      _itemSwitch(
+          _local.settingsDark, dark, _mode == ThemeType.DARK, _setDarkMode)
     ];
 
     List<Widget> _dwnld = [
       _sectionHeader(_local.downloadHeader),
-      _itemTile(
-          _local.settingsDownload, Icon(Icons.file_download), _downloadStack),
+      _itemTile(_local.settingsDownload, download, _downloadStack),
     ];
 
     List<Widget> _notif = [
       _sectionHeader(_local.notificationHeader),
       _itemSwitch(
-          _local.settingsNotification, notification, _temp, enableNotification)
+          _local.settingsNotification, notification, _temp, _enableNotification)
     ];
 
     List<Widget> _supp = [
@@ -182,15 +184,15 @@ class _SettingsPageState extends State<SettingsPage> {
     ];
 
     return Scaffold(
+      extendBodyBehindAppBar: true,
+      backgroundColor: _theme.backgroundColor,
       appBar: PageAppBar(
-        color: Theme.of(context).cardColor,
+        color: _theme.cardColor,
         height: 72.0,
         elevation: 7.5,
         title: _local.settingsHeader,
-        textColor: Theme.of(context).textSelectionColor,
+        textColor: _theme.textSelectionColor,
       ),
-      backgroundColor: Theme.of(context).backgroundColor,
-      extendBodyBehindAppBar: true,
       body: SafeArea(
         bottom: false,
         child: SingleChildScrollView(
@@ -200,24 +202,25 @@ class _SettingsPageState extends State<SettingsPage> {
             mainAxisSize: MainAxisSize.min,
             children: [
               Container(
-                height: SHEET_SIZE,
+                height: _kSize,
                 color: UserData.of(context).primaryColor,
-                child: profileSheet,
+                child: this.profileSheet,
               ),
               Container(
-                color: Theme.of(context).backgroundColor,
+                color: _theme.backgroundColor,
                 width: _width,
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const SizedBox(height: 20.0),
-                    Center(child: userProfile()),
-                    const SizedBox(height: 10.0),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 10.0),
+                      child: Center(child: userProfile()),
+                    ),
                     _section(_pref),
                     _section(_dwnld),
                     _section(_notif),
                     _section(_supp),
-                    SizedBox(height: MediaQuery.of(context).size.height / 6),
+                    SizedBox(height: _height / 6),
                   ],
                 ),
               ),
@@ -229,22 +232,33 @@ class _SettingsPageState extends State<SettingsPage> {
   }
 
   Widget userProfile() {
-    final data = UserData.of(context);
+    final _theme = Theme.of(context);
+    final _client = UserData.of(context);
 
-    var name = Text(
-      data.user.name,
+    var _name = Text(
+      _client.user.name,
       style: Theme.of(context).textTheme.bodyText2,
     );
 
-    var image = Container(
+    var _image = Container(
       decoration: RoundShadow(
         focus: true,
-        brightness: Theme.of(context).brightness,
+        brightness: _theme.brightness,
       ).shadow,
-      child: CircleAvatar(
-        radius: 22.5,
-        backgroundImage: data.profile,
+      child: CircleAvatar(radius: 22.5, backgroundImage: _client.image),
+    );
+
+    var _profile = Align(
+      alignment: Alignment(-0.8, 0.0),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [_image, const SizedBox(width: 15.0), _name],
       ),
+    );
+
+    var _edit = Align(
+      alignment: Alignment(0.9, 0.0),
+      child: Icon(Icons.edit, color: _client.primaryColor),
     );
 
     return Hero(
@@ -254,36 +268,18 @@ class _SettingsPageState extends State<SettingsPage> {
         height: 70.0,
         width: double.infinity,
         margin: const EdgeInsets.all(20.0),
+        child: Material(
+          type: MaterialType.transparency,
+          child: InkWell(
+            onTap: () => _editProfile(),
+            child: Stack(children: [_edit, _profile]),
+            borderRadius: BorderRadius.circular(20.0),
+          ),
+        ),
         decoration: CardDecoration(
           radius: 20.0,
           brightness: Theme.of(context).brightness,
         ).shadow,
-        child: Material(
-          type: MaterialType.transparency,
-          child: InkWell(
-            borderRadius: BorderRadius.circular(20.0),
-            onTap: () => _editProfile(),
-            child: Stack(
-              children: [
-                Align(
-                  alignment: Alignment(0.9, 0.0),
-                  child: Icon(Icons.edit, color: data.primaryColor),
-                ),
-                Align(
-                  alignment: Alignment(-0.8, 0.0),
-                  child: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      image,
-                      const SizedBox(width: 15.0),
-                      name,
-                    ],
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ),
       ),
     );
   }

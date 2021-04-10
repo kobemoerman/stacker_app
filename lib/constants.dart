@@ -5,10 +5,10 @@ Color cYellow = Color(0xFFE2C421);
 Color cGreen = Color(0xFF80A78A);
 
 Icon settings = Icon(Icons.settings, size: 30);
-Icon close = Icon(Icons.close, size: 30, color: Colors.black54);
 Icon edit = Icon(Icons.edit, color: Colors.white);
 Icon arrowRight = Icon(Icons.keyboard_arrow_right);
 
+Icon download = Icon(Icons.file_download);
 Icon language = Icon(Icons.language);
 Icon dark = Icon(Icons.bedtime);
 Icon notification = Icon(Icons.notifications);

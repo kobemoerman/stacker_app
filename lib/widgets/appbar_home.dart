@@ -84,7 +84,7 @@ class _HomeAppBarState extends State<HomeAppBar> {
           ).shadow,
           child: CircleAvatar(
             radius: EXPAND / 6,
-            backgroundImage: user.profile,
+            backgroundImage: user.image,
           ),
         ),
         SizedBox(width: 10.0),

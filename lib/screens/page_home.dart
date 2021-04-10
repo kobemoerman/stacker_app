@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/animation.dart';
 import 'package:stackr/screens/page_study.dart';
-import 'package:stackr/widgets/textfield_platform.dart';
 
 import '../model/studystack.dart';
 import '../model/user_inherited.dart';
@@ -12,6 +11,9 @@ import '../widgets/appbar_home.dart';
 import '../widgets/sliver_header.dart';
 import '../widgets/gridview_home.dart';
 import '../widgets/pageview_feature.dart';
+
+const Cubic _cScroll = Curves.easeIn;
+const Duration _dScroll = Duration(milliseconds: 100);
 
 class HomePage extends StatefulWidget {
   @override
@@ -61,27 +63,25 @@ class _HomePageState extends State<HomePage> {
     if (_focus.hasFocus) return;
 
     if (_anim && _scrollCtrl.hasClients) {
-      await _scrollCtrl.animateTo(_pos,
-          duration: Duration(milliseconds: 100), curve: Curves.easeIn);
+      await _scrollCtrl.animateTo(_pos, duration: _dScroll, curve: _cScroll);
       setState(() => _opacity);
     }
   }
 
   void _searchListener() async {
-    var maxPos = _scrollCtrl.position.maxScrollExtent;
-
     if (_focus.hasFocus) {
-      await _scrollCtrl.animateTo(maxPos > 225.0 ? 225.0 : maxPos,
-          duration: Duration(milliseconds: 100), curve: Curves.easeIn);
+      var maxPos = _scrollCtrl.position.maxScrollExtent;
+      var _pos = maxPos > 225.0 ? 225.0 : maxPos;
+      await _scrollCtrl.animateTo(_pos, duration: _dScroll, curve: _cScroll);
 
       setState(() {});
     }
   }
 
   void _textListener() {
-    var data = UserData.of(context);
+    var _client = UserData.of(context);
 
-    setState(() => data.generateTableList(filter: _textCtrl.text));
+    setState(() => _client.generateTableList(filter: _textCtrl.text));
   }
 
   @override
@@ -99,6 +99,8 @@ class _HomePageState extends State<HomePage> {
   @override
   void dispose() {
     super.dispose();
+    _focus.dispose();
+    _textCtrl.dispose();
     _scrollCtrl.dispose();
   }
 
@@ -106,13 +108,15 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
-    final _client = UserData.of(context);
     final _theme = Theme.of(context);
+    final _client = UserData.of(context);
 
     final appBarWidget = HomeAppBar(color: _theme.backgroundColor);
 
-    final featureWidget =
-        SliverPersistentHeader(pinned: false, delegate: _feature());
+    final featureWidget = SliverPersistentHeader(
+      pinned: false,
+      delegate: _feature(),
+    );
 
     final titleWidget = SliverToBoxAdapter(child: _gridFilter());
 
@@ -141,7 +145,7 @@ class _HomePageState extends State<HomePage> {
                   data = snapshot.hasData ? snapshot.data : [];
 
                   return CustomScrollView(
-                    key: Key('scroll_home'),
+                    key: Key('home_page_scroll_view'),
                     controller: _scrollCtrl,
                     physics: BouncingScrollPhysics(),
                     slivers: <Widget>[
@@ -180,12 +184,12 @@ class _HomePageState extends State<HomePage> {
                     alignment: Alignment.bottomCenter,
                     children: [
                       /// GRADIENT
-                      IgnorePointer(child: bottomGradient()),
+                      IgnorePointer(child: _bottomGradient()),
+
+                      /// STUDYING BUTTON
                       Align(
                         alignment: Alignment.centerRight,
-
-                        /// STUDYING BUTTON
-                        child: startStudying(),
+                        child: _startStudying(),
                       ),
                     ],
                   ),
@@ -198,7 +202,7 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  AnimatedOpacity bottomGradient() {
+  AnimatedOpacity _bottomGradient() {
     var gradient =
         MediaQuery.of(context).viewInsets.bottom == 0.0 ? _opacity : 0.0;
 
@@ -222,7 +226,7 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  Container startStudying() {
+  Container _startStudying() {
     AnimatedContainer animation = AnimatedContainer(
       curve: Curves.easeIn,
       duration: Duration(milliseconds: 250),
@@ -244,8 +248,8 @@ class _HomePageState extends State<HomePage> {
         closedElevation: 4.0,
         transitionType: ContainerTransitionType.fade,
         onClosed: (_) {
-          _textCtrl.clear();
           isSearching = false;
+          _textCtrl.clear();
           study.clear();
         },
         closedBuilder: (context, openContainer) => Material(
@@ -265,12 +269,30 @@ class _HomePageState extends State<HomePage> {
   }
 
   Row _gridFilter() {
+    final _local = UserData.of(context).local;
+    final _theme = Theme.of(context).textTheme;
+
+    var _title = Container(
+      child: Text(_local.stacksHeader, style: _theme.headline1),
+    );
+
+    var _iconSwitcher = AnimatedSwitcher(
+      duration: Duration(milliseconds: 250),
+      child: Icon(
+        isSearching ? Icons.arrow_back_ios : Icons.search,
+        key: ValueKey(isSearching),
+        color: UserData.of(context).primaryColor,
+      ),
+      transitionBuilder: (child, animation) =>
+          ScaleTransition(scale: animation, child: child),
+    );
+
     return Row(
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
         ClipOval(
           child: Material(
-            color: Colors.transparent,
+            type: MaterialType.transparency,
             child: InkWell(
               onTap: () => setState(() {
                 if (isSearching) {
@@ -279,31 +301,13 @@ class _HomePageState extends State<HomePage> {
                 }
                 isSearching = !isSearching;
               }),
-              child: AnimatedSwitcher(
-                duration: Duration(milliseconds: 250),
-                child: Icon(
-                  isSearching ? Icons.arrow_back_ios : Icons.search,
-                  key: ValueKey(isSearching),
-                  color: UserData.of(context).primaryColor,
-                ),
-                transitionBuilder: (Widget child, Animation<double> animation) {
-                  return ScaleTransition(scale: animation, child: child);
-                },
-              ),
+              child: _iconSwitcher,
             ),
           ),
         ),
         const SizedBox(width: 10.0),
-        _title(),
+        _title,
       ],
-    );
-  }
-
-  Widget _title() {
-    final _local = UserData.of(context).local;
-    final _theme = Theme.of(context);
-    return Container(
-      child: Text(_local.stacksHeader, style: _theme.textTheme.headline1),
     );
   }
 

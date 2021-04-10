@@ -35,11 +35,12 @@ class UserDataState extends State<UserData> {
 
   UserDataState(this.preferences, this.local);
 
+  /// PARAM
   DBHelper dbClient;
 
   User user = new User('', null);
   Color primaryColor = themeDarkColor[0];
-  ImageProvider profile;
+  ImageProvider image;
 
   double percent = 0.0;
   String cards = '0';
@@ -48,8 +49,32 @@ class UserDataState extends State<UserData> {
 
   Future<List<StudyStack>> tables;
 
+  /// HELPER
   refresh() => setState(() {});
 
+  featuredStudy(List<StudyStack> list) => list
+      .map((e) => e.table.formatTable().last)
+      .toList()
+      .getOccurences()
+      .join(', ');
+
+  featuredCards(List<StudyStack> list) =>
+      list.map((e) => e.cards).toList().fold(0, (p, c) => p + c).toString();
+
+  generateTableList({String filter = ''}) {
+    if (this.dbClient == null) this.dbClient = new DBHelper();
+
+    this.tables = dbClient.tableList(filter.toLowerCase());
+  }
+
+  String base64String(Uint8List data) => base64Encode(data);
+
+  ImageProvider imageFromBase64String(String base64String) =>
+      base64String == null
+          ? AssetImage('assets/profile.jpeg')
+          : MemoryImage(base64Decode(base64String));
+
+  /// PREFERENCES
   dynamic getFromDisk(key) => this.preferences.get(key);
   dynamic saveToDisk<T>(String key, T content) async {
     print('(TRACE) LocalStorageService:saveToDisk. key: $key value: $content');
@@ -71,43 +96,14 @@ class UserDataState extends State<UserData> {
     }
   }
 
-  void updateThemeColor() async {
-    final brightness = Theme.of(context).brightness;
-    final index = getFromDisk('theme_color') ?? 0;
-
-    this.primaryColor = getThemeColor(index, brightness);
-
-    refresh();
-  }
-
-  featuredStudy(List<StudyStack> list) => list
-      .map((e) => e.table.formatTable().last)
-      .toList()
-      .getOccurences()
-      .join(', ');
-
-  featuredCards(List<StudyStack> list) =>
-      list.map((e) => e.cards).toList().fold(0, (p, c) => p + c).toString();
-
-  String base64String(Uint8List data) => base64Encode(data);
-
-  ImageProvider imageFromBase64String(String base64String) =>
-      base64String == null
-          ? AssetImage('assets/profile.jpeg')
-          : MemoryImage(base64Decode(base64String));
-
-  void generateTableList({String filter = ''}) {
-    if (this.dbClient == null) this.dbClient = new DBHelper();
-
-    this.tables = dbClient.tableList(filter.toLowerCase());
-  }
+  /// SAVE
 
   void saveImage(String value) {
     user.photoUrl = value;
     saveToDisk('profile_photo', value);
 
     setState(() {
-      profile = imageFromBase64String(user.photoUrl);
+      image = imageFromBase64String(user.photoUrl);
     });
   }
 
@@ -124,6 +120,17 @@ class UserDataState extends State<UserData> {
     await saveToDisk('featured_time', time);
 
     updateFeatured();
+  }
+
+  /// UPDATE
+
+  updateThemeColor() async {
+    final brightness = Theme.of(context).brightness;
+    final index = getFromDisk('theme_color') ?? 0;
+
+    this.primaryColor = getThemeColor(index, brightness);
+
+    refresh();
   }
 
   updateFeatured() async {
@@ -155,8 +162,10 @@ class UserDataState extends State<UserData> {
 
     local = await AppLocalization.load(Locale(tag, subtag));
 
-    this.refresh();
+    setState(() => local);
   }
+
+  /// INIT
 
   initUser() {
     var _name = getFromDisk('profile_name') ?? 'Student';
@@ -166,7 +175,7 @@ class UserDataState extends State<UserData> {
 
     setState(() {
       user = User(_name, _photo);
-      profile = imageFromBase64String(user.photoUrl);
+      image = imageFromBase64String(user.photoUrl);
       primaryColor = getThemeColor(_color, Theme.of(context).brightness);
     });
   }
@@ -178,6 +187,8 @@ class UserDataState extends State<UserData> {
     generateTableList();
     updateFeatured();
   }
+
+  /// BUILD
 
   @override
   Widget build(BuildContext context) {
