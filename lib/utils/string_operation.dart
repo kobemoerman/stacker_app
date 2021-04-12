@@ -6,7 +6,7 @@ extension StringFormat on String {
     return matches;
   }
 
-  String formatStrinToDB() {
+  String formatStringToDB() {
     var reg = RegExp('[\']+');
 
     return this.replaceAll(reg, '\'\'');
@@ -24,5 +24,11 @@ extension StringFormat on String {
     }
 
     return RegExp('[A-Z]+[^A-Z]*').allMatches(string).map((m) => m.group(0));
+  }
+
+  String simplify() {
+    var string = this[0].toUpperCase() + this.substring(1).toLowerCase();
+
+    return string.replaceAll(' ', '_');
   }
 }

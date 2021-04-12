@@ -5,8 +5,10 @@ import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:percent_indicator/percent_indicator.dart';
+import 'package:stackr/model/stats_helper.dart';
 import 'package:stackr/utils/stopwatch_operation.dart';
 import 'package:stackr/widgets/button_study.dart';
+import 'package:stackr/widgets/dialog_information.dart';
 
 import '../model/flashcard.dart';
 import '../model/studystack.dart';
@@ -18,7 +20,9 @@ import '../decoration/card_shadow.dart';
 
 import '../utils/list_operation.dart';
 import '../utils/string_operation.dart';
-import '../utils/date_operation.dart';
+
+const _dSwipe = Duration(milliseconds: 250);
+const _dTime = Duration(minutes: 1);
 
 class StudyPage extends StatefulWidget {
   final bool init;
@@ -52,13 +56,32 @@ class _StudyPageState extends State<StudyPage> with TickerProviderStateMixin {
   List<FlashCard> cardContent = [];
   List<FlashCard> cardReview = [];
 
+  StatsHelper stat;
   UserDataState data;
 
-  getCards(String table) => data.dbClient.cardList(name: table);
+  _getCards(String table) => data.dbClient.cardList(name: table);
   double getProgress() => (_wrong + _correct) / (_total ?? double.infinity);
-  double getPercentage() => (_correct) / (_total ?? double.infinity);
+  double getPercentage() => _correct / (_total ?? double.infinity);
 
-  void featuredStudy() async {
+  _initStudy({int w = 0, int c = 0, int t = 1}) {
+    _wrong = w;
+    _correct = c;
+    _total = t;
+    isComplete = false;
+    isSwipped = false;
+
+    timer.reset();
+    render = Timer.periodic(_dTime, _updateTimer);
+    timer.start();
+
+    setState(() => buildCardStack());
+  }
+
+  _updateTimer(Timer timer) {
+    setState(() => stat.updateOverview());
+  }
+
+  _updateFeatured() async {
     /// update featured stack
     List<String> tables =
         List.generate(widget.table.length, (idx) => widget.table[idx].table);
@@ -74,33 +97,9 @@ class _StudyPageState extends State<StudyPage> with TickerProviderStateMixin {
     Navigator.pop(context);
   }
 
-  void updateTimer(Timer timer) async {
-    var date = DateTime.now();
-    List<String> list = data.preferences.getStringList('stats_week_review');
-
-    var time = 1;
-
-    var val = list[0].split('-').map(int.parse).toList();
-
-    if (date.difference(DateTime(val[0], val[1], val[2])).inDays == 0) {
-      time = val[3] + 1;
-      list[0] = date.convertToString() + '-$time';
-    } else {
-      list.removeLast();
-      list.insert(0, date.convertToString() + '-$time');
-    }
-
-    data.saveToDisk('stats_week_review', list);
-
-    setState(() {});
-  }
-
   @override
   void initState() {
     super.initState();
-
-    timer.start();
-    render = Timer.periodic(Duration(minutes: 1), updateTimer);
 
     _completeCtrl = AnimationController(vsync: this);
 
@@ -126,20 +125,10 @@ class _StudyPageState extends State<StudyPage> with TickerProviderStateMixin {
     if (cardDesign.isNotEmpty || data != null) return;
 
     data = UserData.of(context);
+    stat = StatsHelper.of(context);
+    stat.updateStreak();
 
-    /// update streak
-    var now = DateTime.now();
-    var streak = data.getFromDisk('stats_day_streak');
-    var date = convertToDate(string: streak);
-    if (now.compareDays(days: 1, date: date, equals: true)) {
-      var value = int.parse(streak.split('-').last) + 1;
-      var updated = now.convertToString() + '-$value';
-      data.saveToDisk('stats_day_streak', updated);
-    }
-    if (!now.compareDays(days: 1, date: date)) {
-      var value = now.convertToString() + '-0';
-      data.saveToDisk('stats_day_streak', value);
-    }
+    int wrong = 0, correct = 0, total = 0;
 
     /// retrieve all the cards
     for (var i = 0; i < widget.table.length; i++) {
@@ -150,20 +139,20 @@ class _StudyPageState extends State<StudyPage> with TickerProviderStateMixin {
         );
       }
 
-      var list = await getCards(widget.table[i].table);
+      var list = await _getCards(widget.table[i].table);
       cardContent.addAll(list);
 
-      _total = (_total ?? 0) + widget.table[i].cards;
+      total = total + widget.table[i].cards;
     }
 
     /// update swipe state
     if (!widget.init) {
       cardContent.removeWhere((e) {
         if (e.isSwipped == -1) {
-          _wrong++;
+          wrong++;
           cardReview.add(e);
         }
-        if (e.isSwipped == 1) _correct++;
+        if (e.isSwipped == 1) correct++;
 
         return e.isSwipped != 0;
       });
@@ -172,47 +161,45 @@ class _StudyPageState extends State<StudyPage> with TickerProviderStateMixin {
       if (!timer.isInitialised) timer.initialOffset = offset;
     }
 
-    setState(() => createCards(null));
+    _initStudy(w: wrong, c: correct, t: total);
   }
 
   void dispose() {
-    super.dispose();
     timer.stop();
     render.cancel();
+    _completeCtrl.dispose();
+    super.dispose();
   }
+
+  final _scaffoldKey = GlobalKey<ScaffoldState>();
 
   @override
   Widget build(BuildContext context) {
-    final _animation = IgnorePointer(
-      child: Align(
-        alignment: Alignment.bottomCenter,
-        child: Lottie.asset(
-          'assets/on_complete.json',
-          controller: _completeCtrl,
-          onLoaded: (composition) {
-            if (_completeCtrl.isCompleted) _completeCtrl.reset();
+    var _prog = '${_wrong + _correct}/${_total ?? 0}';
 
-            _completeCtrl
-              ..duration = composition.duration
-              ..forward();
-          },
-        ),
-      ),
+    var _indicators = Row(
+      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+      children: [
+        _timeIndicator(),
+        SizedBox(width: 10.0),
+        Expanded(child: _progressIndicator()),
+      ],
     );
 
     return Scaffold(
+      key: _scaffoldKey,
       backgroundColor: Theme.of(context).backgroundColor,
       appBar: PageAppBar(
         color: Theme.of(context).cardColor,
         height: 72.0,
         elevation: 7.5,
         title: _study,
-        subtitle:
-            '${_theme.formatDBToString()} | ${_wrong + _correct}/${_total ?? 0}',
+        subtitle: '${_theme.formatDBToString()} | $_prog',
         textColor: UserData.of(context).primaryColor,
-        onPress: featuredStudy,
+        onPress: _updateFeatured,
       ),
       body: SafeArea(
+        bottom: false,
         child: Stack(
           children: [
             Column(
@@ -227,14 +214,7 @@ class _StudyPageState extends State<StudyPage> with TickerProviderStateMixin {
                             margin: const EdgeInsets.symmetric(horizontal: 20),
                             height: 0.15 * constraints.maxHeight,
                             alignment: Alignment.center,
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                              children: [
-                                timerIndicator(),
-                                SizedBox(width: 10.0),
-                                Expanded(child: progressIndicator()),
-                              ],
-                            ),
+                            child: _indicators,
                           ),
 
                           /// QUESTION SHEET
@@ -254,26 +234,30 @@ class _StudyPageState extends State<StudyPage> with TickerProviderStateMixin {
                       side: Side.L,
                       value: _wrong,
                       isComplete: isComplete,
-                      callback: isComplete ? reviewCards : swipeCard,
+                      callback: isComplete ? _reviewCards : swipeCard,
                     ),
                     StudyButton(
                       side: Side.R,
                       value: _correct,
                       isComplete: isComplete,
-                      callback: isComplete ? restartCards : swipeCard,
+                      callback: isComplete ? _restartCards : swipeCard,
                     ),
                   ],
                 ),
               ],
             ),
-            this.isComplete && getPercentage() > 0.75 ? _animation : null,
+
+            /// COMPLETE ANIMATION
+            this.isComplete && getPercentage() > 0.75
+                ? _completeAnimation()
+                : null,
           ].where((e) => e != null).toList(),
         ),
       ),
     );
   }
 
-  void reviewCardSheet() {
+  _reviewCardSheet() {
     showBarModalBottomSheet(
       context: context,
       isDismissible: true,
@@ -282,67 +266,39 @@ class _StudyPageState extends State<StudyPage> with TickerProviderStateMixin {
     );
   }
 
-  void updateStatRatio() {
-    var res;
-    var now = DateTime.now();
-    var ratio = data.getFromDisk('stats_correct_ratio');
-    var date = convertToDate(string: ratio);
-    if (now.compareDays(days: 0, date: date, equals: true)) {
-      var value = ratio.split('-');
-      var c = int.parse(value[3]) + _correct;
-      var t = int.parse(value[4]) + _total;
-      res = now.convertToString() + '-$c' + '-$t';
-    } else {
-      res = now.convertToString() + '-$_correct' + '-$_total';
-    }
-    data.saveToDisk('stats_correct_ratio', res);
+  _onStackComplete() async {
+    timer.stop();
+    render.cancel();
+
+    cardDesign[1].progress = getPercentage();
+    cardDesign[0].progress = getPercentage();
+
+    Future.delayed(_dSwipe, () => setState(() => isComplete = true));
+
+    stat.updateDailyRatio(_correct, _total);
+    await stat.updateBestStack(widget.table);
   }
 
-  void updateStatBestStack() async {
-    var res = 0.0;
-    var table;
-    var best = data.getFromDisk('stats_best_stack').split('-');
-
-    for (var i = 0; i < widget.table.length; i++) {
-      var ratio = await data.dbClient.tableRatio(name: widget.table[i].table);
-      if (ratio > res) {
-        table = widget.table[i].table;
-        res = ratio;
-      }
+  _reviewCards() {
+    if (cardReview.isEmpty) {
+      InfoDialog.of(context, _scaffoldKey)
+          .displaySnackBar(text: 'No cards to review.');
+      return;
     }
-
-    if (res > double.parse(best.last)) {
-      data.saveToDisk('stats_best_stack', table + '-$res');
-    }
-  }
-
-  void reviewCards() {
-    if (cardReview.isEmpty) return;
 
     cardDesign = [];
     cardContent = List.from(cardReview);
+
     cardReview.forEach((e) {
       e.setSwipped = 0;
       data.dbClient.updateCard(e, e.theme);
     });
     cardReview = [];
 
-    _wrong = 0;
-    _correct = 0;
-    _total = cardContent.length;
-    isComplete = false;
-    isSwipped = false;
-
-    timer.reset();
-    render = Timer.periodic(Duration(minutes: 1), updateTimer);
-    timer.start();
-
-    setState(() {
-      createCards(null);
-    });
+    _initStudy(t: cardContent.length);
   }
 
-  void restartCards() async {
+  _restartCards() async {
     cardDesign = [];
     cardReview = [];
     cardContent = [];
@@ -352,23 +308,11 @@ class _StudyPageState extends State<StudyPage> with TickerProviderStateMixin {
         name: widget.table[i].table,
         length: widget.table[i].cards,
       );
-      var list = await getCards(widget.table[i].table);
+      var list = await _getCards(widget.table[i].table);
       cardContent.addAll(list);
     }
 
-    _wrong = 0;
-    _correct = 0;
-    _total = cardContent.length;
-    isComplete = false;
-    isSwipped = false;
-
-    timer.reset();
-    render = Timer.periodic(Duration(minutes: 1), updateTimer);
-    timer.start();
-
-    setState(() {
-      createCards(null);
-    });
+    _initStudy(t: cardContent.length);
   }
 
   void swipeCard(int side) {
@@ -380,7 +324,7 @@ class _StudyPageState extends State<StudyPage> with TickerProviderStateMixin {
     cardDesign[1].state.swipeCard(ratio, width);
   }
 
-  SwipeCard refreshCards(Direction dir) {
+  SwipeCard onSwipeAction(Direction dir) {
     SwipeCard oldCard = cardDesign.removeAt(cardDesign.length - 1);
 
     if (dir == Direction.RIGHT) _correct++;
@@ -392,9 +336,8 @@ class _StudyPageState extends State<StudyPage> with TickerProviderStateMixin {
     var newCard = SwipeCard(
       key: UniqueKey(),
       card: cardContent.isNotEmpty ? newStudyCard() : null,
-      progress: 0.0,
-      callback: this.refreshCards,
-      review: this.reviewCardSheet,
+      callback: this.onSwipeAction,
+      review: this._reviewCardSheet,
       listener: null,
     );
 
@@ -406,17 +349,9 @@ class _StudyPageState extends State<StudyPage> with TickerProviderStateMixin {
     }
 
     if (cardDesign[1].card == null) {
-      updateStatRatio();
-      updateStatBestStack();
-      timer.stop();
-      render.cancel();
-      cardDesign[1].progress = getPercentage();
-      Future.delayed(Duration(milliseconds: 250), () {
-        setState(() => isComplete = true);
-      });
-    } else {
+      _onStackComplete();
+    } else
       isSwipped = false;
-    }
 
     setState(() => cardDesign);
 
@@ -429,7 +364,7 @@ class _StudyPageState extends State<StudyPage> with TickerProviderStateMixin {
     return cardContent.removeAt(this.index);
   }
 
-  void createCards(SwipeCard card) {
+  void buildCardStack({SwipeCard card}) {
     if (cardDesign.length == 2) {
       cardDesign[0].card = cardContent.length == 1 ? null : newStudyCard();
       cardDesign[1].card = newStudyCard();
@@ -438,14 +373,12 @@ class _StudyPageState extends State<StudyPage> with TickerProviderStateMixin {
 
     cardDesign.add(SwipeCard(
       key: UniqueKey(),
-      card: null,
-      progress: 0.0,
-      callback: this.refreshCards,
-      review: this.reviewCardSheet,
+      callback: this.onSwipeAction,
+      review: this._reviewCardSheet,
       listener: card,
     ));
 
-    return createCards(cardDesign[0]);
+    return buildCardStack(card: cardDesign[0]);
   }
 
   String formatTime(int milliseconds) {
@@ -457,41 +390,68 @@ class _StudyPageState extends State<StudyPage> with TickerProviderStateMixin {
     return '$hours:$minutes min';
   }
 
-  Widget timerIndicator() {
+  Widget _completeAnimation() {
+    var _lottie = Lottie.asset(
+      'assets/on_complete.json',
+      controller: _completeCtrl,
+      onLoaded: (composition) {
+        if (_completeCtrl.isCompleted) _completeCtrl.reset();
+
+        _completeCtrl
+          ..duration = composition.duration
+          ..forward();
+      },
+    );
+
+    return IgnorePointer(
+      child: Align(alignment: Alignment.bottomCenter, child: _lottie),
+    );
+  }
+
+  Widget _timeIndicator() {
+    final _theme = Theme.of(context);
+
+    var _indicator = Text(
+      formatTime(timer.getMilliseconds),
+      style: _theme.textTheme.bodyText1,
+    );
+
     return Container(
       height: 30.0,
-      alignment: Alignment.center,
       padding: const EdgeInsets.symmetric(horizontal: 7.5),
-      child: Text(
-        formatTime(timer.getMilliseconds),
-        style: Theme.of(context).textTheme.bodyText1,
-      ),
+      alignment: Alignment.center,
+      child: _indicator,
       decoration: CardDecoration(
         focus: true,
         radius: 5.0,
-        brightness: Theme.of(context).brightness,
+        brightness: _theme.brightness,
       ).shadow,
     );
   }
 
-  Widget progressIndicator() {
+  Widget _progressIndicator() {
+    final _theme = Theme.of(context);
+    final _color = UserData.of(context).primaryColor;
+
+    var _indicator = LinearPercentIndicator(
+      lineHeight: 15.0,
+      animation: true,
+      animateFromLastPercent: true,
+      percent: getProgress(),
+      progressColor: _color,
+      backgroundColor: _color.withAlpha(50),
+      linearStrokeCap: LinearStrokeCap.butt,
+    );
+
     return Container(
-      padding: EdgeInsets.symmetric(vertical: 5.0),
       height: 30.0,
+      padding: EdgeInsets.symmetric(vertical: 5.0),
       alignment: Alignment.center,
-      child: LinearPercentIndicator(
-        lineHeight: 15.0,
-        animation: true,
-        animateFromLastPercent: true,
-        percent: getProgress(),
-        progressColor: UserData.of(context).primaryColor,
-        backgroundColor: UserData.of(context).primaryColor.withAlpha(50),
-        linearStrokeCap: LinearStrokeCap.butt,
-      ),
+      child: _indicator,
       decoration: CardDecoration(
         focus: true,
         radius: 5.0,
-        brightness: Theme.of(context).brightness,
+        brightness: _theme.brightness,
       ).shadow,
     );
   }

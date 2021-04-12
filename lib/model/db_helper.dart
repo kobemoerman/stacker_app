@@ -106,7 +106,7 @@ class DBHelper {
     return List.generate(maps.length, (i) => FlashCard.fromMap(maps[i]));
   }
 
-  initStack({String name, List<FlashCard> cards}) {
+  List<FlashCard> initStack({String name, List<FlashCard> cards}) {
     List<FlashCard> list = List.from(cards);
 
     for (var i = 0; i < list.length; i++) {

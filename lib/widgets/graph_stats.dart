@@ -1,6 +1,7 @@
 import 'package:intl/intl.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
+import 'package:stackr/model/stats_helper.dart';
 import 'package:stackr/model/user_inherited.dart';
 
 class InfoGraphic extends StatefulWidget {
@@ -67,7 +68,7 @@ class _InfoGraphicState extends State<InfoGraphic> {
   }
 
   LineChartBarData get populate {
-    List<double> values = retrieveStats();
+    List<double> values = StatsHelper.of(context).getOverview();
 
     return LineChartBarData(
       preventCurveOverShooting: true,
@@ -94,30 +95,5 @@ class _InfoGraphicState extends State<InfoGraphic> {
     var now = DateTime.now().subtract(Duration(days: 6 - index));
 
     return DateFormat('EEEE').format(now)[0].toUpperCase();
-  }
-
-  List<double> retrieveStats() {
-    List<double> values = List.filled(7, 0.0, growable: false);
-    List<String> list =
-        UserData.of(context).preferences.getStringList('stats_week_review');
-
-    var idx = 0;
-    for (var i = 0; i < list.length; i++) {
-      var val = list[idx].split('-').map(int.parse).toList();
-
-      if (differenceOfDays(i, val)) {
-        idx = idx + 1;
-        values[i] = val[3].toDouble();
-      }
-    }
-
-    return values.reversed.toList();
-  }
-
-  bool differenceOfDays(int dx, List<int> arr) {
-    var n = DateTime.now();
-    var d = DateTime(arr[0], arr[1], arr[2]);
-
-    return n.subtract(Duration(days: dx)).difference(d).inDays == 0;
   }
 }

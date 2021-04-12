@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:percent_indicator/circular_percent_indicator.dart';
 import 'package:stackr/decoration/card_shadow.dart';
+import 'package:stackr/model/stats_helper.dart';
 import 'package:stackr/model/user_inherited.dart';
 import 'package:stackr/widgets/appbar_page.dart';
 import 'package:stackr/widgets/graph_stats.dart';
 
 import '../constants.dart';
-import '../utils/date_operation.dart';
 import '../utils/string_operation.dart';
 
 class StatisticsPage extends StatefulWidget {
@@ -38,15 +38,12 @@ class _StatisticsPageState extends State<StatisticsPage> {
       body: SafeArea(
         child: Column(
           children: [
-            Hero(
-              tag: 'stats_launch',
-              child: weekReview(),
-            ),
+            Hero(tag: 'stats_launch', child: weekReview()),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
                 statCards(bestStack(), dayStreak()),
-                statCards(correctCards(), hourStudied()),
+                statCards(dailyRatio(), weeklyHours()),
               ],
             ),
           ],
@@ -87,7 +84,7 @@ class _StatisticsPageState extends State<StatisticsPage> {
     final theme = Theme.of(context).textTheme;
     final data = UserData.of(context);
 
-    String study = data.getFromDisk('stats_best_stack').split('-').first;
+    var study = StatsHelper.of(context).getBestStack();
 
     var header = Text(data.local.statsBestStack, style: theme.bodyText1);
     var content = Text(study.formatTable().last, style: theme.subtitle1);
@@ -109,17 +106,8 @@ class _StatisticsPageState extends State<StatisticsPage> {
   Widget dayStreak() {
     final theme = Theme.of(context).textTheme;
     final data = UserData.of(context);
-    final day = DateTime.now();
 
-    var count;
-    var streak = data.getFromDisk('stats_day_streak');
-    var streakDay = convertToDate(string: streak);
-
-    if (day.compareDays(days: 1, date: streakDay)) {
-      count = streak.split('-').last;
-    } else {
-      count = '0';
-    }
+    var count = StatsHelper.of(context).getStreak();
 
     var header = Text(data.local.statsStreak, style: theme.bodyText1);
     var content = Text(count,
@@ -149,21 +137,11 @@ class _StatisticsPageState extends State<StatisticsPage> {
     );
   }
 
-  Widget correctCards() {
+  Widget dailyRatio() {
     final theme = Theme.of(context).textTheme;
     final data = UserData.of(context);
-    final day = DateTime.now();
 
-    var ratio;
-    var cards = data.getFromDisk('stats_correct_ratio');
-    var ratioDay = convertToDate(string: cards);
-
-    if (day.compareDays(days: 0, date: ratioDay, equals: true)) {
-      List<String> list = cards.split('-');
-      ratio = double.parse(list[3]) / double.parse(list[4]);
-    } else {
-      ratio = 0.0;
-    }
+    var ratio = StatsHelper.of(context).getDailyRatio();
 
     var header = Text(data.local.statsCorrectCards, style: theme.bodyText1);
     var content = CircularPercentIndicator(
@@ -193,21 +171,14 @@ class _StatisticsPageState extends State<StatisticsPage> {
     );
   }
 
-  Widget hourStudied() {
+  Widget weeklyHours() {
     final theme = Theme.of(context).textTheme;
     final data = UserData.of(context);
 
-    List<String> week = data.getFromDisk('stats_week_review');
-
-    var sum = 0.0;
-    week.forEach((e) {
-      var value = e.split('-').last;
-      sum += double.parse(value);
-    });
-    sum /= 60;
+    String hours = StatsHelper.of(context).getWeeklyHours().round().toString();
 
     var header = Text(data.local.statsHoursStudied, style: theme.bodyText1);
-    var content = Text(sum.round().toString(),
+    var content = Text(hours,
         style: theme.headline1
             .copyWith(fontSize: 45, height: 0.8, color: data.primaryColor));
 

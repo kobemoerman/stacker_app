@@ -28,7 +28,7 @@ class SwipeCard extends StatefulWidget {
       this.listener,
       this.callback,
       this.card,
-      this.progress,
+      this.progress = 0.0,
       this.review})
       : super(key: key);
 

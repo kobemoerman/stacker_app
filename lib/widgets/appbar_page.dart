@@ -58,7 +58,7 @@ class PageAppBar extends StatelessWidget implements PreferredSizeWidget {
           padding: EdgeInsets.only(top: pow(2, this.height / 22), right: 5.0),
           child: this.action,
         )
-      ],
+      ].where((e) => e != null).toList(),
     );
   }
 

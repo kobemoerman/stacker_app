@@ -149,6 +149,12 @@ class _SettingsPageState extends State<SettingsPage> {
   }
 
   @override
+  void dispose() {
+    _scrollCtrl.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     final _theme = Theme.of(context);
     final _local = UserData.of(context).local;

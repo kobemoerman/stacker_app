@@ -1,6 +1,5 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flushbar/flushbar.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:stackr/model/studystack.dart';
 import 'package:stackr/screens/sheet_qna.dart';
@@ -19,7 +18,84 @@ import '../widgets/card_flip.dart';
 import '../decoration/card_shadow.dart';
 import '../utils/string_operation.dart';
 
-const double OFFSET = 30.0;
+class CreateBuilder extends StatelessWidget {
+  final String table;
+  final List<FlashCard> cards;
+
+  final Function callback;
+  final Widget actionBar;
+
+  CreateBuilder({
+    Key key,
+    this.table,
+    this.cards,
+    this.callback,
+    this.actionBar,
+  }) : super(key: key);
+
+  _onCompleteCallback(BuildContext context, String name, String theme) async {
+    final data = UserData.of(context);
+    final _local = UserData.of(context).local;
+    final _dialog = InfoDialog.of(context, _scaffoldKey);
+
+    if (this.table != name) {
+      if (await data.dbClient.tableExist(name: name)) {
+        _dialog.displaySnackBar(text: _local.infoStackExists);
+        return;
+      }
+    }
+
+    await this.callback(name, theme);
+
+    var list = data.dbClient.initStack(name: name, cards: cards);
+    data.dbClient.batchInsertCard(name: name, cards: list);
+    data.generateTableList();
+
+    data.refresh();
+    Navigator.pop(context);
+  }
+
+  final _scaffoldKey = GlobalKey<ScaffoldState>();
+
+  @override
+  Widget build(BuildContext context) {
+    final _theme = Theme.of(context);
+    final _local = UserData.of(context).local;
+
+    var studyName, themeName;
+    if (this.table.isEmpty) {
+      studyName = themeName = '';
+    } else {
+      studyName = this.table.formatTable()?.first;
+      themeName = this.table.formatTable()?.last;
+    }
+
+    return Scaffold(
+      key: _scaffoldKey,
+      appBar: PageAppBar(
+        color: _theme.cardColor,
+        height: 72.0,
+        elevation: 7.5,
+        title: _local.editStackHeader,
+        textColor: _theme.textSelectionColor,
+        action: this.actionBar,
+      ),
+      resizeToAvoidBottomPadding: false,
+      body: SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.only(top: 15.0),
+          child: StackPage(
+            scaffold: _scaffoldKey,
+            study: studyName,
+            theme: themeName,
+            cards: this.cards,
+            callback: _onCompleteCallback,
+          ),
+        ),
+      ),
+    );
+  }
+}
 
 class StackPage extends StatefulWidget {
   final String study;
@@ -30,22 +106,22 @@ class StackPage extends StatefulWidget {
 
   final GlobalKey<ScaffoldState> scaffold;
 
-  const StackPage(
-      {Key key,
-      this.study,
-      this.theme,
-      this.cards,
-      this.callback,
-      @required this.scaffold})
-      : super(key: key);
+  const StackPage({
+    Key key,
+    this.study,
+    this.theme,
+    this.cards,
+    this.callback,
+    @required this.scaffold,
+  }) : super(key: key);
 
   @override
   _StackPageState createState() => _StackPageState();
 }
 
 class _StackPageState extends State<StackPage> {
-  final _name = TextEditingController();
-  final _theme = TextEditingController();
+  TextEditingController _name;
+  TextEditingController _theme;
 
   bool isFlipped;
   bool showFront;
@@ -55,7 +131,7 @@ class _StackPageState extends State<StackPage> {
   setQuestion(String text) => setState(() => this.question = text);
   setAnswer(String text) => setState(() => this.answer = text);
 
-  switchCard() {
+  flipCard() {
     if (isFlipped) return;
 
     isFlipped = true;
@@ -69,6 +145,9 @@ class _StackPageState extends State<StackPage> {
     super.initState();
     showFront = true;
     isFlipped = false;
+
+    _name = TextEditingController();
+    _theme = TextEditingController();
 
     _name.text = widget.study.formatDBToString();
     _theme.text = widget.theme.formatDBToString();
@@ -93,6 +172,7 @@ class _StackPageState extends State<StackPage> {
           child: Row(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
+              /// NAME & THEME TEXTFIELDS
               Flexible(
                 child: Column(
                   children: [
@@ -102,11 +182,13 @@ class _StackPageState extends State<StackPage> {
                   ],
                 ),
               ),
+
+              /// COMPLETE ACTION
               ButtonIcon(
                 size: 32.5,
                 icon: Icons.check,
                 margin: const EdgeInsets.all(20.0),
-                onTap: () => createDBTable(),
+                onTap: () => _createDBTable(),
               ),
             ],
           ),
@@ -117,57 +199,86 @@ class _StackPageState extends State<StackPage> {
         Flexible(
           fit: FlexFit.tight,
           child: LayoutBuilder(
-            builder: (BuildContext ctx, BoxConstraints constraints) {
-              return Column(
-                children: [
-                  GestureDetector(
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 10.0),
-                      child: cardInformation(
-                        constraints.maxHeight,
-                        constraints.maxWidth,
-                      ),
-                    ),
-                    onTap: switchCard,
+            builder: (context, constraints) {
+              return GestureDetector(
+                onTap: flipCard,
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 10.0),
+                  child: cardBuilder(
+                    constraints.maxHeight,
+                    constraints.maxWidth,
                   ),
-                ],
+                ),
               );
             },
           ),
         ),
 
         /// PAGE ACTIONS
-        bottomActions()
+        _bottomActions()
       ],
     );
   }
 
-  void editCardContent() {
+  _editCardSheet() {
     showBarModalBottomSheet(
       context: context,
       isDismissible: true,
       backgroundColor: Colors.transparent,
       builder: (context) => QuestionAnswerSheet(
-        setQuestion: setQuestion,
         question: this.question,
-        setAnswer: setAnswer,
+        setQuestion: setQuestion,
         answer: this.answer,
+        setAnswer: setAnswer,
         side: this.showFront,
       ),
     );
   }
 
-  void seeAllCards() {
+  _overviewCardSheet() {
     showBarModalBottomSheet(
       context: context,
       isDismissible: true,
       backgroundColor: Colors.transparent,
       builder: (context) =>
-          FlashCardSheet(stack: widget.cards, callback: editQuestion),
+          FlashCardSheet(stack: widget.cards, callback: _editQuestion),
     );
   }
 
-  void createDBTable() async {
+  _editQuestion(FlashCard card) {
+    setState(() {
+      question = card?.question;
+      answer = card?.answer;
+    });
+  }
+
+  _addQuestion() {
+    if (question.isNotEmpty && answer.isNotEmpty) {
+      widget.cards.add(FlashCard(question: this.question, answer: this.answer));
+
+      showFront = true;
+
+      setQuestion('');
+      setAnswer('');
+
+      return;
+    }
+
+    final _local = UserData.of(context).local;
+
+    String message = '${_local.missing} ';
+    if (question.isEmpty) {
+      message = message + _local.question.toLowerCase();
+    }
+    if (answer.isEmpty) {
+      var concat = question.isEmpty ? ' ${_local.and} ' : '';
+      message = message + concat + _local.answer.toLowerCase();
+    }
+
+    InfoDialog.of(context, widget.scaffold).displaySnackBar(text: message);
+  }
+
+  _createDBTable() async {
     final _regex = RegExp('[0-9]');
     final _local = UserData.of(context).local;
 
@@ -186,69 +297,38 @@ class _StackPageState extends State<StackPage> {
       return;
     }
 
-    var name =
-        '${_name.text[0].toUpperCase()}${_name.text.substring(1).toLowerCase().replaceAll(' ', '_')}';
+    var name = _name.text.simplify();
+    var theme = _theme.text.simplify();
+    var table = '$name$theme'.formatStringToDB();
 
-    var theme =
-        '${_theme.text[0].toUpperCase()}${_theme.text.substring(1).toLowerCase().replaceAll(' ', '_')}';
-
-    var table = '$name$theme'.formatStrinToDB();
-
-    widget.callback(table, theme);
+    widget.callback(context, table, theme);
   }
 
-  void addQuestion() {
+  Widget cardBuilder(double height, double width) {
+    final _theme = Theme.of(context);
     final _local = UserData.of(context).local;
-    String message = '${_local.missing} ';
 
-    if (question.isNotEmpty && answer.isNotEmpty) {
-      widget.cards.add(FlashCard(question: this.question, answer: this.answer));
-
-      showFront = true;
-
-      setQuestion('');
-      setAnswer('');
-
-      return;
-    }
-
-    if (question.isEmpty) message = message + _local.question.toLowerCase();
-    if (answer.isEmpty) {
-      var concat = question.isEmpty ? ' ${_local.and} ' : '';
-      message = message + concat + _local.answer.toLowerCase();
-    }
-
-    InfoDialog.of(context, widget.scaffold).displaySnackBar(text: message);
-  }
-
-  void editQuestion(FlashCard card) {
-    setState(() {
-      question = card?.question;
-      answer = card?.answer;
-    });
-  }
-
-  Widget cardInformation(double height, double width) {
-    final _local = UserData.of(context).local;
-    var child = Container(
-      key: ValueKey(this.showFront),
-      height: height,
-      width: width,
-      decoration: CardDecoration(
-        radius: 10.0,
-        brightness: Theme.of(context).brightness,
-      ).shadow,
-      child: StudyCard(
-        title: this.showFront ? '${_local.question}:' : '${_local.answer}:',
-        content: this.showFront ? this.question : this.answer,
-        icon: Icons.edit,
-        callback: editCardContent,
-      ),
+    var _card = StudyCard(
+      title: this.showFront ? '${_local.question}:' : '${_local.answer}:',
+      content: this.showFront ? this.question : this.answer,
+      icon: Icons.edit,
+      callback: _editCardSheet,
     );
+
+    var _decoration = CardDecoration(
+      radius: 10.0,
+      brightness: _theme.brightness,
+    ).shadow;
 
     return FlipCard(
       showFront: this.showFront,
-      child: child,
+      child: Container(
+        key: ValueKey(this.showFront),
+        height: height,
+        width: width,
+        child: _card,
+        decoration: _decoration,
+      ),
     );
   }
 
@@ -264,47 +344,65 @@ class _StackPageState extends State<StackPage> {
     );
   }
 
-  Row bottomActions() {
-    var color = [UserData.of(context).primaryColor, cGreen];
-    var icon = [Icons.menu, Icons.add];
+  Row _bottomActions() {
+    final _theme = Theme.of(context);
+    final _client = UserData.of(context);
+
+    Widget _overview = Container(
+      margin: const EdgeInsets.symmetric(vertical: 20.0),
+      child: Material(
+        type: MaterialType.transparency,
+        child: InkWell(
+          onTap: () => _overviewCardSheet(),
+          child: Container(
+            height: 56.0,
+            width: 56.0,
+            padding: const EdgeInsets.all(15.0),
+            child: FittedBox(child: Icon(Icons.menu, color: Colors.white)),
+          ),
+          borderRadius: _splashRadius(10.0, 0.0),
+        ),
+      ),
+      decoration: CardDecoration(
+        topRight: 10.0,
+        bottomRight: 10.0,
+        color: _client.primaryColor,
+        brightness: _theme.brightness,
+      ).shadow,
+    );
+
+    Widget _add = Container(
+      margin: const EdgeInsets.symmetric(vertical: 20.0),
+      child: Material(
+        type: MaterialType.transparency,
+        child: InkWell(
+          onTap: () => _addQuestion(),
+          child: Container(
+            height: 56.0,
+            width: 56.0,
+            padding: const EdgeInsets.all(15.0),
+            child: FittedBox(child: Icon(Icons.add, color: Colors.white)),
+          ),
+          borderRadius: _splashRadius(0.0, 10.0),
+        ),
+      ),
+      decoration: CardDecoration(
+        topLeft: 10.0,
+        bottomLeft: 10.0,
+        color: cGreen,
+        brightness: _theme.brightness,
+      ).shadow,
+    );
 
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: List<Widget>.generate(2, (index) {
-        return Container(
-          margin: const EdgeInsets.symmetric(vertical: 20.0),
-          child: Material(
-            type: MaterialType.transparency,
-            child: InkWell(
-              onTap: () => index == 0 ? seeAllCards() : addQuestion(),
-              child: Container(
-                height: 56.0,
-                width: 56.0,
-                child: Padding(
-                  padding: const EdgeInsets.all(15.0),
-                  child:
-                      FittedBox(child: Icon(icon[index], color: Colors.white)),
-                ),
-              ),
-              borderRadius: BorderRadius.only(
-                bottomLeft: Radius.circular(index == 0 ? 0.0 : 10.0),
-                bottomRight: Radius.circular(index == 0 ? 10.0 : 0.0),
-                topLeft: Radius.circular(index == 0 ? 0.0 : 10.0),
-                topRight: Radius.circular(index == 0 ? 10.0 : 0.0),
-              ),
-            ),
-          ),
-          decoration: CardDecoration(
-            color: color[index],
-            bottomLeft: index == 0 ? 0.0 : 10.0,
-            bottomRight: index == 0 ? 10.0 : 0.0,
-            topLeft: index == 0 ? 0.0 : 10.0,
-            topRight: index == 0 ? 10.0 : 0.0,
-            brightness: Theme.of(context).brightness,
-          ).shadow,
-        );
-      }),
+      children: [_overview, _add],
     );
+  }
+
+  BorderRadius _splashRadius(double r, double l) {
+    return BorderRadius.horizontal(
+        right: Radius.circular(r), left: Radius.circular(l));
   }
 }
 
@@ -318,126 +416,78 @@ class EditStack extends StatefulWidget {
 }
 
 class _EditStackState extends State<EditStack> {
-  String _study;
-  String _theme;
-
   List<FlashCard> _cards = [];
 
   final String table;
 
   _EditStackState(this.table);
 
-  getCards(table) => UserData.of(context).dbClient.cardList(name: table);
+  get tableCards => UserData.of(context).dbClient.cardList(name: this.table);
 
-  dropTable() async {
-    var data = UserData.of(context);
-    await data.dbClient.dropStack(name: this.table);
-    data.generateTableList();
-
-    List<String> list = data.featured.map((e) => e.table).toList();
-
+  _updateFeatured(UserDataState client) {
+    List<String> list = client.featured.map((e) => e.table).toList();
     if (list.contains(this.table)) {
       list.remove(this.table);
-      data.saveFeatured(list, 0, 0.0);
+      client.saveFeatured(list, 0, 0.0);
     }
+  }
 
-    await data.refresh();
+  _dropTable() async {
+    var _client = UserData.of(context);
+
+    await _client.dbClient.dropStack(name: this.table);
+    _client.generateTableList();
+
+    _updateFeatured(_client);
+
+    await _client.refresh();
     Navigator.pop(context);
   }
 
   updateStack(String name, String theme) async {
-    final data = UserData.of(context);
-    final _local = UserData.of(context).local;
+    final _client = UserData.of(context);
 
-    if (this.table != name) {
-      if (await data.dbClient.tableExist(name: name)) {
-        InfoDialog.of(context, _scaffoldKey)
-            .displaySnackBar(text: _local.infoStackExists);
-        return;
-      }
-    }
+    await _client.dbClient.dropStack(name: this.table);
+    await _client.dbClient.createStack(name: name);
 
-    await data.dbClient.dropStack(name: this.table);
-    await data.dbClient.createStack(name: name);
-
-    _cards = data.dbClient.initStack(name: name, cards: _cards);
-    data.dbClient.batchInsertCard(name: name, cards: _cards);
-    data.generateTableList();
-
-    List<String> list = data.featured.map((e) => e.table).toList();
-    if (list.contains(this.table)) {
-      list.remove(this.table);
-      list.add(name);
-      data.saveFeatured(list, 0, 0.0);
-    }
-
-    data.refresh();
-    Navigator.pop(context);
-  }
-
-  void initState() {
-    super.initState();
-    _study = this.table.formatTable().first;
-    _theme = this.table.formatTable().last;
+    _updateFeatured(_client);
   }
 
   @override
   void didChangeDependencies() async {
     super.didChangeDependencies();
     if (_cards.isEmpty) {
-      _cards = await getCards(this.table);
+      _cards = await tableCards;
       setState(() => _cards);
     }
   }
 
-  final _scaffoldKey = GlobalKey<ScaffoldState>();
-
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context) => CreateBuilder(
+        table: this.table,
+        cards: _cards,
+        callback: updateStack,
+        actionBar: _onActionConfirm(),
+      );
+
+  Widget _onActionConfirm() {
     final _local = UserData.of(context).local;
 
-    return Scaffold(
-      key: _scaffoldKey,
-      appBar: PageAppBar(
-        color: Theme.of(context).cardColor,
-        height: 72.0,
-        elevation: 7.5,
-        title: _local.editStackHeader,
-        textColor: Theme.of(context).textSelectionColor,
-        action: appBarAction(),
-      ),
-      resizeToAvoidBottomPadding: false,
-      body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.only(top: 15.0),
-          child: StackPage(
-            scaffold: _scaffoldKey,
-            study: _study,
-            theme: _theme,
-            cards: _cards,
-            callback: updateStack,
-          ),
-        ),
-      ),
+    final _dialog = ConfirmDialog(
+      color: Theme.of(context).cardColor,
+      title: _local.infoDeleteHeader,
+      message: _local.infoDeleteStack,
+      confirm: _local.delete,
+      onConfirmPress: _dropTable,
+      dismiss: _local.cancel,
+      radius: 15.0,
     );
-  }
-
-  Widget appBarAction() {
-    final _local = UserData.of(context).local;
 
     return IconButton(
       icon: Icon(Icons.delete, color: cRed, size: 24),
       onPressed: () => showDialog(
         context: context,
-        builder: (BuildContext context) => ConfirmDialog(
-          color: Theme.of(context).cardColor,
-          title: _local.infoDeleteHeader,
-          message: _local.infoDeleteStack,
-          confirm: _local.delete,
-          onConfirmPress: dropTable,
-          dismiss: _local.cancel,
-          radius: 15.0,
-        ),
+        builder: (BuildContext context) => _dialog,
       ),
     );
   }
@@ -453,52 +503,11 @@ class _CreateStackState extends State<CreateStack> {
 
   createStack(String name, String theme) async {
     final data = UserData.of(context);
-    final _local = UserData.of(context).local;
-
-    if (await data.dbClient.tableExist(name: name)) {
-      InfoDialog.of(context, _scaffoldKey)
-          .displaySnackBar(text: _local.infoStackExists);
-      return;
-    }
 
     await data.dbClient.createStack(name: name);
-
-    _cards = data.dbClient.initStack(name: name, cards: _cards);
-    data.dbClient.batchInsertCard(name: name, cards: _cards);
-    data.generateTableList();
-
-    data.refresh();
-    Navigator.pop(context);
   }
-
-  final _scaffoldKey = GlobalKey<ScaffoldState>();
 
   @override
-  Widget build(BuildContext context) {
-    final _local = UserData.of(context).local;
-
-    return Scaffold(
-      key: _scaffoldKey,
-      appBar: PageAppBar(
-        color: Theme.of(context).cardColor,
-        height: 72.0,
-        elevation: 7.5,
-        title: _local.createStackHeader,
-        textColor: Theme.of(context).textSelectionColor,
-      ),
-      resizeToAvoidBottomPadding: false,
-      body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.only(top: 15.0),
-          child: StackPage(
-            scaffold: _scaffoldKey,
-            study: '',
-            theme: '',
-            cards: _cards,
-            callback: createStack,
-          ),
-        ),
-      ),
-    );
-  }
+  Widget build(BuildContext context) =>
+      CreateBuilder(table: '', cards: _cards, callback: createStack);
 }
