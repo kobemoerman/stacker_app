@@ -598,6 +598,14 @@ class AppLocalization {
       desc: 'info dialogue',
     );
   }
+
+  String get infoEmptyReview {
+    return Intl.message(
+      "No cards to review.",
+      name: 'info_empty_review',
+      desc: 'info dialogue',
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<AppLocalization> {

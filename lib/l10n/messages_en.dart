@@ -128,5 +128,7 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Delete stack?"),
         "info_card_init": MessageLookupByLibrary.simpleMessage(
             "Tap the card to flip it.\nTap the edit icon to set content."),
+        "info_empty_review":
+            MessageLookupByLibrary.simpleMessage("No cards to review."),
       };
 }

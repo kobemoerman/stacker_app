@@ -130,5 +130,7 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Stack verwijderen?"),
         "info_card_init": MessageLookupByLibrary.simpleMessage(
             "Tik op de kaart om deze om te draaien.\nTik op het bewerkings icoon om inhoud in te stellen."),
+        "info_empty_review": MessageLookupByLibrary.simpleMessage(
+            "Geen kaarten om te beoordelen."),
       };
 }

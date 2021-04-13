@@ -129,5 +129,7 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Supprimer ce stack?"),
         "info_card_init": MessageLookupByLibrary.simpleMessage(
             "Appuyez sur la carte pour la retourner.\nAppuyez sur l'icône de modification pour définir le contenu."),
+        "info_empty_review":
+            MessageLookupByLibrary.simpleMessage("Aucune carte a réviser."),
       };
 }

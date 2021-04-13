@@ -32,7 +32,7 @@ class _DownloadSheetState extends State<DownloadSheet> {
   final _stacks = List<String>();
   final _selected = <String, bool>{};
 
-  void filterListener(String text) {
+  _filterListener(String text) {
     _filter.clear();
     _list.forEach((e) {
       var format = e.formatTable();
@@ -44,11 +44,25 @@ class _DownloadSheetState extends State<DownloadSheet> {
     setState(() => _filter);
   }
 
+  _selectListener(String item) {
+    bool isSelected = _selected[item] ?? false;
+
+    if (!isSelected) {
+      if (_selected.containsKey(item)) {
+        _selected.remove(item);
+      } else {
+        _selected[item] = false;
+      }
+    }
+
+    setState(() => _selected);
+  }
+
   Future<ListResult> _getData() {
     return _storage.child('Medicine').listAll();
   }
 
-  void _downloadData() {
+  _downloadData() {
     setState(() => _isDownloading = true);
     final temp = List<String>();
 
@@ -57,7 +71,7 @@ class _DownloadSheetState extends State<DownloadSheet> {
     });
 
     FBHelper.of(context).downloadList(temp, _storage).then((value) {
-      if (value == false) throw ('Could not download tables!!');
+      if (value == false) throw ('Could not download tables!');
       _isDownloading = false;
       Navigator.pop(context);
     });
@@ -77,8 +91,9 @@ class _DownloadSheetState extends State<DownloadSheet> {
 
     var _db = await _getData();
 
+    final _instance = FirebaseStorage.instance;
     for (Reference ref in _db.items) {
-      String table = FirebaseStorage.instance.ref(ref.fullPath).name;
+      String table = _instance.ref(ref.fullPath).name;
 
       _list.add(table);
       _filter.add(table);
@@ -115,6 +130,7 @@ class _DownloadSheetState extends State<DownloadSheet> {
             pageHeader(),
             searchBuilder(),
             _isDownloading ? downloadOverlay() : null,
+            downloadOverlay(),
           ].where((e) => e != null).toList(),
         ),
       ),
@@ -134,7 +150,7 @@ class _DownloadSheetState extends State<DownloadSheet> {
       child: Padding(
         padding: const EdgeInsets.only(bottom: 45.0),
         child: SearchExpand(
-            side: Side.LEFT, callback: filterListener, radius: 10.0),
+            side: Side.LEFT, callback: _filterListener, radius: 10.0),
       ),
     );
   }
@@ -169,7 +185,7 @@ class _DownloadSheetState extends State<DownloadSheet> {
 
   Widget downloadOverlay() {
     return Container(
-      color: Colors.black45,
+      color: Colors.black26,
       height: double.infinity,
       width: double.infinity,
       alignment: Alignment.center,
@@ -189,27 +205,31 @@ class _DownloadSheetState extends State<DownloadSheet> {
 
     final title = Text(local.avilableStackHeader, style: theme.headline3);
 
+    final _background = ClipRect(
+      child: Container(
+        height: double.infinity,
+        width: double.infinity,
+        child: BackdropFilter(
+          filter: ImageFilter.blur(sigmaX: 10.0, sigmaY: 5.0),
+          child: Container(color: Colors.transparent),
+        ),
+      ),
+    );
+
+    final _content = Container(
+      height: double.infinity,
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [leading, title],
+      ),
+    );
+
     return Container(
       height: 56.0,
       child: Stack(
         children: [
-          ClipRect(
-            child: Container(
-              height: double.infinity,
-              width: double.infinity,
-              child: BackdropFilter(
-                filter: ImageFilter.blur(sigmaX: 10.0, sigmaY: 5.0),
-                child: Container(color: Colors.transparent),
-              ),
-            ),
-          ),
-          Container(
-            height: double.infinity,
-            child: Row(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [leading, title],
-            ),
-          ),
+          _background,
+          _content,
           Align(alignment: Alignment.bottomCenter, child: seperator),
         ],
       ),
@@ -267,19 +287,8 @@ class _DownloadSheetState extends State<DownloadSheet> {
         type: MaterialType.transparency,
         child: InkWell(
           borderRadius: BorderRadius.circular(10.0),
-          onTap: () => setState(() {
-            bool isSelected = _selected[item] ?? false;
-            if (!isSelected) {
-              if (_selected.containsKey(item)) {
-                _selected.remove(item);
-              } else {
-                _selected[item] = false;
-              }
-            }
-          }),
-          child: Column(
-            children: [child, seperator],
-          ),
+          onTap: () => _selectListener(item),
+          child: Column(children: [child, seperator]),
         ),
       ),
     );

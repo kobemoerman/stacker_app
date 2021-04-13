@@ -131,5 +131,7 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Stapel löschen?"),
         "info_card_init": MessageLookupByLibrary.simpleMessage(
             "Tippen Sie auf die Karte, um sie umzudrehen.\nTippen Sie auf das Bearbeitungssymbol, um den Inhalt festzulegen."),
+        "info_empty_review":
+            MessageLookupByLibrary.simpleMessage("Keine Karten zu überprüfen."),
       };
 }

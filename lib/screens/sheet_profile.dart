@@ -22,6 +22,14 @@ class ProfileSheet extends StatefulWidget {
 class _ProfileSheetState extends State<ProfileSheet> {
   File imageFile;
 
+  _heroListener() {
+    final _page = HeroDialogRoute(builder: (context) {
+      return EditNamePopup(function: widget.callback);
+    });
+
+    Navigator.of(context).push(_page);
+  }
+
   Future selectImage(ImageSource source, UserDataState data) async {
     PickedFile pickedFile = await ImagePicker().getImage(source: source);
 
@@ -34,7 +42,7 @@ class _ProfileSheetState extends State<ProfileSheet> {
 
   @override
   Widget build(BuildContext context) {
-    final data = UserData.of(context);
+    final _client = UserData.of(context);
     final brightness = Theme.of(context).brightness;
 
     return Column(
@@ -43,18 +51,18 @@ class _ProfileSheetState extends State<ProfileSheet> {
       children: [
         Padding(
           padding: const EdgeInsets.only(top: 5.0),
-          child: sectionHeader(UserData.of(context).local.editPicHeader),
+          child: sectionHeader(_client.local.editPicHeader),
         ),
-        itemPicture(data),
-        sectionHeader(UserData.of(context).local.editNameHeader),
-        itemName(data),
-        sectionHeader(UserData.of(context).local.editThemeHeader),
+        itemPicture(_client),
+        sectionHeader(_client.local.editNameHeader),
+        itemName(_client),
+        sectionHeader(_client.local.editThemeHeader),
         Container(height: 80.0, child: itemList(brightness)),
       ],
     );
   }
 
-  Widget itemList(brightness) {
+  Widget itemList(Brightness brightness) {
     return ListView.builder(
       itemCount: themeLightColor.length,
       scrollDirection: Axis.horizontal,
@@ -80,15 +88,15 @@ class _ProfileSheetState extends State<ProfileSheet> {
   }
 
   Widget themeCard(int index) {
-    var data = UserData.of(context);
+    var _client = UserData.of(context);
 
     return Material(
       type: MaterialType.transparency,
       child: InkWell(
         borderRadius: BorderRadius.circular(10.0),
         onTap: () {
-          data.saveToDisk('theme_color', index);
-          data.updateThemeColor();
+          _client.saveToDisk('theme_color', index);
+          _client.updateThemeColor();
         },
         child: Container(),
       ),
@@ -96,8 +104,8 @@ class _ProfileSheetState extends State<ProfileSheet> {
   }
 
   Widget sectionHeader(var str) {
-    final style =
-        Theme.of(context).textTheme.headline2.copyWith(color: Colors.white);
+    final _theme = Theme.of(context).textTheme;
+    final style = _theme.headline2.copyWith(color: Colors.white);
 
     return Padding(
       padding: const EdgeInsets.fromLTRB(10.0, 10.0, 0.0, 5.0),
@@ -139,10 +147,7 @@ class _ProfileSheetState extends State<ProfileSheet> {
           Icons.keyboard_arrow_right,
           color: Colors.white54,
         ),
-        onTap: () =>
-            Navigator.of(context).push(HeroDialogRoute(builder: (context) {
-          return EditNamePopup(function: widget.callback);
-        })),
+        onTap: () => _heroListener(),
       ),
     );
   }
@@ -169,16 +174,16 @@ class _ProfileSheetState extends State<ProfileSheet> {
   }
 }
 
-class EditNamePopup extends StatelessWidget {
-  static const int MAX_LEN = 40;
+const int _kMax = 40;
 
+class EditNamePopup extends StatelessWidget {
   final Function function;
   final nameCtrl = TextEditingController();
 
   EditNamePopup({Key key, @required this.function}) : super(key: key);
 
-  void selectName(UserDataState data, BuildContext context) {
-    if (nameCtrl.text.length <= MAX_LEN && nameCtrl.text.length > 0) {
+  _onCompleteAction(UserDataState data, BuildContext context) {
+    if (nameCtrl.text.length <= _kMax && nameCtrl.text.length > 0) {
       data.saveName(nameCtrl.text);
       function();
     }
@@ -188,7 +193,7 @@ class EditNamePopup extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final textTheme = Theme.of(context).textTheme;
+    final _theme = Theme.of(context);
 
     return Align(
       alignment: Alignment(0.0, -0.4),
@@ -196,9 +201,7 @@ class EditNamePopup extends StatelessWidget {
         tag: 'edit_name_tween',
         createRectTween: (begin, end) => RectangleTween(begin: begin, end: end),
         child: Material(
-          color: Theme.of(context).cardColor,
-          shape:
-              RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
+          color: _theme.cardColor,
           type: MaterialType.transparency,
           child: SingleChildScrollView(
             child: Container(
@@ -211,21 +214,21 @@ class EditNamePopup extends StatelessWidget {
                 children: [
                   Align(
                     alignment: Alignment.topLeft,
-                    child: _header(context, textTheme),
+                    child: _header(context, _theme.textTheme),
                   ),
                   Align(
                     alignment: Alignment.topRight,
-                    child: _completeAction(context, textTheme),
+                    child: _completeAction(context, _theme.textTheme),
                   ),
                   Align(
                     alignment: Alignment(0, 0.5),
-                    child: _userTextField(context, textTheme),
+                    child: _userTextField(context, _theme.textTheme),
                   ),
                 ],
               ),
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(20.0),
-                color: Theme.of(context).cardColor,
+                color: _theme.cardColor,
               ),
             ),
           ),
@@ -239,17 +242,17 @@ class EditNamePopup extends StatelessWidget {
     return Text(_local.editUsername, style: textTheme.headline2);
   }
 
-  Widget _completeAction(context, textTheme) {
-    final data = UserData.of(context);
+  Widget _completeAction(BuildContext context, TextTheme textTheme) {
+    final _client = UserData.of(context);
 
     final text = Text('ok',
-        style: textTheme.headline2.copyWith(color: data.primaryColor));
+        style: textTheme.headline2.copyWith(color: _client.primaryColor));
 
     return Material(
       type: MaterialType.transparency,
       child: InkWell(
         borderRadius: BorderRadius.circular(5.0),
-        onTap: () => selectName(data, context),
+        onTap: () => _onCompleteAction(_client, context),
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 5.0),
           child: text,
@@ -259,13 +262,13 @@ class EditNamePopup extends StatelessWidget {
   }
 
   Widget _userTextField(context, textTheme) {
-    final _data = UserData.of(context);
+    final _client = UserData.of(context);
 
     return TextFieldPlatform(
       controller: nameCtrl,
-      hint: _data.user.name,
+      hint: _client.user.name,
       maxLines: 1,
-      maxLength: MAX_LEN,
+      maxLength: _kMax,
     );
   }
 }

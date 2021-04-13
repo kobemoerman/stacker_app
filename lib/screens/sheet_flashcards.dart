@@ -10,6 +10,10 @@ import '../widgets/slidable.dart';
 import '../widgets/searchbar.dart';
 import '../decoration/card_shadow.dart';
 
+const double _kRadius = 10.0;
+const double _sHeader = 56.0;
+const double _sSearch = 40.0;
+
 // ignore: must_be_immutable
 class FlashCardSheet extends StatefulWidget {
   final Function callback;
@@ -23,32 +27,25 @@ class FlashCardSheet extends StatefulWidget {
 }
 
 class _FlashCardSheetState extends State<FlashCardSheet> {
-  static const double RADIUS = 10.0;
-  static const double HEADER_SIZE = 56.0;
-  static const double SEARCH_SIZE = 40.0;
-  static const double BOTTOM_OFFSET = 45.0;
-
   bool _isOpen = false;
-  String filter = '';
+  String _filter = '';
 
   List<FlashCard> filterList;
   SlidableController _slideCtrl;
 
   get search =>
-      widget.stack.where((e) => e.question.toLowerCase().contains(filter));
+      widget.stack.where((e) => e.question.toLowerCase().contains(_filter));
 
-  void filterListener(String text) {
-    filter = text;
-
-    filterList = filter.isEmpty ? List.from(widget.stack) : search.toList();
-
+  _filterListener(String text) {
+    _filter = text;
+    filterList = _filter.isEmpty ? List.from(widget.stack) : search.toList();
     setState(() => filterList);
   }
 
   @override
   void initState() {
     super.initState();
-    filterListener(filter);
+    _filterListener(_filter);
     _slideCtrl = SlidableController();
   }
 
@@ -56,6 +53,7 @@ class _FlashCardSheetState extends State<FlashCardSheet> {
 
   @override
   Widget build(BuildContext context) {
+    final _theme = Theme.of(context);
     final _local = UserData.of(context).local;
     var size = widget.stack.length;
 
@@ -64,12 +62,12 @@ class _FlashCardSheetState extends State<FlashCardSheet> {
     return Scaffold(
       key: _scaffoldKey,
       extendBodyBehindAppBar: true,
+      backgroundColor: _theme.backgroundColor,
       appBar: PageAppBar(
         blur: true,
         title: title,
-        textColor: Theme.of(context).textSelectionColor,
+        textColor: _theme.textSelectionColor,
       ),
-      backgroundColor: Theme.of(context).backgroundColor,
       body: Stack(
         children: [
           /// LIST VIEW
@@ -79,8 +77,7 @@ class _FlashCardSheetState extends State<FlashCardSheet> {
               shrinkWrap: true,
               scrollDirection: Axis.vertical,
               physics: BouncingScrollPhysics(),
-              padding: const EdgeInsets.only(
-                  top: HEADER_SIZE, bottom: SEARCH_SIZE + BOTTOM_OFFSET),
+              padding: EdgeInsets.only(top: _sHeader, bottom: 2 * _sSearch),
               itemCount: filterList.length,
               itemBuilder: (_, index) => generateItem(index),
             ),
@@ -90,15 +87,15 @@ class _FlashCardSheetState extends State<FlashCardSheet> {
           Align(
             alignment: Alignment.bottomLeft,
             child: Padding(
-              padding: const EdgeInsets.only(bottom: BOTTOM_OFFSET),
+              padding: const EdgeInsets.only(bottom: _sSearch),
               child: SearchExpand(
-                  side: Side.LEFT, callback: filterListener, radius: 10.0),
+                  side: Side.LEFT, callback: _filterListener, radius: 10.0),
             ),
           ),
 
           /// SEPERATOR
           Padding(
-            padding: const EdgeInsets.only(top: HEADER_SIZE),
+            padding: const EdgeInsets.only(top: _sHeader),
             child: seperator,
           ),
         ],
@@ -113,44 +110,50 @@ class _FlashCardSheetState extends State<FlashCardSheet> {
       );
 
   Widget generateItem(int index) {
+    final _slide = SlidableAction(
+      pos: index,
+      isOpen: _isOpen,
+      dismiss: _onDismissed,
+      controller: _slideCtrl,
+      child: _itemList(index),
+    );
+
     return Container(
       margin: const EdgeInsets.all(5.0),
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(_kRadius),
+        child: _slide,
+      ),
       decoration: CardDecoration(
         focus: true,
-        radius: RADIUS,
+        radius: _kRadius,
         brightness: Theme.of(context).brightness,
       ).shadow,
-      child: ClipRRect(
-        borderRadius: BorderRadius.circular(RADIUS),
-        child: SlidableAction(
-          pos: index,
-          isOpen: _isOpen,
-          dismiss: _onDismissed,
-          controller: _slideCtrl,
-          child: _itemList(index),
-        ),
-      ),
     );
   }
 
   Widget _itemList(int index) {
+    final _theme = Theme.of(context);
+
     var item = filterList[index];
     var text = 'Q${widget.stack.indexOf(item) + 1}: ${item.question}';
+
+    final _content = Text(
+      text,
+      style: _theme.textTheme.bodyText2,
+      maxLines: 1,
+      overflow: TextOverflow.ellipsis,
+    );
 
     return Container(
       padding: const EdgeInsets.all(15.0),
       height: 50.0,
       width: double.infinity,
       decoration: BoxDecoration(
-        color: Theme.of(context).cardColor,
-        borderRadius: BorderRadius.circular(RADIUS),
+        color: _theme.cardColor,
+        borderRadius: BorderRadius.circular(_kRadius),
       ),
-      child: Text(
-        text,
-        style: Theme.of(context).textTheme.bodyText2,
-        maxLines: 1,
-        overflow: TextOverflow.ellipsis,
-      ),
+      child: _content,
     );
   }
 
@@ -162,7 +165,7 @@ class _FlashCardSheetState extends State<FlashCardSheet> {
       Navigator.pop(context);
       widget.callback(_removed);
     } else {
-      filterListener(filter);
+      _filterListener(_filter);
       _undoAction(context, _removed, idx);
     }
   }
@@ -171,11 +174,11 @@ class _FlashCardSheetState extends State<FlashCardSheet> {
     final _local = UserData.of(context).local;
 
     InfoDialog.of(context, _scaffoldKey).undoSnackBar(
+      text: '${_local.deleted} ${_local.question} ${index + 1}',
       onPressed: () {
         widget.stack.insert(index, item);
-        filterListener(filter);
+        _filterListener(_filter);
       },
-      text: '${_local.deleted} ${_local.question} ${index + 1}',
     );
   }
 }

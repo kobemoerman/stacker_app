@@ -1,6 +1,7 @@
 import 'package:flutter/services.dart' show rootBundle;
 
 import 'package:flutter/material.dart';
+import 'package:lottie/lottie.dart';
 import 'package:stackr/widgets/appbar_page.dart';
 
 class InformationSheet extends StatelessWidget {
@@ -16,29 +17,41 @@ class InformationSheet extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final _theme = Theme.of(context);
+
     return Scaffold(
       extendBodyBehindAppBar: true,
+      backgroundColor: _theme.backgroundColor,
       appBar: PageAppBar(
         blur: true,
         title: this.header,
-        textColor: Theme.of(context).textSelectionColor,
+        textColor: _theme.textSelectionColor,
       ),
-      backgroundColor: Theme.of(context).backgroundColor,
       body: SingleChildScrollView(
         scrollDirection: Axis.vertical,
         physics: BouncingScrollPhysics(),
         child: FutureBuilder(
           future: getFileData('assets/${this.file}'),
           builder: (context, snapshot) {
-            String text = 'Could not find requested file...';
+            String text;
             if (snapshot.hasData) {
               text = snapshot.data;
             }
-
-            return textLayout(context, text);
+            return text != null
+                ? textLayout(context, text)
+                : loadingLayout(context);
           },
         ),
       ),
+    );
+  }
+
+  Widget loadingLayout(BuildContext context) {
+    final _h = MediaQuery.of(context).size.height;
+    return Container(
+      height: _h,
+      alignment: Alignment.center,
+      child: Lottie.asset('assets/loading.json', width: 150, height: 150),
     );
   }
 

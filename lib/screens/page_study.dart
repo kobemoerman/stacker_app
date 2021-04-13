@@ -280,9 +280,10 @@ class _StudyPageState extends State<StudyPage> with TickerProviderStateMixin {
   }
 
   _reviewCards() {
+    final _local = UserData.of(context).local;
     if (cardReview.isEmpty) {
       InfoDialog.of(context, _scaffoldKey)
-          .displaySnackBar(text: 'No cards to review.');
+          .displaySnackBar(text: _local.infoEmptyReview);
       return;
     }
 
