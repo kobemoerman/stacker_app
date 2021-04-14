@@ -6,6 +6,10 @@ import '../constants.dart';
 
 enum Side { L, R }
 
+const double _kHeight = 64.0;
+const Duration _dStudy = Duration(milliseconds: 250);
+const Duration _dComplete = Duration(milliseconds: 750);
+
 // ignore: must_be_immutable
 class StudyButton extends StatefulWidget {
   final bool isComplete;
@@ -24,7 +28,7 @@ class _StudyButtonState extends State<StudyButton> {
   @override
   Widget build(BuildContext context) {
     return AnimatedSwitcher(
-      duration: Duration(milliseconds: 750),
+      duration: _dComplete,
       switchInCurve: Curves.easeOutBack,
       switchOutCurve: Curves.ease,
       layoutBuilder: transitionLayout,
@@ -39,7 +43,7 @@ class _StudyButtonState extends State<StudyButton> {
             onTap: () => widget.isComplete
                 ? widget.callback()
                 : widget.callback(widget.side.index),
-            child: widget.isComplete ? completeState() : studyState(),
+            child: widget.isComplete ? _completeState() : _studyState(),
             borderRadius: widget.isComplete ? completeInk() : studyInk(),
           ),
         ),
@@ -51,13 +55,12 @@ class _StudyButtonState extends State<StudyButton> {
 
   Widget transitionLayout(Widget currentChild, List<Widget> previousChildren) {
     List<Widget> children = previousChildren;
+    AlignmentGeometry align = this.widget.side == Side.L
+        ? Alignment.centerLeft
+        : Alignment.centerRight;
+
     if (currentChild != null) children = children.toList()..add(currentChild);
-    return Stack(
-      children: children,
-      alignment: this.widget.side == Side.L
-          ? Alignment.centerLeft
-          : Alignment.centerRight,
-    );
+    return Stack(children: children, alignment: align);
   }
 
   Widget transitionAnimation(Widget child, Animation<double> animation) {
@@ -72,43 +75,39 @@ class _StudyButtonState extends State<StudyButton> {
     );
   }
 
-  Container completeState() {
+  Container _completeState() {
     final _local = UserData.of(context).local;
+    final _color = UserData.of(context).primaryColor;
+    final _text = Theme.of(context).textTheme.bodyText1;
 
     String text = widget.side == Side.R
         ? _local.studyCompleteRepeat
         : _local.studyCompleteReview;
 
     return Container(
-      height: 64.0,
+      height: _kHeight,
       width: 125.0,
       alignment: Alignment.center,
-      child: Text(
-        text,
-        style: Theme.of(context)
-            .textTheme
-            .bodyText1
-            .copyWith(color: UserData.of(context).primaryColor),
-      ),
+      child: Text(text, style: _text.copyWith(color: _color)),
     );
   }
 
-  Container studyState() {
+  Container _studyState() {
+    final _text = Theme.of(context).textTheme.bodyText1;
+
     return Container(
-      height: 64.0,
+      height: _kHeight,
       width: 54.0,
       alignment: Alignment.center,
       child: AnimatedSwitcher(
-        duration: Duration(milliseconds: 250),
-        transitionBuilder: (child, animation) =>
-            ScaleTransition(child: child, scale: animation),
+        duration: _dStudy,
+        transitionBuilder: (child, animation) {
+          return ScaleTransition(child: child, scale: animation);
+        },
         child: Text(
           widget.value.toString(),
           key: ValueKey<int>(widget.value),
-          style: Theme.of(context)
-              .textTheme
-              .bodyText1
-              .copyWith(color: Colors.white),
+          style: _text.copyWith(color: Colors.white),
         ),
       ),
     );

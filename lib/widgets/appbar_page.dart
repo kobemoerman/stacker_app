@@ -46,8 +46,8 @@ class PageAppBar extends StatelessWidget implements PreferredSizeWidget {
           crossAxisAlignment: CrossAxisAlignment.center,
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
-            leadingAction(context),
-            Expanded(child: textHeader(context)),
+            _leadingAction(context),
+            Expanded(child: _textHeader(context)),
           ],
         ),
       ),
@@ -62,7 +62,9 @@ class PageAppBar extends StatelessWidget implements PreferredSizeWidget {
     );
   }
 
-  Widget textHeader(context) {
+  Widget _textHeader(context) {
+    final _text = Theme.of(context).textTheme;
+
     var sub;
     if (this.subtitle != null) sub = this.subtitle.split(' | ');
 
@@ -80,14 +82,11 @@ class PageAppBar extends StatelessWidget implements PreferredSizeWidget {
           if (this.subtitle != null)
             Row(
               children: [
-                Text(
-                  '${sub[1]} | ',
-                  style: Theme.of(context).textTheme.subtitle2,
-                ),
+                Text('${sub[1]} | ', style: _text.subtitle2),
                 Expanded(
                   child: Text(
                     sub[0],
-                    style: Theme.of(context).textTheme.subtitle2,
+                    style: _text.subtitle2,
                     overflow: TextOverflow.ellipsis,
                     maxLines: 1,
                   ),
@@ -99,7 +98,7 @@ class PageAppBar extends StatelessWidget implements PreferredSizeWidget {
     );
   }
 
-  Widget leadingAction(context) => ButtonIcon(
+  Widget _leadingAction(context) => ButtonIcon(
         icon: Icons.arrow_back_ios_sharp,
         size: 24,
         onTap: () => onPress == null ? Navigator.pop(context) : onPress(),

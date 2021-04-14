@@ -3,7 +3,6 @@ import 'package:stackr/constants.dart';
 import 'package:stackr/model/flashcard.dart';
 import 'package:stackr/widgets/card_flip.dart';
 
-import '../locale/localization.dart';
 import '../model/user_inherited.dart';
 import 'card_study.dart';
 import 'progress_circular.dart';

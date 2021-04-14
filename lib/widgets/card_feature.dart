@@ -8,6 +8,8 @@ import 'package:stackr/screens/page_study.dart';
 import '../utils/string_operation.dart';
 import 'dialog_information.dart';
 
+const Duration _kOpen = Duration(milliseconds: 250);
+
 class FeaturedCard extends StatelessWidget {
   final double percent;
   final String cards;
@@ -26,50 +28,61 @@ class FeaturedCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final _local = UserData.of(context).local;
+    final _theme = Theme.of(context);
+
     return OpenContainer(
-      transitionDuration: Duration(milliseconds: 250),
-      closedColor: Theme.of(context).cardColor,
-      openColor: Theme.of(context).cardColor,
+      transitionDuration: _kOpen,
+      closedColor: _theme.cardColor,
+      openColor: _theme.cardColor,
       transitionType: ContainerTransitionType.fade,
       closedElevation: 0.0,
       closedShape:
           RoundedRectangleBorder(borderRadius: BorderRadius.circular(18.0)),
-      openBuilder: (context, closeContainer) =>
-          StudyPage(init: false, table: this.tables),
-      closedBuilder: (context, openContainer) {
-        return Material(
-          type: MaterialType.transparency,
-          child: InkWell(
-            onTap: () => tables.isEmpty
-                ? InfoDialog.of(context, this.scaffold)
-                    .displaySnackBar(text: _local.featuredEmptyInfo)
-                : openContainer(),
-            child: Container(
-              padding: const EdgeInsets.all(15.0),
-              child: Stack(
-                children: [
-                  Align(
-                    alignment: Alignment.topLeft,
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        _cardHeader(context),
-                        _cardContent(context),
-                      ],
-                    ),
-                  ),
-                  Align(
-                    alignment: Alignment.bottomCenter,
-                    child: _progressIndicator(context),
-                  ),
-                ],
-              ),
-            ),
+      openBuilder: _openBuilder,
+      closedBuilder: _closedBuilder,
+    );
+  }
+
+  Widget _openBuilder(BuildContext context, _) {
+    return StudyPage(init: false, table: this.tables);
+  }
+
+  Widget _closedBuilder(BuildContext context, void Function() openContainer) {
+    final _dialog = InfoDialog.of(context, this.scaffold);
+    final _local = UserData.of(context).local;
+
+    return Material(
+      type: MaterialType.transparency,
+      child: InkWell(
+        onTap: () => tables.isEmpty
+            ? _dialog.displaySnackBar(text: _local.featuredEmptyInfo)
+            : openContainer(),
+        child: _containerBuilder(context),
+      ),
+    );
+  }
+
+  Widget _containerBuilder(BuildContext context) {
+    var _text = Column(
+      mainAxisSize: MainAxisSize.min,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [_cardHeader(context), _cardContent(context)],
+    );
+
+    return Container(
+      padding: const EdgeInsets.all(15.0),
+      child: Stack(
+        children: [
+          Align(
+            alignment: Alignment.topLeft,
+            child: _text,
           ),
-        );
-      },
+          Align(
+            alignment: Alignment.bottomCenter,
+            child: _progressIndicator(context),
+          ),
+        ],
+      ),
     );
   }
 

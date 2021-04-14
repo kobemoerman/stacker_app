@@ -18,6 +18,9 @@ class ButtonIcon extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final _theme = Theme.of(context);
+    final _color = UserData.of(context).primaryColor;
+
     return Container(
       margin: this.margin,
       child: ClipOval(
@@ -28,20 +31,14 @@ class ButtonIcon extends StatelessWidget {
             child: FittedBox(
               child: Container(
                 padding: const EdgeInsets.all(6.0),
-                child: Icon(
-                  this.icon,
-                  size: this.size,
-                  color: UserData.of(context).primaryColor,
-                ),
+                child: Icon(this.icon, size: this.size, color: _color),
               ),
             ),
           ),
         ),
       ),
-      decoration: RoundShadow(
-        focus: true,
-        brightness: Theme.of(context).brightness,
-      ).shadow,
+      decoration:
+          RoundShadow(focus: true, brightness: _theme.brightness).shadow,
     );
   }
 }

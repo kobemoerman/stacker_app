@@ -10,6 +10,8 @@ class StatisticsCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final _theme = Theme.of(context);
+
     return Hero(
       tag: 'stats_launch',
       child: Container(
@@ -26,8 +28,8 @@ class StatisticsCard extends StatelessWidget {
         ),
         decoration: CardDecoration(
           radius: this.radius,
-          color: Theme.of(context).cardColor,
-          brightness: Theme.of(context).brightness,
+          color: _theme.cardColor,
+          brightness: _theme.brightness,
         ).shadow,
       ),
     );

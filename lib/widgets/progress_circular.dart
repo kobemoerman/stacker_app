@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:percent_indicator/percent_indicator.dart';
-import 'package:stackr/decoration/round_shadow.dart';
 import 'package:stackr/model/user_inherited.dart';
 
 import '../constants.dart';
-import '../locale/localization.dart';
 import 'button_icon.dart';
 
 class CircularProgress extends StatefulWidget {
@@ -22,17 +20,11 @@ class CircularProgress extends StatefulWidget {
 class _CircularProgressState extends State<CircularProgress> {
   @override
   Widget build(BuildContext context) {
-    final _local = UserData.of(context).local;
     return Stack(
       children: [
         Align(
           alignment: Alignment(0.9, 0.9),
-          child: ButtonIcon(
-            margin: const EdgeInsets.all(2.5),
-            icon: Icons.info_outline_rounded,
-            size: 24,
-            onTap: () => widget.callback(),
-          ),
+          child: _icon(),
         ),
         Align(
           alignment: Alignment.center,
@@ -41,24 +33,14 @@ class _CircularProgressState extends State<CircularProgress> {
             lineWidth: 13.0,
             animation: true,
             percent: widget.percentage,
-            center: Text(
-              '${(widget.percentage * 100).toStringAsFixed(1)}%',
-              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20.0),
-            ),
+            center: _center(),
             header: Padding(
               padding: const EdgeInsets.all(15.0),
-              child: Text(
-                _local.studyCompleteHeader,
-                style: Theme.of(context).textTheme.headline3,
-              ),
+              child: _header(),
             ),
             footer: Padding(
               padding: const EdgeInsets.all(15.0),
-              child: Text(
-                _local.studyCompleteSubtitle,
-                textAlign: TextAlign.center,
-                style: Theme.of(context).textTheme.bodyText2,
-              ),
+              child: _footer(),
             ),
             circularStrokeCap: CircularStrokeCap.round,
             backgroundColor: cRed,
@@ -66,6 +48,37 @@ class _CircularProgressState extends State<CircularProgress> {
           ),
         ),
       ],
+    );
+  }
+
+  Widget _center() {
+    return Text(
+      '${(widget.percentage * 100).toStringAsFixed(1)}%',
+      style: Theme.of(context).textTheme.headline3,
+    );
+  }
+
+  Widget _header() {
+    return Text(
+      UserData.of(context).local.studyCompleteHeader,
+      style: Theme.of(context).textTheme.headline2,
+    );
+  }
+
+  Widget _footer() {
+    return Text(
+      UserData.of(context).local.studyCompleteSubtitle,
+      textAlign: TextAlign.center,
+      style: Theme.of(context).textTheme.bodyText2,
+    );
+  }
+
+  Widget _icon() {
+    return ButtonIcon(
+      margin: const EdgeInsets.all(2.5),
+      icon: Icons.info_outline_rounded,
+      size: 24,
+      onTap: () => widget.callback(),
     );
   }
 }

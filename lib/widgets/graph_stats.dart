@@ -23,51 +23,60 @@ class _InfoGraphicState extends State<InfoGraphic> {
       width: double.infinity,
       height: double.infinity,
       color: Colors.transparent,
-      child: LineChart(chart),
+      child: LineChart(
+        LineChartData(
+          lineTouchData: _lineTouchData,
+          gridData: _gridData,
+          titlesData: _titlesData,
+          borderData: _borderData,
+          minX: 0,
+          maxX: 8,
+          minY: 0,
+          lineBarsData: [_lineBarsData],
+        ),
+      ),
     );
   }
 
-  LineChartData get chart {
-    return LineChartData(
-      lineTouchData: LineTouchData(
-        touchTooltipData: LineTouchTooltipData(
-          tooltipBgColor: Colors.white,
-          getTooltipItems: (List<LineBarSpot> lineSpot) {
-            return lineSpot
-                .map((spot) => LineTooltipItem(
-                    '${spot.y.round()} min', TextStyle(color: Colors.black)))
-                .toList();
-          },
-        ),
-        handleBuiltInTouches: true,
-        enabled: widget.detailed,
+  LineTouchData get _lineTouchData {
+    return LineTouchData(
+      touchTooltipData: LineTouchTooltipData(
+        tooltipBgColor: Theme.of(context).backgroundColor,
+        getTooltipItems: _retrieveToolTipItems,
       ),
-      gridData: FlGridData(
-        show: true,
-        drawHorizontalLine: false,
-        drawVerticalLine: true,
-      ),
-      titlesData: FlTitlesData(
-        bottomTitles: SideTitles(
-          showTitles: true,
-          getTitles: (value) {
-            if (value == 0 || value == 8) return '';
-            return retrieveTitles(value.round() - 1);
-          },
-          getTextStyles: (value) => Theme.of(context).textTheme.bodyText2,
-          margin: 10.0,
-        ),
-        leftTitles: SideTitles(showTitles: false),
-      ),
-      borderData: FlBorderData(show: false),
-      minX: 0,
-      maxX: 8,
-      minY: 0,
-      lineBarsData: [populate],
+      handleBuiltInTouches: true,
+      enabled: widget.detailed,
     );
   }
 
-  LineChartBarData get populate {
+  FlGridData get _gridData {
+    return FlGridData(
+      show: true,
+      drawHorizontalLine: false,
+      drawVerticalLine: true,
+    );
+  }
+
+  FlTitlesData get _titlesData {
+    return FlTitlesData(
+      bottomTitles: SideTitles(
+        showTitles: true,
+        getTitles: (value) {
+          if (value == 0 || value == 8) return '';
+          return _retrieveTitles(value.round() - 1);
+        },
+        getTextStyles: (value) => Theme.of(context).textTheme.bodyText2,
+        margin: 10.0,
+      ),
+      leftTitles: SideTitles(showTitles: false),
+    );
+  }
+
+  FlBorderData get _borderData {
+    return FlBorderData(show: false);
+  }
+
+  LineChartBarData get _lineBarsData {
     List<double> values = StatsHelper.of(context).getOverview();
 
     return LineChartBarData(
@@ -79,7 +88,7 @@ class _InfoGraphicState extends State<InfoGraphic> {
         FlSpot(4, values[3]),
         FlSpot(5, values[4]),
         FlSpot(6, values[5]),
-        FlSpot(7, values[6])
+        FlSpot(7, values[6]),
       ],
       isCurved: true,
       colors: [UserData.of(context).primaryColor],
@@ -91,7 +100,14 @@ class _InfoGraphicState extends State<InfoGraphic> {
     );
   }
 
-  String retrieveTitles(int index) {
+  List<LineTooltipItem> _retrieveToolTipItems(List<LineBarSpot> lineSpot) {
+    var spot = lineSpot.map((spot) => LineTooltipItem(
+        '${spot.y.round()} min', TextStyle(color: Colors.black)));
+
+    return spot.toList();
+  }
+
+  String _retrieveTitles(int index) {
     var now = DateTime.now().subtract(Duration(days: 6 - index));
 
     return DateFormat('EEEE').format(now)[0].toUpperCase();

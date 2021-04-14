@@ -7,6 +7,9 @@ import 'package:stackr/model/user_inherited.dart';
 import 'package:stackr/screens/page_stack.dart';
 import '../utils/string_operation.dart';
 
+const Duration _kOpen = Duration(milliseconds: 250);
+const Duration _dSelect = Duration(milliseconds: 400);
+
 class StackCard extends StatelessWidget {
   final int index;
 
@@ -43,38 +46,46 @@ class StackCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final _theme = Theme.of(context);
+
     return Container(
       decoration: CardDecoration(
         focus: true,
         radius: this.radius,
-        color: Theme.of(context).cardColor,
-        brightness: Theme.of(context).brightness,
+        color: _theme.cardColor,
+        brightness: _theme.brightness,
       ).shadow,
       child: OpenContainer(
-        transitionDuration: Duration(milliseconds: 250),
+        transitionDuration: _kOpen,
         closedElevation: 0.0,
-        closedColor: Theme.of(context).cardColor,
-        openColor: Theme.of(context).cardColor,
+        closedColor: _theme.cardColor,
+        openColor: _theme.cardColor,
         transitionType: ContainerTransitionType.fade,
         closedShape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(this.radius)),
-        openBuilder: (context, closeContainer) => CreateStack(),
-        closedBuilder: (context, openContainer) {
-          InkWell action;
-
-          if (this.table == null) {
-            action = InkWell(onTap: openContainer, child: body(context));
-          } else {
-            action = InkWell(
-              onTap: () => selectStudy(context, this.index),
-              child: body(context),
-            );
-          }
-
-          return Material(type: MaterialType.transparency, child: action);
-        },
+        openBuilder: _openBuilder,
+        closedBuilder: _closedBuilder,
       ),
     );
+  }
+
+  Widget _openBuilder(BuildContext context, _) {
+    return CreateStack();
+  }
+
+  Widget _closedBuilder(BuildContext context, void Function() openContainer) {
+    InkWell action;
+
+    if (this.table == null) {
+      action = InkWell(onTap: openContainer, child: body(context));
+    } else {
+      action = InkWell(
+        onTap: () => selectStudy(context, this.index),
+        child: body(context),
+      );
+    }
+
+    return Material(type: MaterialType.transparency, child: action);
   }
 
   Widget body(context) {
@@ -82,7 +93,7 @@ class StackCard extends StatelessWidget {
       alignment: Alignment.center,
       children: [
         /// CONTENT WIDGET
-        this.table == null ? createStack() : studyStack(context),
+        this.table == null ? _stackCreate() : _stackTitle(context),
 
         /// BOTTOM ACTION
         if (this.table != null)
@@ -97,14 +108,14 @@ class StackCard extends StatelessWidget {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  editStack(context),
+                  _stackEdit(context),
                   Container(
                     padding: const EdgeInsets.all(2.5),
                     decoration: BoxDecoration(
                       shape: BoxShape.circle,
                       border: Border.all(color: Colors.white),
                     ),
-                    child: isSelected(),
+                    child: _isSelected(),
                   ),
                 ],
               ),
@@ -114,12 +125,12 @@ class StackCard extends StatelessWidget {
     );
   }
 
-  Widget createStack() => Stack(
+  Widget _stackCreate() => Stack(
         alignment: Alignment.center,
         children: [Icon(Icons.add, size: 70.0, color: data.primaryColor)],
       );
 
-  Widget studyStack(BuildContext context) {
+  Widget _stackTitle(BuildContext context) {
     final _local = UserData.of(context).local;
     String text = this.table.table.formatTable().last;
 
@@ -145,16 +156,16 @@ class StackCard extends StatelessWidget {
     );
   }
 
-  Widget isSelected() {
+  Widget _isSelected() {
     return AnimatedOpacity(
       curve: Curves.decelerate,
-      duration: Duration(milliseconds: 400),
+      duration: _dSelect,
       opacity: study.containsKey(table.table) ? 1.0 : 0.0,
       child: Icon(Icons.school, color: Colors.white),
     );
   }
 
-  Widget editStack(BuildContext context) {
+  Widget _stackEdit(BuildContext context) {
     return ClipOval(
       child: Material(
         color: Colors.transparent,

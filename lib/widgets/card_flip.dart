@@ -2,6 +2,8 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 
+const Duration _kAnimation = Duration(milliseconds: 500);
+
 // ignore: must_be_immutable
 class FlipCard extends StatefulWidget {
   bool showFront;
@@ -22,7 +24,7 @@ class _FlipCardState extends State<FlipCard> {
   @override
   Widget build(BuildContext context) {
     return AnimatedSwitcher(
-      duration: Duration(milliseconds: 500),
+      duration: _kAnimation,
       transitionBuilder: this.transitionBuilder,
       layoutBuilder: (widget, list) => Stack(children: [widget, ...list]),
       child: widget.child,

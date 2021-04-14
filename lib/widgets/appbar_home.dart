@@ -2,8 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:stackr/decoration/round_shadow.dart';
 
 import '../constants.dart';
-import '../locale/localization.dart';
 import '../model/user_inherited.dart';
+
+const double _kExpand = 100.0;
+const double _kOffset = 20.0;
 
 class HomeAppBar extends StatefulWidget {
   final Color color;
@@ -15,9 +17,6 @@ class HomeAppBar extends StatefulWidget {
 }
 
 class _HomeAppBarState extends State<HomeAppBar> {
-  static const double EXPAND = 100.0;
-  static const double OFFSET = 20.0;
-
   @override
   Widget build(BuildContext context) {
     return SliverAppBar(
@@ -27,8 +26,8 @@ class _HomeAppBarState extends State<HomeAppBar> {
       pinned: true,
       primary: true,
       floating: true,
-      expandedHeight: EXPAND,
-      collapsedHeight: EXPAND - OFFSET,
+      expandedHeight: _kExpand,
+      collapsedHeight: _kExpand - _kOffset,
       backgroundColor: widget.color,
       actions: [actionSettings],
       flexibleSpace: userStack,
@@ -58,33 +57,31 @@ class _HomeAppBarState extends State<HomeAppBar> {
             margin: const EdgeInsets.only(left: 10.0),
             height: double.infinity,
             width: double.infinity,
-            child: Align(alignment: Alignment.bottomLeft, child: userInfo()),
+            child: Align(alignment: Alignment.bottomLeft, child: _userInfo()),
           ),
         )
       ],
     );
   }
 
-  Row userInfo() {
-    TextTheme theme = Theme.of(context).textTheme;
-    final user = UserData.of(context);
+  Row _userInfo() {
+    final _theme = Theme.of(context);
+    final _client = UserData.of(context);
 
     Text _greet = Text('${getGreeting()},',
-        style: theme.subtitle1.copyWith(fontSize: 10.0));
+        style: _theme.textTheme.subtitle2.copyWith(fontSize: 11.0));
 
-    Text _name = Text('${user.user.name}!',
-        style: theme.bodyText1.copyWith(fontSize: 16.0));
+    Text _name =
+        Text('${_client.user.name}!', style: _theme.textTheme.bodyText2);
 
     return Row(
       children: [
         Container(
-          decoration: RoundShadow(
-            focus: true,
-            brightness: Theme.of(context).brightness,
-          ).shadow,
+          decoration:
+              RoundShadow(focus: true, brightness: _theme.brightness).shadow,
           child: CircleAvatar(
-            radius: EXPAND / 6,
-            backgroundImage: user.image,
+            radius: _kExpand / 6,
+            backgroundImage: _client.image,
           ),
         ),
         SizedBox(width: 10.0),

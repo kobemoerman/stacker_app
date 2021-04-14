@@ -5,6 +5,8 @@ import 'package:stackr/model/user_inherited.dart';
 import 'package:stackr/widgets/card_feature.dart';
 import 'package:stackr/widgets/card_stats.dart';
 
+const int _kPages = 2;
+
 class FeaturedView extends StatefulWidget {
   final GlobalKey<ScaffoldState> scaffold;
   final double height;
@@ -18,9 +20,6 @@ class FeaturedView extends StatefulWidget {
 }
 
 class _FeaturedViewState extends State<FeaturedView> {
-  static const int PAGES = 2;
-  static const double RADIUS = 20.0;
-
   double _percent;
   String _cards;
   String _study;
@@ -56,8 +55,8 @@ class _FeaturedViewState extends State<FeaturedView> {
 
   @override
   void dispose() {
-    super.dispose();
     _pageCtrl.dispose();
+    super.dispose();
   }
 
   @override
@@ -72,28 +71,8 @@ class _FeaturedViewState extends State<FeaturedView> {
             controller: _pageCtrl,
             physics: BouncingScrollPhysics(),
             scrollDirection: Axis.horizontal,
-            itemCount: PAGES,
-            itemBuilder: (context, idx) {
-              bool active = idx == _pageActive;
-
-              Widget child;
-              switch (idx) {
-                case 0:
-                  child = FeaturedCard(
-                    scaffold: widget.scaffold,
-                    tables: this._tables,
-                    cards: this._cards,
-                    study: this._study,
-                    percent: this._percent,
-                  );
-                  break;
-                case 1:
-                  child = StatisticsCard(radius: RADIUS);
-                  break;
-              }
-
-              return featureWidget(active, child);
-            },
+            itemCount: _kPages,
+            itemBuilder: _itemBuilder,
           ),
         ),
         Container(
@@ -105,10 +84,35 @@ class _FeaturedViewState extends State<FeaturedView> {
     );
   }
 
+  Widget _itemBuilder(BuildContext context, int index) {
+    bool active = index == _pageActive;
+
+    Widget child;
+    switch (index) {
+      case 0:
+        child = FeaturedCard(
+          scaffold: widget.scaffold,
+          tables: this._tables,
+          cards: this._cards,
+          study: this._study,
+          percent: this._percent,
+        );
+        break;
+      case 1:
+        child = StatisticsCard(radius: 20.0);
+        break;
+    }
+
+    return featureWidget(active, child);
+  }
+
   Widget activePage() {
+    final _color = UserData.of(context).primaryColor;
+    final _theme = Theme.of(context);
+
     return Row(
       mainAxisSize: MainAxisSize.min,
-      children: List.generate(PAGES, (idx) {
+      children: List.generate(_kPages, (idx) {
         return AnimatedContainer(
           duration: Duration(milliseconds: 250),
           margin: const EdgeInsets.symmetric(horizontal: 2.5),
@@ -117,10 +121,8 @@ class _FeaturedViewState extends State<FeaturedView> {
           decoration: CardDecoration(
             focus: true,
             radius: 5.0,
-            color: idx == _pageActive
-                ? UserData.of(context).primaryColor
-                : Theme.of(context).unselectedWidgetColor,
-            brightness: Theme.of(context).brightness,
+            color: idx == _pageActive ? _color : _theme.unselectedWidgetColor,
+            brightness: _theme.brightness,
           ).shadow,
         );
       }),
@@ -137,7 +139,7 @@ class _FeaturedViewState extends State<FeaturedView> {
       curve: Curves.easeOutQuart,
       margin: EdgeInsets.fromLTRB(5.0, top / 2, 5.0, top / 2),
       decoration: CardDecoration(
-        radius: RADIUS,
+        radius: 20.0,
         color: Theme.of(context).cardColor,
         brightness: Theme.of(context).brightness,
       ).shadow,
