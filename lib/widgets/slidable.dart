@@ -39,18 +39,26 @@ class _SlidableActionState extends State<SlidableAction> {
       child: slideChild(child: widget.child),
       actionDelegate: SlideActionBuilderDelegate(
         actionCount: 1,
-        builder: (context, index, animation, renderingMode) =>
-            slideAction(context, SlideActionType.primary, Icons.edit, cYellow),
+        builder: _actionBuilder,
       ),
       secondaryActionDelegate: SlideActionBuilderDelegate(
         actionCount: 1,
-        builder: (context, index, animation, renderingMode) =>
-            slideAction(context, SlideActionType.secondary, Icons.delete, cRed),
+        builder: _secondaryActionBuilder,
       ),
     );
   }
 
-  Widget slideAction(context, type, icon, color) {
+  Widget _actionBuilder(BuildContext context, int index,
+      Animation<double> animation, SlidableRenderingMode renderingMode) {
+    return _slideAction(context, SlideActionType.primary, Icons.edit, cYellow);
+  }
+
+  Widget _secondaryActionBuilder(BuildContext context, int index,
+      Animation<double> animation, SlidableRenderingMode renderingMode) {
+    return _slideAction(context, SlideActionType.secondary, Icons.delete, cRed);
+  }
+
+  Widget _slideAction(context, type, icon, color) {
     return IconSlideAction(
       closeOnTap: false,
       color: color,

@@ -32,9 +32,8 @@ class _TextFieldPlatformState extends State<TextFieldPlatform> {
   Color _decorationColor;
 
   void maxLengthListener() {
-    _decorationColor = widget.controller.text.length < widget.maxLength
-        ? Theme.of(context).shadowColor
-        : cRed;
+    _decorationColor =
+        widget.controller.text.length < widget.maxLength ? null : cRed;
 
     setState(() => _decorationColor);
   }
@@ -85,6 +84,9 @@ class _TextFieldPlatformState extends State<TextFieldPlatform> {
   }
 
   Widget get _iosTextField {
+    final _client = Theme.of(context);
+    final _style = Theme.of(context).textTheme;
+
     return CupertinoTextField(
       autofocus: false,
       focusNode: widget.focusNode,
@@ -93,9 +95,9 @@ class _TextFieldPlatformState extends State<TextFieldPlatform> {
       maxLengthEnforced: widget.maxLength == null ? false : true,
       controller: widget.controller,
       placeholder: widget.hint,
-      placeholderStyle: Theme.of(context).textTheme.subtitle2,
-      style: Theme.of(context).textTheme.bodyText2,
-      cursorColor: UserData.of(context).primaryColor,
+      placeholderStyle: _style.subtitle2,
+      style: _style.bodyText2,
+      cursorColor: _client.primaryColor,
       keyboardType: widget.maxLines == null
           ? TextInputType.multiline
           : TextInputType.text,
@@ -105,6 +107,9 @@ class _TextFieldPlatformState extends State<TextFieldPlatform> {
   }
 
   Widget get _androidTextField {
+    final _client = Theme.of(context);
+    final _style = Theme.of(context).textTheme;
+
     return TextField(
       autofocus: false,
       focusNode: widget.focusNode,
@@ -113,15 +118,15 @@ class _TextFieldPlatformState extends State<TextFieldPlatform> {
       buildCounter: (context, {currentLength, isFocused, maxLength}) => null,
       maxLengthEnforced: widget.maxLength == null ? false : true,
       controller: widget.controller,
-      style: Theme.of(context).textTheme.bodyText2,
-      cursorColor: UserData.of(context).primaryColor,
+      style: _style.bodyText2,
+      cursorColor: _client.primaryColor,
       keyboardType: widget.maxLines == null
           ? TextInputType.multiline
           : TextInputType.text,
       scrollPhysics: BouncingScrollPhysics(),
       decoration: InputDecoration(
         hintText: widget.hint,
-        hintStyle: Theme.of(context).textTheme.subtitle2,
+        hintStyle: _style.subtitle2,
         isDense: true,
         border: InputBorder.none,
       ),

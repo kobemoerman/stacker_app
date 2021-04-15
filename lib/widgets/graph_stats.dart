@@ -101,8 +101,10 @@ class _InfoGraphicState extends State<InfoGraphic> {
   }
 
   List<LineTooltipItem> _retrieveToolTipItems(List<LineBarSpot> lineSpot) {
-    var spot = lineSpot.map((spot) => LineTooltipItem(
-        '${spot.y.round()} min', TextStyle(color: Colors.black)));
+    final _style = Theme.of(context).textTheme;
+
+    var spot = lineSpot.map(
+        (spot) => LineTooltipItem('${spot.y.round()} min', _style.bodyText2));
 
     return spot.toList();
   }

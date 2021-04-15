@@ -130,7 +130,6 @@ class _DownloadSheetState extends State<DownloadSheet> {
             pageHeader(),
             searchBuilder(),
             _isDownloading ? downloadOverlay() : null,
-            downloadOverlay(),
           ].where((e) => e != null).toList(),
         ),
       ),
@@ -149,8 +148,7 @@ class _DownloadSheetState extends State<DownloadSheet> {
       alignment: Alignment.bottomLeft,
       child: Padding(
         padding: const EdgeInsets.only(bottom: 45.0),
-        child: SearchExpand(
-            side: Side.LEFT, callback: _filterListener, radius: 10.0),
+        child: SearchExpand(callback: _filterListener, radius: 10.0),
       ),
     );
   }

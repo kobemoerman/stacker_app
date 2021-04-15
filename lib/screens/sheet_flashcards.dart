@@ -88,8 +88,7 @@ class _FlashCardSheetState extends State<FlashCardSheet> {
             alignment: Alignment.bottomLeft,
             child: Padding(
               padding: const EdgeInsets.only(bottom: _sSearch),
-              child: SearchExpand(
-                  side: Side.LEFT, callback: _filterListener, radius: 10.0),
+              child: SearchExpand(callback: _filterListener, radius: 10.0),
             ),
           ),
 

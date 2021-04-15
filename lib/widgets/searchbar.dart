@@ -7,14 +7,20 @@ import '../model/user_inherited.dart';
 
 enum Side { LEFT, RIGHT }
 
-class SearchExpand extends StatefulWidget {
-  final Function callback;
-  final double radius;
-  final Side side;
+const double _kHeight = 56.0;
+const Duration _kExpand = Duration(milliseconds: 250);
 
-  const SearchExpand(
-      {Key key, @required this.side, @required this.radius, this.callback})
-      : assert(side != null),
+class SearchExpand extends StatefulWidget {
+  final Side side;
+  final double radius;
+  final Function callback;
+
+  const SearchExpand({
+    Key key,
+    this.side = Side.LEFT,
+    @required this.radius,
+    this.callback,
+  })  : assert(side != null),
         assert(radius != null),
         super(key: key);
 
@@ -23,9 +29,6 @@ class SearchExpand extends StatefulWidget {
 }
 
 class _SearchExpandState extends State<SearchExpand> {
-  static const int DUR = 250;
-  static const double DIM = 56.0;
-
   bool isFolded = true;
   final _textCtrl = TextEditingController();
 
@@ -48,9 +51,12 @@ class _SearchExpandState extends State<SearchExpand> {
     var width = MediaQuery.of(context).size.width;
 
     return AnimatedContainer(
-      duration: Duration(milliseconds: DUR),
-      width: isFolded ? DIM : 3 * width / 4,
-      height: DIM,
+      duration: _kExpand,
+      width: isFolded ? _kHeight : 3 * width / 4,
+      height: _kHeight,
+      child: Row(
+        children: [_searchField(), _searchIcon()],
+      ),
       decoration: CardDecoration(
         focus: true,
         color: cRed,
@@ -60,12 +66,6 @@ class _SearchExpandState extends State<SearchExpand> {
         topRight: widget.side == Side.RIGHT ? 0.0 : widget.radius,
         brightness: Theme.of(context).brightness,
       ).shadow,
-      child: Row(
-        children: [
-          _searchField(),
-          _searchIcon(),
-        ],
-      ),
     );
   }
 
@@ -73,22 +73,20 @@ class _SearchExpandState extends State<SearchExpand> {
     var icon = Icon(isFolded ? Icons.search : Icons.close, color: Colors.white);
 
     return AnimatedContainer(
-      duration: Duration(milliseconds: DUR),
+      duration: _kExpand,
       child: Material(
         type: MaterialType.transparency,
         child: InkWell(
+          onTap: () => setState(() => isFolded = !isFolded),
           child: Padding(
             padding: const EdgeInsets.all(16.0),
             child: icon,
           ),
           splashColor: cRed,
-          borderRadius: BorderRadius.only(
-            topLeft: Radius.circular(isFolded ? widget.radius : 0.0),
-            topRight: Radius.circular(widget.radius),
-            bottomLeft: Radius.circular(isFolded ? widget.radius : 0.0),
-            bottomRight: Radius.circular(widget.radius),
+          borderRadius: BorderRadius.horizontal(
+            left: Radius.circular(isFolded ? widget.radius : 0.0),
+            right: Radius.circular(widget.radius),
           ),
-          onTap: () => setState(() => isFolded = !isFolded),
         ),
       ),
     );
@@ -99,14 +97,10 @@ class _SearchExpandState extends State<SearchExpand> {
     Widget child;
 
     if (!isFolded) {
-      child = TextField(
-        style: TextStyle(color: Colors.white),
+      child = TextFieldPlatform(
+        maxLines: 1,
+        hint: _local.search,
         controller: _textCtrl,
-        decoration: InputDecoration(
-          hintText: _local.search,
-          hintStyle: TextStyle(color: Colors.white54),
-          border: InputBorder.none,
-        ),
       );
     }
 
@@ -138,11 +132,11 @@ class SearchHidden extends StatefulWidget {
 class _SearchHiddenState extends State<SearchHidden> {
   @override
   Widget build(BuildContext context) {
-    final _local = UserData.of(context).local;
+    final _theme = Theme.of(context);
     final _width = MediaQuery.of(context).size.width;
 
     return AnimatedContainer(
-      duration: Duration(milliseconds: 250),
+      duration: _kExpand,
       height: widget.isSearching ? 40.0 : 0.0,
       width: _width,
       margin: EdgeInsets.only(bottom: widget.isSearching ? 10.0 : 0.0),
@@ -152,36 +146,43 @@ class _SearchHiddenState extends State<SearchHidden> {
           margin: const EdgeInsets.symmetric(horizontal: 15.0),
           padding: const EdgeInsets.symmetric(horizontal: 10.0),
           width: _width,
-          decoration: CardDecoration(
-            focus: true,
-            radius: 7.5,
-            color: Theme.of(context).cardColor,
-            brightness: Theme.of(context).brightness,
-          ).shadow,
           child: Stack(
             alignment: Alignment.center,
             children: [
               Align(
                 alignment: Alignment.centerLeft,
-                child: TextFieldPlatform(
-                  maxLines: 1,
-                  hint: _local.stacksSearch,
-                  controller: widget.controller,
-                  focusNode: widget.focus,
-                ),
+                child: _searchField(),
               ),
               Align(
                 alignment: Alignment.centerRight,
-                child: InkWell(
-                  onTap: () => widget.controller.clear(),
-                  child: Icon(Icons.close,
-                      color: UserData.of(context).primaryColor),
-                ),
+                child: _searchClear(),
               ),
             ],
           ),
+          decoration: CardDecoration(
+            focus: true,
+            radius: 7.5,
+            color: _theme.cardColor,
+            brightness: _theme.brightness,
+          ).shadow,
         ),
       ),
+    );
+  }
+
+  Widget _searchField() {
+    return TextFieldPlatform(
+      maxLines: 1,
+      hint: UserData.of(context).local.stacksSearch,
+      controller: widget.controller,
+      focusNode: widget.focus,
+    );
+  }
+
+  Widget _searchClear() {
+    return InkWell(
+      onTap: () => widget.controller.clear(),
+      child: Icon(Icons.close, color: UserData.of(context).primaryColor),
     );
   }
 }
